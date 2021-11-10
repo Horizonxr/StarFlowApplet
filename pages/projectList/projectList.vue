@@ -16,6 +16,14 @@
 				</view>
 			</view>
 		</view>
+		<button @click="open" class="button-click">+</button>
+		<uni-popup ref="popup" type="bottom" background-color="#fff">底部弹出 Popup</uni-popup>
+		
+		<view class="progress-box">
+				<progress show-info percent="60" stroke-width="12rpx" backgroundColor="#999" activeColor="#007AFF" font-size="8" border-radius="12rpx"/>		
+			</view>
+			
+			
 	</view>
 </template>
 
@@ -127,4 +135,32 @@
 			}
 		}
 	}
+	.button-click{
+		position:fixed;
+		height: 100rpx;
+		width: 100rpx;
+		border-radius: 50rpx;
+		top: 85%;
+		left: 80%;
+		z-index: 10;
+	}
+	.progress-box{
+				height: 20rpx;
+				width: 90%;
+				position: fixed;
+				top: 95%;
+				left: 5%;
+				z-index: 10;
+			}
+		
+		
+		
+		
+		
+	
+
+		
+		 
+		
+	
 </style>
