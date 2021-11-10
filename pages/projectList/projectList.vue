@@ -16,6 +16,13 @@
 				</view>
 			</view>
 		</view>
+	
+		
+		<view class="progress-box">
+				<progress show-info percent="60" stroke-width="12rpx" backgroundColor="#999" activeColor="#007AFF" font-size="8" border-radius="12rpx"/>		
+			</view>
+			
+			
 	</view>
 </template>
 
@@ -127,4 +134,24 @@
 			}
 		}
 	}
+
+	.progress-box{
+				height: 20rpx;
+				width: 90%;
+				position: fixed;
+				top: 95%;
+				left: 5%;
+				z-index: 10;
+			}
+		
+		
+		
+		
+		
+	
+
+		
+		 
+		
+	
 </style>
