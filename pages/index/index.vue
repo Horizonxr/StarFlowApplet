@@ -29,6 +29,7 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		background-color: #007AFF;
 	}
 
 	.logo {
