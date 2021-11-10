@@ -1,5 +1,6 @@
 <template>
 	<view class="body">
+		
 		<view class="top-wrapper">
 			<view class="top">
 				<view class="title">项目选择</view>
@@ -18,9 +19,14 @@
 						<view class ="member-number">{{}}</view>
 						<view class="iconfont icon-ren111"></view>
 						<view class="list-item-description">This is a test case for TodoList</view>
-						</view>
+							</view>
 					</view>
 			</view>
+		</view>
+		<view class="bg-circle">
+			<view class='orange'></view>
+			<view class='blue'></view>
+			<view class='green'></view>
 		</view>
 	</view>
 </template>
@@ -39,6 +45,36 @@
 	.body{
 		height: 100vh;
 		z-index: -999;
+	}
+	.bg-circle{
+		.orange{
+			width: 90px;
+			height: 90px;
+			border-radius: 50%;
+			position: fixed;
+			z-index: 0;
+			left: 80rpx;
+			top: 450rpx;
+			background: rgba($color: $uni-color-warning, $alpha: 0.9);			
+		}
+		.blue{
+			width: 180px;
+			height: 180px;
+			left: 230rpx;
+			top: 400rpx;
+			position: fixed;
+			border-radius: 50%;
+			background: rgba($color: $pending-mission, $alpha: 0.9);
+		}
+		.green{
+			width: 120px;
+			height: 120px;
+			left: 190rpx;
+			top: 700rpx;
+			position: fixed;
+			border-radius: 50%;
+			background: rgba($color: $uni-color-success, $alpha: 0.9);
+		}
 	}
 	.top-wrapper{
 		top:0rpx;
@@ -90,11 +126,9 @@
 		width: 100%;
 		height: 100%;
 		z-index: 1;
-		
 		.list-item-wrapper{
 			margin-top: 30rpx;
 			width: 100%;
-
 			.list-item{
 				margin: 22rpx auto;
 				height: 120rpx;
@@ -126,6 +160,7 @@
 					top:-20rpx;
 					font-size: 50rpx;
 				}
+				
 				.list-item-description{
 					position: relative;
 					left: 21rpx;
@@ -135,13 +170,7 @@
 					line-height: 25rpx;
 					color: $less-important-font;
 				}
-				.list-item-bar{
-					position: relative;
-					left: 21rpx;
-					top:-10rpx;
-					stroke-width:6rpx ;
-					font-size: 20rpx;
-				}
+				
 			}
 		}
 	}
