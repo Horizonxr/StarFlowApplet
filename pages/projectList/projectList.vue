@@ -1,5 +1,19 @@
 <template>
 	<view class="body">
+		<uni-popup class="moremorePopup" ref="moremorePopup" type="center">
+			<button class="button-more" @click="morePopup">
+				<view class="iconfont icon-zengjia">
+				</view>
+			</button>
+			<button class="button-jiaru" @click="morePopup">
+				<view class="iconfont icon-qm">
+				</view>
+			</button>
+			<button class="button-quxiao" @click="morePopup">
+				<view class="iconfont icon-chahao size">
+				</view>
+			</button>
+		</uni-popup>
 		<view class="top-wrapper">
 			<view class="top">
 				<view class="title">项目名称</view>
@@ -16,8 +30,15 @@
 				</view>
 			</view>
 		</view>
+
+		<button class="button-message" @click="morePopup">
+			<view class="iconfont icon-zengjia">
+			</view>
+		</button>
+		<!-- 消息提示 -->
 	
-		
+		 
+
 		<view class="progress-box">
 				<progress show-info percent="60" stroke-width="12rpx" backgroundColor="#999" activeColor="#007AFF" font-size="8" border-radius="12rpx"/>		
 			</view>
@@ -30,9 +51,18 @@
 	export default {
 		data() {
 			return {
-				mission_list:[1,2,3,4,5,6,7,9,10,11,22]
+				mission_list:[1,2,3,4,5,6,7,9,10,11,22],
+				msgType: 'success',
+				message: '这是一条成功消息提示',
 			};
-		}
+		},
+			methods: {
+				morePopup(){
+					this.$refs.moremorePopup.open("center")
+				}
+			}
+		
+		
 	}
 </script>
 
@@ -41,6 +71,10 @@
 		height: 100vh;
 		background-color: $bg-color;
 		z-index: -999;
+	}
+	.moremorePopup{
+		width: 100%;
+		height: 100vh;
 	}
 	.top-wrapper{
 		top:0rpx;
@@ -84,6 +118,77 @@
 			}
 		}
 	}
+	.size{
+		height:134rpx;
+	}
+	.more-text{
+		z-index: 101;
+		position:fixed;
+		bottom:475rpx;
+		right:200rpx;
+		font-size: 55rpx;
+		color: #fffefe;
+		font-family: Adobe 黑体 Std;
+	}
+	.help-text{
+		z-index: 101;
+		position:fixed;
+		bottom:305rpx;
+		right:200rpx;
+		font-size: 55rpx;
+		color: #fffefe;
+		font-family: Adobe 黑体 Std;
+		
+	}
+	.quxiao-text{
+		z-index: 101;
+		position:fixed;
+		bottom:125rpx;
+		right:200rpx;
+		font-size: 55rpx;
+		color: #fffefe;
+		font-family: Adobe 黑体 Std;
+	}
+	.button-more{
+		height: 134rpx;
+		width: 134rpx;
+		border-radius: 50%;
+		z-index: 101;
+		position:fixed;
+		bottom:425rpx;
+		right:45rpx;
+			.iconfont{
+			
+				font-size: 86rpx;
+			}
+	}
+	.button-jiaru{
+		height: 134rpx;
+		width: 134rpx;
+		border-radius: 50%;
+		z-index: 101;
+		position:fixed;
+		bottom:255rpx;
+		right:45rpx;
+		.iconfont{
+			font-size: 80rpx;
+		  
+		}
+		
+	}
+	.button-quxiao{
+		height: 134rpx;
+		width: 134rpx;
+		border-radius: 50%;
+		z-index: 101;
+		position:fixed;
+		bottom:90rpx;
+		right:45rpx;
+		.iconfont{
+			font-size: 80rpx;
+		}
+	}
+	
 	.list-wrapper{
 		position: relative;
 		width: 100%;
@@ -134,7 +239,22 @@
 			}
 		}
 	}
-
+.button-message{
+	height: 134rpx;
+	width: 134rpx;
+	border-radius: 50%;
+	z-index: 10;
+	position:fixed;
+	bottom:45rpx;
+	right:37rpx;
+	.iconfont{
+		font-size: 80rpx;
+	  
+	}
+}
+.moremorePopup{
+	z-index: 15;
+}
 	.progress-box{
 				height: 20rpx;
 				width: 90%;
