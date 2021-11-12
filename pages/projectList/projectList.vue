@@ -1,19 +1,25 @@
 <template>
 	<view class="body">
 		<uni-popup class="moremorePopup" ref="moremorePopup" type="center">
-			<button class="button-more" @click="morePopup">
+			<view class="more-text">添加新任务</view>
+			<view class="help-text">帮助说明</view>
+			<view class="quxiao-text">取消</view>
+			<button class="button-more" @click="addPopup">
 				<view class="iconfont icon-zengjia">
 				</view>
 			</button>
-			<button class="button-jiaru" @click="morePopup">
+			<button class="button-jiaru" @click="poupeQuestion">
 				<view class="iconfont icon-qm">
 				</view>
 			</button>
-			<button class="button-quxiao" @click="morePopup">
+			<button class="button-quxiao" @click="canclePopup">
 				<view class="iconfont icon-chahao size">
 				</view>
 			</button>
 		</uni-popup>
+		<uni-add-popup  class="moremorePopup" ref="addaddPopup" >
+			
+		</uni-add-popup>
 		<view class="top-wrapper">
 			<view class="top">
 				<view class="title">项目名称</view>
@@ -52,14 +58,19 @@
 		data() {
 			return {
 				mission_list:[1,2,3,4,5,6,7,9,10,11,22],
-				msgType: 'success',
-				message: '这是一条成功消息提示',
 			};
 		},
 			methods: {
 				morePopup(){
 					this.$refs.moremorePopup.open("center")
+				},
+				canclePopup(){
+					this.$refs.moremorePopup.close("center")
+				},
+				addPopup(){
+					this.$refs.addaddpopup.open("center")
 				}
+				
 			}
 		
 		
@@ -157,10 +168,6 @@
 		position:fixed;
 		bottom:425rpx;
 		right:45rpx;
-			.iconfont{
-			
-				font-size: 86rpx;
-			}
 	}
 	.button-jiaru{
 		height: 134rpx;
@@ -170,10 +177,7 @@
 		position:fixed;
 		bottom:255rpx;
 		right:45rpx;
-		.iconfont{
-			font-size: 80rpx;
-		  
-		}
+		
 		
 	}
 	.button-quxiao{
@@ -184,9 +188,7 @@
 		position:fixed;
 		bottom:90rpx;
 		right:45rpx;
-		.iconfont{
-			font-size: 80rpx;
-		}
+		
 	}
 	
 	.list-wrapper{
@@ -239,6 +241,11 @@
 			}
 		}
 	}
+	.iconfont{
+		font-size: 86rpx;
+		position: absolute;
+		top:-25%;
+	}
 .button-message{
 	height: 134rpx;
 	width: 134rpx;
@@ -247,10 +254,7 @@
 	position:fixed;
 	bottom:45rpx;
 	right:37rpx;
-	.iconfont{
-		font-size: 80rpx;
-	  
-	}
+	
 }
 .moremorePopup{
 	z-index: 15;
