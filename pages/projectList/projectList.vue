@@ -1,25 +1,28 @@
 <template>
 	<view class="body">
 		<uni-popup class="moremorePopup" ref="moremorePopup" type="center">
-			<view class="more-text">添加新任务</view>
-			<view class="help-text">帮助说明</view>
-			<view class="quxiao-text">取消</view>
-			<button class="button-more" @click="addPopup">
-				<view class="iconfont icon-zengjia">
-				</view>
-			</button>
-			<button class="button-jiaru" @click="poupeQuestion">
-				<view class="iconfont icon-qm">
-				</view>
-			</button>
-			<button class="button-quxiao" @click="canclePopup">
-				<view class="iconfont icon-chahao size">
-				</view>
-			</button>
+			<view>
+				<view class="more-text">添加新任务</view>
+				<view class="help-text">帮助说明</view>
+				<view class="quxiao-text">取消</view>
+				<button class="button-more" @click="addPopup">
+					<view class="iconfont icon-zengjia">
+					</view>
+				</button>
+				<button class="button-jiaru" @click="poupeQuestion">
+					<view class="iconfont icon-qm">
+					</view>
+				</button>
+				<button class="button-quxiao" @click="canclePopup">
+					<view class="iconfont icon-chahao ">
+					</view>
+				</button>
+			</view>
 		</uni-popup>
-		<uni-add-popup  class="moremorePopup" ref="addaddPopup" >
-			
-		</uni-add-popup>
+		<uni-popup  class="addaddPopup" ref="addaddPopup" type="center" >
+			<addPopup></addPopup>
+		</uni-popup>
+		
 		<view class="top-wrapper">
 			<view class="top">
 				<view class="title">项目名称</view>
@@ -64,12 +67,13 @@
 				morePopup(){
 					this.$refs.moremorePopup.open("center")
 				},
+				addPopup(){
+					this.$refs.closePopup()
+				},
 				canclePopup(){
 					this.$refs.moremorePopup.close("center")
 				},
-				addPopup(){
-					this.$refs.addaddpopup.open("center")
-				}
+				
 				
 			}
 		
@@ -86,6 +90,11 @@
 	.moremorePopup{
 		width: 100%;
 		height: 100vh;
+	}
+	.addaddPopup{
+		width: 100%;
+		height: 100vh;
+		z-index: 999;
 	}
 	.top-wrapper{
 		top:0rpx;
