@@ -1,6 +1,27 @@
 <template>
 	<view class="body">
-		
+		<uni-popup class="morePopup" ref="morePopup" type="center" :mask-click="false">
+			<view class="botton-wrapper">
+				<view class="top-popup">
+					<view class="top-popup-text">创建项目</view>
+					<view>
+						<view class="iconfont icon-zengjia" @click=""></view>
+					</view>
+				</view>	
+				<view class="middle-popup">
+				   <view class="middle-popup-text">加入项目</view>
+				   <view>
+					   <view class="iconfont icon-jiarubanji" @click=""></view>
+				   </view>
+				</view>
+				<view class="close-popup" @click="closePopup">
+					<view class="close-popup-text">取消</view>
+					<view>
+						<view class="iconfont icon-quxiao"@click=""></view>
+					</view>
+				</view>	
+			</view>
+		</uni-popup>
 		<view class="top-wrapper">
 			<!-- 顶部 -->
 			<view class="top">
@@ -10,6 +31,10 @@
 				  <view class="iconfont icon-shezhi "></view>
 				</navigator>
 			</view>
+		</view>
+		<!-- 按钮 -->
+		<view class="more" @click="openPopup">
+			<view class="iconfont icon-zengjia"></view>
 		</view>
 		<!-- 仓库列表 -->
 		<view class="list-wrapper">
@@ -31,24 +56,7 @@
 			<view class='blue'></view>
 			<view class='green'></view>
 		</view>
-	<!-- 弹出层 -->
-	<view class="more-add">
-		<button class="iconfont icon-zengjia" @click="open" ></button>
-			<uni-popup ref="popup" type="center" >
-				<view class="top-popup" >
-					<view class="top-popup-text">创建项目</view>
-					<view class="iconfont icon-zengjia" @click=""></view>	
-				</view>	
-				<view class="middle-popup">
-				   <view class="middle-popup-text">加入项目</view>
-					<view class="iconfont icon-jiarubanji" @click=""></view>
-				</view>
-				<view class="close-popup">
-					<view class="close-popup-text">取消</view>
-					<view class="iconfont icon-quxiao"@click=""></view>
-				</view>	
-			</uni-popup>
-	</view>
+		
 	</view>
 </template>
 <script>
@@ -59,10 +67,12 @@
 			};
 		},
 		methods:{
-			open(){
+			openPopup(){
 			  // 通过组件定义的ref调用uni-popup方法 ,如果传入参数 ，type 属性将失效 ，仅支持 ['top','left','bottom','right','center']
-			  this.$refs.popup.open('right')
-							console.log("ok")
+				this.$refs.morePopup.open('center')
+			},
+			closePopup(){
+				this.$refs.morePopup.close()
 			}
 		}
 	}
@@ -70,73 +80,45 @@
 
 <style lang="scss">
 	.body{
-		height: 100vh;
-		z-index: -999;
+		
 	}
-	.more-add{
-		position: absolute;
-		top:500rpx;
-		.iconfont{
-			width: 50px;
-			height: 50px;
-			font-size: 50rpx;
-			border-radius: 50%;
-			position: fixed;
-			z-index: 10;
-			left: 570rpx;
-			top: 950rpx;
-			background: rgba($color: #ffff, $alpha: 1);
-			box-shadow: 15rpx 17rpx 15rpx 2rpx #888888;							
-		}
-		.top-popup{
-			margin-top: 725rpx;
-			position:relative;
-			width: 400rpx;
-			z-index: 100;
-			.top-popup-text{
-				position: absolute;
-				color:#ffff;
-				font-size:50rpx;
-				left:-200rpx;
-			}
-			.iconfont{
-				position: absolute;
-				color:#ffff;
-				font-size:50rpx;
-				left:-200rpx;
-				width: 50px;
-				height: 50px;
-				font-size: 50rpx;
-				border-radius: 50%;
-				position: fixed;
-				z-index: 10;
-				left: 570rpx;
-				top: 950rpx;
-				background: rgba($color: #ffff, $alpha: 1);
-				box-shadow: 15rpx 17rpx 15rpx 2rpx #888888;				
-							
-			}
-			
-		}
-		.middle-popup{
-			position:relative;
-			.middle-popup-text{
-				top:100rpx;
-				position: absolute;
-				color:#ffff;
-				font-size:50rpx;
-				left:-200rpx;
-			}
-		}
-		.close-popup{
-			position:relative;
-			.close-popup-text{
-				top:200rpx;
-				right:100rpx;
-				position: absolute;
-				color:#ffff;
-				font-size:50rpx;
-				left:-200rpx;
+	.morePopup{
+		z-index: 15;
+		margin: 0 auto;
+		.botton-wrapper{
+			height: 600rpx;
+			width: 364rpx;
+			margin-top: 486rpx;
+			margin-left: 320rpx;
+			display: flex;
+			flex-direction: column;
+			view{
+				width: 364rpx;
+				height: 200rpx;
+				display: flex;
+				justify-content: center;
+				view:nth-child(1){
+					width: 210rpx;
+					height: 200rpx;
+					font-size: 40rpx;
+					line-height: 200rpx;
+					color: white;
+				}
+				view:nth-child(2){
+					width: 130rpx;
+					height: 130rpx;
+					margin-top: 41rpx;
+					background-color: white;
+					border-radius: 50%;
+					display: flex;
+					box-shadow: 0 4rpx 12rpx #888888;
+					.iconfont{
+						line-height: 130rpx;
+						text-align: center;
+						font-size: 100rpx;
+						color:black;
+					}
+				}
 			}
 		}
 	}
@@ -239,12 +221,12 @@
 		}
 	}
 	.bg-circle{
+		z-index: 0;
 		.orange{
 			width: 90px;
 			height: 90px;
 			border-radius: 50%;
 			position: fixed;
-			z-index: 0;
 			left: 80rpx;
 			top: 450rpx;
 			background: rgba($color: $uni-color-warning, $alpha: 0.9);			
@@ -266,6 +248,22 @@
 			position: fixed;
 			border-radius: 50%;
 			background: rgba($color: $uni-color-success, $alpha: 0.9);
+		}
+	}
+	.more{
+		position: fixed;
+		width: 130rpx;
+		height: 130rpx;
+		right: 44rpx;
+		bottom: 90rpx;
+		border-radius: 50%;
+		background-color: white;
+		z-index: 10;
+		text-align: center;
+		line-height: 130rpx;
+		box-shadow: 0 4rpx 12rpx #888888;
+		.iconfont{
+			font-size: 130rpx;
 		}
 	}
 </style>
