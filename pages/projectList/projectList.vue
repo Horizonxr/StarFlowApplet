@@ -25,7 +25,11 @@
 			return {
 				mission_list:[1,2,3,4,5,6,7,9,10,11,22]
 			};
+		},
+		methods:{
 		}
+		
+		
 	}
 </script>
 

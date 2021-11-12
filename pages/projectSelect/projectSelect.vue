@@ -63,7 +63,12 @@
 	export default {
 		data() {
 			return {
-				mission_list:[1,2,3,4,5,6,7,9,10,11,22]
+				mission_list:[1,2,3,4,5,6,7,9,10,11,22],
+				repo_name: {}, // 仓库名 暂不可用
+				username: '', // 用户名 暂不可用
+				incomplete: 0, // 未完成任务数目 暂不可用
+				checking: 0,	// 待审核任务数目 暂不可用
+				finished: 0,	// 已完成任务数目	 暂不可用
 			};
 		},
 		methods:{
@@ -73,7 +78,41 @@
 			},
 			closePopup(){
 				this.$refs.morePopup.close()
+			},
+			onLaunch: function() {
+				// 页面初始化时调用的函数
+				// 暂不可用
+				uni.request({
+					url: 'http://37446r369t.zicp.vip', // url还未完成
+					data: {
+						text: 'uni.request'
+					},
+					header: {
+						'content-type': 'application/json' // 自定义请求头信息
+					},
+					success: (res) => {
+						console.log(res.data);
+						
+					}
+				})
+			},
+			selectProject(){
+				// 一个点击事件,可以选择进哪个项目
+				// 暂不可用
+				uni.request({
+					url: 'http://37446r369t.zicp.vip', // url还未完成
+					data: {
+						text: 'uni.request'
+					},
+					header: {
+						'content-type': 'application/json' // 自定义请求头信息
+					},
+					success: (res) => {
+						console.log(res.data);						
+					}
+				})
 			}
+			
 		}
 	}
 </script>
