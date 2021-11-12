@@ -22,6 +22,14 @@
 				</view>	
 			</view>
 		</uni-popup>
+		<!-- 第二层弹窗 -->
+		</uni-popup>
+		<uni-popup class="createPopup" ref="createPopup" type="center" :mask-click="false">
+			<createProject></createProject>
+		</uni-popup>
+		<uni-popup class="joininPopup"  ref="joininPopup" type="center" :mask-click="false">
+			<joininProject></joininProject>
+		</uni-popup>
 		<view class="top-wrapper">
 			<!-- 顶部 -->
 			<view class="top">
@@ -60,12 +68,15 @@
 	</view>
 </template>
 <script>
+	import createProject from '../../components/createProject';
+	import joininProject from '../../components/joininProject';
 	export default {
 		data() {
 			return {
 				mission_list:[1,2,3,4,5,6,7,9,10,11,22]
 			};
 		},
+		components:{createProject,joininProject},
 		methods:{
 			openPopup(){
 			  // 通过组件定义的ref调用uni-popup方法 ,如果传入参数 ，type 属性将失效 ，仅支持 ['top','left','bottom','right','center']
