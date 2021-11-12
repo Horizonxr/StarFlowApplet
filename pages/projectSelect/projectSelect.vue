@@ -25,10 +25,10 @@
 		<!-- 第二层弹窗 -->
 		</uni-popup>
 		<uni-popup class="createPopup" ref="createPopup" type="center" :mask-click="false">
-			<createProject></createProject>
+			<createProject @closeCreatepopup="closeCreatepopup"></createProject>
 		</uni-popup>
 		<uni-popup class="joininPopup"  ref="joininPopup" type="center" :mask-click="false">
-			<joininProject></joininProject>
+			<joininProject  @closeJoininpopup="closeJoininpopup"></joininProject>
 		</uni-popup>
 		<view class="top-wrapper">
 			<!-- 顶部 -->
@@ -84,7 +84,16 @@
 			},
 			closePopup(){
 				this.$refs.morePopup.close()
-			}
+			},
+			closeCreatepopup(){
+				this.$refs.createPopup.close()
+			},
+			joininPopup(){
+				this.$refs.joininPopup.open('center')
+			},
+			closeJoininpopup(){
+				this.$refs.joininPopup.close()
+			},
 		}
 	}
 </script>
