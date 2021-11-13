@@ -68,7 +68,8 @@
 					this.$refs.moremorePopup.open("center")
 				},
 				addPopup(){
-					this.$refs.closePopup()
+					this.$refs.moremorePopup.close("center");
+					this.$refs.addaddPopup.open("center")
 				},
 				canclePopup(){
 					this.$refs.moremorePopup.close("center")
