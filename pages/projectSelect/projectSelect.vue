@@ -1,25 +1,27 @@
 <template>
 	<view class="body">
 		<uni-popup class="morePopup" ref="morePopup" type="center" :mask-click="false">
-			<view class="botton-wrapper">
-				<view class="top-popup" @click="createPopup">
-					<view class="top-popup-text">创建项目</view>
-					<view>
-						<view class="iconfont icon-zengjia" ></view>
+			<view class="wrapper">
+				<view class="botton-wrapper">
+					<view class="top-popup" @click="createPopup">
+						<view class="top-popup-text">创建项目</view>
+						<view>
+							<view class="iconfont icon-zengjia" ></view>
+						</view>
+					</view>	
+					<view class="middle-popup"  @click="joininPopup">
+					   <view class="middle-popup-text">加入项目</view>
+					   <view>
+						   <view class="iconfont icon-jiarubanji"></view>
+					   </view>
 					</view>
-				</view>	
-				<view class="middle-popup"  @click="joininPopup">
-				   <view class="middle-popup-text">加入项目</view>
-				   <view>
-					   <view class="iconfont icon-jiarubanji"></view>
-				   </view>
+					<view class="close-popup" @click="closePopup">
+						<view class="close-popup-text">取消</view>
+						<view>
+							<view class="iconfont icon-quxiao"@click=""></view>
+						</view>
+					</view>	
 				</view>
-				<view class="close-popup" @click="closePopup">
-					<view class="close-popup-text">取消</view>
-					<view>
-						<view class="iconfont icon-quxiao"@click=""></view>
-					</view>
-				</view>	
 			</view>
 		</uni-popup>
 		<!-- 第二层弹窗 -->
@@ -108,38 +110,43 @@
 	.morePopup{
 		z-index: 15;
 		margin: 0 auto;
-		.botton-wrapper{
-			height: 600rpx;
-			width: 364rpx;
-			margin-top: 486rpx;
-			margin-left: 320rpx;
-			display: flex;
-			flex-direction: column;
-			view{
+		.wrapper{
+			width: 100%;
+			height: 100vh;
+			.botton-wrapper{
+				position: absolute;
+				height: 600rpx;
 				width: 364rpx;
-				height: 200rpx;
+				bottom: 59rpx;
+				left: -23rpx;
 				display: flex;
-				justify-content: center;
-				view:nth-child(1){
-					width: 210rpx;
+				flex-direction: column;
+				view{
+					width: 364rpx;
 					height: 200rpx;
-					font-size: 40rpx;
-					line-height: 200rpx;
-					color: white;
-				}
-				view:nth-child(2){
-					width: 130rpx;
-					height: 130rpx;
-					margin-top: 41rpx;
-					background-color: white;
-					border-radius: 50%;
 					display: flex;
-					box-shadow: 0 4rpx 12rpx #888888;
-					.iconfont{
-						line-height: 130rpx;
-						text-align: center;
-						font-size: 100rpx;
-						color:black;
+					justify-content: center;
+					view:nth-child(1){
+						width: 210rpx;
+						height: 200rpx;
+						font-size: 40rpx;
+						line-height: 200rpx;
+						color: white;
+					}
+					view:nth-child(2){
+						width: 130rpx;
+						height: 130rpx;
+						margin-top: 41rpx;
+						background-color: white;
+						border-radius: 50%;
+						display: flex;
+						box-shadow: 0 4rpx 12rpx #888888;
+						.iconfont{
+							line-height: 130rpx;
+							text-align: center;
+							font-size: 100rpx;
+							color:black;
+						}
 					}
 				}
 			}
@@ -282,7 +289,6 @@
 		position: fixed;
 		width: 130rpx;
 		height: 130rpx;
-		top:970rpx;
 		right: 46rpx;
 		bottom: 90rpx;
 		border-radius: 50%;
