@@ -2,16 +2,16 @@
 	<view class="body">
 		<uni-popup class="morePopup" ref="morePopup" type="center" :mask-click="false">
 			<view class="botton-wrapper">
-				<view class="top-popup">
+				<view class="top-popup" @click="createPopup">
 					<view class="top-popup-text">创建项目</view>
 					<view>
-						<view class="iconfont icon-zengjia" @click=""></view>
+						<view class="iconfont icon-zengjia" ></view>
 					</view>
 				</view>	
-				<view class="middle-popup">
+				<view class="middle-popup"  @click="joininPopup">
 				   <view class="middle-popup-text">加入项目</view>
 				   <view>
-					   <view class="iconfont icon-jiarubanji" @click=""></view>
+					   <view class="iconfont icon-jiarubanji"></view>
 				   </view>
 				</view>
 				<view class="close-popup" @click="closePopup">
@@ -85,6 +85,9 @@
 			closePopup(){
 				this.$refs.morePopup.close()
 			},
+			createPopup(){
+				this.$refs.createPopup.open('center')
+			 },
 			closeCreatepopup(){
 				this.$refs.createPopup.close()
 			},
@@ -236,7 +239,12 @@
 					line-height: 25rpx;
 					color: $less-important-font;
 				}
-				
+				.list-item-bar{
+					position: relative;
+					top:-10rpx;
+					width: 570rpx;
+					left: 10rpx;
+				}
 			}
 		}
 	}
@@ -274,7 +282,8 @@
 		position: fixed;
 		width: 130rpx;
 		height: 130rpx;
-		right: 44rpx;
+		top:970rpx;
+		right: 46rpx;
 		bottom: 90rpx;
 		border-radius: 50%;
 		background-color: white;
