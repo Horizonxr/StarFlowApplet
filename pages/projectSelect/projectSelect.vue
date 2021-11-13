@@ -1,26 +1,36 @@
 <template>
 	<view class="body">
 		<uni-popup class="morePopup" ref="morePopup" type="center" :mask-click="false">
-			<view class="botton-wrapper">
-				<view class="top-popup">
-					<view class="top-popup-text">创建项目</view>
-					<view>
-						<view class="iconfont icon-zengjia" @click=""></view>
+			<view class="wrapper">
+				<view class="botton-wrapper">
+					<view class="top-popup" @click="createPopup">
+						<view class="top-popup-text">创建项目</view>
+						<view>
+							<view class="iconfont icon-zengjia" ></view>
+						</view>
+					</view>	
+					<view class="middle-popup"  @click="joininPopup">
+					   <view class="middle-popup-text">加入项目</view>
+					   <view>
+						   <view class="iconfont icon-jiarubanji"></view>
+					   </view>
 					</view>
-				</view>	
-				<view class="middle-popup">
-				   <view class="middle-popup-text">加入项目</view>
-				   <view>
-					   <view class="iconfont icon-jiarubanji" @click=""></view>
-				   </view>
+					<view class="close-popup" @click="closePopup">
+						<view class="close-popup-text">取消</view>
+						<view>
+							<view class="iconfont icon-quxiao"@click=""></view>
+						</view>
+					</view>	
 				</view>
-				<view class="close-popup" @click="closePopup">
-					<view class="close-popup-text">取消</view>
-					<view>
-						<view class="iconfont icon-quxiao"@click=""></view>
-					</view>
-				</view>	
 			</view>
+		</uni-popup>
+		<!-- 第二层弹窗 -->
+		</uni-popup>
+		<uni-popup class="createPopup" ref="createPopup" type="center" :mask-click="false">
+			<createProject @closeCreatepopup="closeCreatepopup"></createProject>
+		</uni-popup>
+		<uni-popup class="joininPopup"  ref="joininPopup" type="center" :mask-click="false">
+			<joininProject  @closeJoininpopup="closeJoininpopup"></joininProject>
 		</uni-popup>
 		<view class="top-wrapper">
 			<!-- 顶部 -->
@@ -60,12 +70,15 @@
 	</view>
 </template>
 <script>
+	import createProject from '../../components/createProject';
+	import joininProject from '../../components/joininProject';
 	export default {
 		data() {
 			return {
 				mission_list:[1,2,3,4,5,6,7,9,10,11,22]
 			};
 		},
+		components:{createProject,joininProject},
 		methods:{
 			openPopup(){
 			  // 通过组件定义的ref调用uni-popup方法 ,如果传入参数 ，type 属性将失效 ，仅支持 ['top','left','bottom','right','center']
@@ -73,7 +86,19 @@
 			},
 			closePopup(){
 				this.$refs.morePopup.close()
-			}
+			},
+			createPopup(){
+				this.$refs.createPopup.open('center')
+			 },
+			closeCreatepopup(){
+				this.$refs.createPopup.close()
+			},
+			joininPopup(){
+				this.$refs.joininPopup.open('center')
+			},
+			closeJoininpopup(){
+				this.$refs.joininPopup.close()
+			},
 		}
 	}
 </script>
@@ -85,38 +110,43 @@
 	.morePopup{
 		z-index: 15;
 		margin: 0 auto;
-		.botton-wrapper{
-			height: 600rpx;
-			width: 364rpx;
-			margin-top: 486rpx;
-			margin-left: 320rpx;
-			display: flex;
-			flex-direction: column;
-			view{
+		.wrapper{
+			width: 100%;
+			height: 100vh;
+			.botton-wrapper{
+				position: absolute;
+				height: 600rpx;
 				width: 364rpx;
-				height: 200rpx;
+				bottom: 59rpx;
+				left: -23rpx;
 				display: flex;
-				justify-content: center;
-				view:nth-child(1){
-					width: 210rpx;
+				flex-direction: column;
+				view{
+					width: 364rpx;
 					height: 200rpx;
-					font-size: 40rpx;
-					line-height: 200rpx;
-					color: white;
-				}
-				view:nth-child(2){
-					width: 130rpx;
-					height: 130rpx;
-					margin-top: 41rpx;
-					background-color: white;
-					border-radius: 50%;
 					display: flex;
-					box-shadow: 0 4rpx 12rpx #888888;
-					.iconfont{
-						line-height: 130rpx;
-						text-align: center;
-						font-size: 100rpx;
-						color:black;
+					justify-content: center;
+					view:nth-child(1){
+						width: 210rpx;
+						height: 200rpx;
+						font-size: 40rpx;
+						line-height: 200rpx;
+						color: white;
+					}
+					view:nth-child(2){
+						width: 130rpx;
+						height: 130rpx;
+						margin-top: 41rpx;
+						background-color: white;
+						border-radius: 50%;
+						display: flex;
+						box-shadow: 0 4rpx 12rpx #888888;
+						.iconfont{
+							line-height: 130rpx;
+							text-align: center;
+							font-size: 100rpx;
+							color:black;
+						}
 					}
 				}
 			}
@@ -216,7 +246,12 @@
 					line-height: 25rpx;
 					color: $less-important-font;
 				}
-				
+				.list-item-bar{
+					position: relative;
+					top:-10rpx;
+					width: 570rpx;
+					left: 10rpx;
+				}
 			}
 		}
 	}
@@ -254,7 +289,7 @@
 		position: fixed;
 		width: 130rpx;
 		height: 130rpx;
-		right: 44rpx;
+		right: 46rpx;
 		bottom: 90rpx;
 		border-radius: 50%;
 		background-color: white;
