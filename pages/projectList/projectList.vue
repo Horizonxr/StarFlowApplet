@@ -22,12 +22,14 @@
 		<uni-popup  class="addaddPopup" ref="addaddPopup" type="center" >
 			<addPopup></addPopup>
 		</uni-popup>
-		
+		<uni-popup  class="addaddPopup" ref="myproject" type="center" >
+			<myPopup></myPopup>
+		</uni-popup>
 		<view class="top-wrapper">
 			<view class="top">
 				<view class="title">项目名称</view>
 				<view class="account">仓库：{{}}</view>
-				<view class="top-button"><view class="iconfont icon-shezhi"></view></view>
+				<view class="top-button"><view class="iconfont icon-shezhi" @click="shezhi"></view></view>
 			</view>
 		</view>
 		<view class="list-wrapper">
@@ -74,6 +76,9 @@
 				canclePopup(){
 					this.$refs.moremorePopup.close("center")
 				},
+				shezhi(){
+					this.$refs.myproject.open("center")
+				}
 				
 				
 			}
@@ -129,7 +134,7 @@
 			.top-button{
 				position: relative;
 				left:555rpx;
-				top:58rpx;
+				top:55rpx;
 				width: 86rpx;
 				height: 86rpx;
 				.iconfont{

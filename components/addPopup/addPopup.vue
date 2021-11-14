@@ -119,7 +119,7 @@
 					height: 74rpx;
 					left:310rpx;
 					border:0.5rpx solid #5c5c5c;
-					border-radius: 37rpx;
+					border-radius: 20rpx;
 					font-size: 33rpx;
 					color: #5c5c5c;
 					text-align: center;
