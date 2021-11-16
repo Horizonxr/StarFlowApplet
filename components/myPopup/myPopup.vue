@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="back"> 
-			<view class="iconfont icon-fanhui"></view>
+			<view class="iconfont icon-fanhui" @click="close"></view>
 			<view class="title">我的任务</view>
 			<view class="slogan">This is a test case for Todolist</view>
 			<view class="projectName">
@@ -37,6 +37,11 @@
 			return {
 				
 			};
+		},
+		methods:{
+			close(){
+				this.$emit("closemyPopup")
+			}
 		}
 	}
 </script>
