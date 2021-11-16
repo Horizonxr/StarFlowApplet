@@ -1,10 +1,35 @@
 <template>
 	<view class="body">
+		<uni-popup class="moremorePopup" ref="moremorePopup" type="center">
+			<view>
+				<view class="more-text">添加新任务</view>
+				<view class="help-text">帮助说明</view>
+				<view class="quxiao-text">取消</view>
+				<button class="button-more" @click="addPopup">
+					<view class="iconfont icon-zengjia">
+					</view>
+				</button>
+				<button class="button-jiaru" @click="poupeQuestion">
+					<view class="iconfont icon-qm">
+					</view>
+				</button>
+				<button class="button-quxiao" @click="canclePopup">
+					<view class="iconfont icon-chahao ">
+					</view>
+				</button>
+			</view>
+		</uni-popup>
+		<uni-popup  class="addaddPopup" ref="addaddPopup" type="center" >
+			<addPopup></addPopup>
+		</uni-popup>
+		<uni-popup  class="addaddPopup" ref="myproject" type="center" >
+			<myPopup></myPopup>
+		</uni-popup>
 		<view class="top-wrapper">
 			<view class="top">
 				<view class="title">项目名称</view>
 				<view class="account">仓库：{{}}</view>
-				<view class="top-button"><view class="iconfont icon-shezhi"></view></view>
+				<view class="top-button"><view class="iconfont icon-shezhi" @click="shezhi"></view></view>
 			</view>
 		</view>
 		<view class="list-wrapper">
@@ -16,6 +41,20 @@
 				</view>
 			</view>
 		</view>
+
+		<button class="button-message" @click="morePopup">
+			<view class="iconfont icon-zengjia">
+			</view>
+		</button>
+		<!-- 消息提示 -->
+	
+		 
+
+		<view class="progress-box">
+				<progress show-info percent="60" stroke-width="12rpx" backgroundColor="#999" activeColor="#007AFF" font-size="8" border-radius="12rpx"/>		
+			</view>
+			
+			
 	</view>
 </template>
 
@@ -23,9 +62,28 @@
 	export default {
 		data() {
 			return {
-				mission_list:[1,2,3,4,5,6,7,9,10,11,22]
+				mission_list:[1,2,3,4,5,6,7,9,10,11,22],
 			};
-		}
+		},
+			methods: {
+				morePopup(){
+					this.$refs.moremorePopup.open("center")
+				},
+				addPopup(){
+					this.$refs.moremorePopup.close("center");
+					this.$refs.addaddPopup.open("center")
+				},
+				canclePopup(){
+					this.$refs.moremorePopup.close("center")
+				},
+				shezhi(){
+					this.$refs.myproject.open("center")
+				}
+				
+				
+			}
+		
+		
 	}
 </script>
 
@@ -34,6 +92,15 @@
 		height: 100vh;
 		background-color: $bg-color;
 		z-index: -999;
+	}
+	.moremorePopup{
+		width: 100%;
+		height: 100vh;
+	}
+	.addaddPopup{
+		width: 100%;
+		height: 100vh;
+		z-index: 999;
 	}
 	.top-wrapper{
 		top:0rpx;
@@ -67,7 +134,7 @@
 			.top-button{
 				position: relative;
 				left:555rpx;
-				top:58rpx;
+				top:55rpx;
 				width: 86rpx;
 				height: 86rpx;
 				.iconfont{
@@ -77,6 +144,68 @@
 			}
 		}
 	}
+	.size{
+		height:134rpx;
+	}
+	.more-text{
+		z-index: 101;
+		position:fixed;
+		bottom:475rpx;
+		right:200rpx;
+		font-size: 55rpx;
+		color: #fffefe;
+		font-family: Adobe 黑体 Std;
+	}
+	.help-text{
+		z-index: 101;
+		position:fixed;
+		bottom:305rpx;
+		right:200rpx;
+		font-size: 55rpx;
+		color: #fffefe;
+		font-family: Adobe 黑体 Std;
+		
+	}
+	.quxiao-text{
+		z-index: 101;
+		position:fixed;
+		bottom:125rpx;
+		right:200rpx;
+		font-size: 55rpx;
+		color: #fffefe;
+		font-family: Adobe 黑体 Std;
+	}
+	.button-more{
+		height: 134rpx;
+		width: 134rpx;
+		border-radius: 50%;
+		z-index: 101;
+		position:fixed;
+		bottom:425rpx;
+		right:45rpx;
+	}
+	.button-jiaru{
+		height: 134rpx;
+		width: 134rpx;
+		border-radius: 50%;
+		z-index: 101;
+		position:fixed;
+		bottom:255rpx;
+		right:45rpx;
+		
+		
+	}
+	.button-quxiao{
+		height: 134rpx;
+		width: 134rpx;
+		border-radius: 50%;
+		z-index: 101;
+		position:fixed;
+		bottom:90rpx;
+		right:45rpx;
+		
+	}
+	
 	.list-wrapper{
 		position: relative;
 		width: 100%;
@@ -127,4 +256,41 @@
 			}
 		}
 	}
+	.iconfont{
+		font-size: 86rpx;
+		position: absolute;
+		top:-25%;
+	}
+.button-message{
+	height: 134rpx;
+	width: 134rpx;
+	border-radius: 50%;
+	z-index: 10;
+	position:fixed;
+	bottom:45rpx;
+	right:37rpx;
+	
+}
+.moremorePopup{
+	z-index: 15;
+}
+	.progress-box{
+				height: 20rpx;
+				width: 90%;
+				position: fixed;
+				top: 95%;
+				left: 5%;
+				z-index: 10;
+			}
+		
+		
+		
+		
+		
+	
+
+		
+		 
+		
+	
 </style>
