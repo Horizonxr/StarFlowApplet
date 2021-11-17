@@ -61,17 +61,15 @@
 	.title{
 			font-size: 100rpx;
 			color: #000;
-			font-family: Adobe 黑体 Std;
 			position: absolute;
-			top:140rpx;
+			top:130rpx;
 			left:40rpx;
 				}
 	.slogan{
 		position: absolute;
-		top: 244rpx;
+		top: 250rpx;
 		left:40rpx;
 		font-size: 35rpx;
-		font-family: Adobe 黑体 Std;
 		color: #000000;
 	}
 	.projectName{
@@ -84,7 +82,6 @@
 			top: 15rpx;
 			left: 40rpx;
 			font-size: 48rpx;
-			font-family: Adobe 黑体 Std;
 			color: #000000;
 		}
 		.name{
@@ -94,10 +91,9 @@
 			top: 0;
 			left: 270rpx;
 			font-size: 33rpx;
-			font-family: Adobe 黑体 Std;
 			color: #000000;
 			border: 0.5rpx solid #817d7e;
-			border-radius: 20rpx;
+			border-radius: 10rpx;
 			text-align: center;
 		}
 		
@@ -111,7 +107,6 @@
 			position: absolute;
 			left: 40rpx;
 			font-size: 48rpx;
-			font-family: Adobe 黑体 Std;
 			color: #000000;
 		}
 		.address{
@@ -121,7 +116,8 @@
 			height: 75rpx;
 			width: 577rpx;
 			border: 0.5rpx solid #817d7e;
-			border-radius: 20rpx;
+			border-radius: 10rpx;
+			padding-left: 20rpx;
 		}
 	}
 	.personalManagement{
@@ -133,7 +129,6 @@
 			position: absolute;
 			top: 0;
 			left: 40rpx;
-			font-family: Adobe 黑体 Std;
 			color: #000000;
 			font-size: 48rpx;
 		}
@@ -150,13 +145,11 @@
 				position: absolute;
 				top: 0;
 				left: 0;
-				font-family: Adobe 黑体 Std;
 				color: #000000;
 				font-size: 33rpx;
 			}
 			.root{
 				position: absolute;
-				font-family: Adobe 黑体 Std;
 				color: #000000;
 				font-size: 28rpx;
 				left: 190rpx;
