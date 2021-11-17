@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     back(){
-		this.$emit("")
+		this.$emit("closePopup")
 	}, 
 	
   }

@@ -1,10 +1,10 @@
 <template>
 	<view class="body">
 		<!-- 任务详情弹窗 -->
-		<uni-popup class="taskPopup" ref="taskPopup" type="center">
-			<incomplete v-show="popup_task === 1"></incomplete>
-			<checking v-show="popup_task === 2"></checking>
-			<finish v-show="popup_task === 3"></finish>
+		<uni-popup class="taskPopup" ref="taskPopup" type="center" :mask-click="false">
+			<incomplete v-show="popup_task === 1" @closePopup = "closePopup"></incomplete>
+			<checking v-show="popup_task === 2" @closePopup = "closePopup"></checking>
+			<finish v-show="popup_task === 3" @closePopup = "closePopup"></finish>
 		</uni-popup>
 		<!-- 按钮弹窗 -->
 		<uni-popup class="moremorePopup" ref="moremorePopup" type="center" :mask-click="false">
@@ -103,9 +103,11 @@
 		components:{createProject},
 		methods: {
 			// 弹出层相关函数
+			closePopup(){
+				this.$refs.taskPopup.close()
+			},
 			taskPopup(kind){
 				this.popup_task = kind
-				console.log(this.popup_task)
 				this.$refs.taskPopup.open("center")
 			},
 			morePopup() {

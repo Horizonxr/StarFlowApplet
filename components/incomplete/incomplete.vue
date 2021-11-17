@@ -1,7 +1,7 @@
 <template name="incomplete">
 	<view class="unfinished-body">
-		<view class="unfinished-top-button">
-			<view class="iconfont icon-fanhui" @click="back"></view>
+		<view class="unfinished-top-button" @click="back">
+			<view class="iconfont icon-fanhui"></view>
 		</view>
 		<view class="unfinished-title">待完成</view>
 		<view class="unfinished-detail">
@@ -31,7 +31,7 @@
 		},
 		methods: {
 			back() {
-				this.$emit("")
+				this.$emit("closePopup")
 			},
 
 		}
