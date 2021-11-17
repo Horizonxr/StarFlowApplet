@@ -36,8 +36,8 @@
 			<!-- 顶部 -->
 			<view class="top">
 				<view class="title">项目选择</view>
-				<view class="account">当前账号：Horizon</view>
-				<navigator class="top-button" url="" hover-class="navigator-hover">
+				<view class="account">当前账号：{{userInfo.nickName}}</view>
+				<navigator class="top-button" url="/pages/accountSettings/accountSettings" hover-class="navigator-hover">
 				  <view class="iconfont icon-shezhi "></view>
 				</navigator>
 			</view>
@@ -48,14 +48,16 @@
 		</view>
 		<!-- 仓库列表 -->
 		<view class="list-wrapper">
-			<view class="list-item-wrapper">
-				<view class="list-item" v-for="(item, key) in mission_list" :key=item.key>
-					<view class="list-item-repositories">Horizon/TeamCase</view>
+			<view class="list-item-wrapper" v-for="(item, key) in project_list" :key=item.key>
+				<view class="list-item" @click="toProject(key)">
+					<view class="list-item-repositories">{{item.repo[0].fields.repo_name}}</view>
 					<view class="list-item-more">
-						<view class ="member-number">{{}}</view>
-						<view class="iconfont icon-ren111"></view>
-						<view class="list-item-description">This is a test case for TodoList</view>
-						<progress class="list-item-bar" stroke-width="20rpx" border-radius="300" active="true" color= "#5091f2" percent="60"></progress>
+						<view class="member-number">
+							<view class="iconfont icon-ren111"></view>
+							<view class="number">15</view>
+						</view>
+						<view class="list-item-description">{{item.repo[0].fields.url}}</view>
+						<progress class="list-item-bar" duration=7 stroke-width="20rpx" border-radius="300" active="true" color= "#5091f2" :percent="item.repo[0].fields.finished * 100 / (item.repo[0].fields.checking+item.repo[0].fields.finished+item.repo[0].fields.incomplete)"></progress>
 					</view>
 				</view>
 			</view>
@@ -70,16 +72,20 @@
 	</view>
 </template>
 <script>
+	import {baseUrl} from '../../utils/config.js';
 	import createProject from '../../components/createProject';
 	import joininProject from '../../components/joininProject';
 	export default {
 		data() {
 			return {
-				mission_list:[1,2,3,4,5,6,7,9,10,11,22]
+				userInfo:[],
+				project_list:[],
+				u_id:-1
 			};
 		},
 		components:{createProject,joininProject},
 		methods:{
+			//弹窗相关方法
 			openPopup(){
 			  // 通过组件定义的ref调用uni-popup方法 ,如果传入参数 ，type 属性将失效 ，仅支持 ['top','left','bottom','right','center']
 				this.$refs.morePopup.open('center')
@@ -99,6 +105,45 @@
 			closeJoininpopup(){
 				this.$refs.joininPopup.close()
 			},
+			toProject(key){
+				console.log(this.project_list[key].repo[0].pk)
+				key = this.project_list[key].repo[0].pk
+				uni.navigateTo({
+					url:'../projectList/projectList?repo_id=' + key,
+					animationDuration:300
+				})
+			}
+		},
+		onLoad() {
+			uni.showLoading({
+				title:"加载中",
+				mask:true
+			})
+			this.u_id = uni.getStorageSync("u_id")
+			this.userInfo = uni.getStorageSync("userInfo")
+			uni.request({
+			    url: baseUrl + '/repo/showRepo', //仅为示例，并非真实接口地址。
+				method:'POST',
+				timeout:2000,
+			    data: {
+			        u_id: this.u_id
+			    },
+			    header: {
+			        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+			    },
+			    success: (res) => {
+					this.project_list = res.data.data
+					uni.hideLoading()
+			    },
+				fail() {
+					uni.hideLoading()
+					uni.showToast({
+						title: '请求失败',
+						icon:'error'
+					});
+				}
+			})
+
 		}
 	}
 </script>
@@ -227,20 +272,26 @@
 				}
 				.member-number{
 					position: relative;
-					left:50rpx;
-					top:-10rpx;
-				}
-				.iconfont{
-					position: relative;
 					left:500rpx;
 					top:-20rpx;
-					font-size: 50rpx;
+					width: 200rpx;
+					height: 50rpx;
+					.iconfont{
+						font-size: 50rpx;
+					}
+					.number{
+						position: relative;
+						font-size: 30rpx;
+						top:-45rpx;
+						right: -57rpx;
+					}
 				}
+
 				
 				.list-item-description{
 					position: relative;
 					left: 21rpx;
-					top:-30rpx;
+					top:-24rpx;
 					height: 25rpx;
 					font-size: 25rpx;
 					line-height: 25rpx;
