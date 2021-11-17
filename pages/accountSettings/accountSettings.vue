@@ -133,7 +133,7 @@
 			if(!uni.getStorageSync("userInfo")){
 				uni.showToast({
 					icon: 'error',
-					title:"无用户信息"
+					title:"缺少用户信息"
 				})
 			}
 			else{
@@ -143,17 +143,7 @@
 				})
 				this.userInfo = uni.getStorageSync("userInfo")
 			}
-			if(!uni.getStorageSync("GitHubAccount")){
-				uni.showToast({
-					icon: 'error',
-					title:"无GitHub账号"
-				})
-			}
-			else{
-				uni.showToast({
-					icon:'success',
-					title:"已获取用户信息"
-				})
+			if(uni.getStorageSync("GitHubAccount")){
 				this.GitHubAccount = uni.getStorageSync("GitHubAccount")
 			}
 		}
