@@ -19,6 +19,7 @@
 </template>
 
 <script>
+	import {baseUrl} from '../../utils/config.js';
 	export default {
 		data() {
 			return {
@@ -38,7 +39,7 @@
 				                success: function (loginRes) {
 									if (loginRes.errMsg == 'login:ok'){
 										uni.request({
-										    url: 'http://37446r369t.zicp.vip/user/wxlogin', //仅为示例，并非真实接口地址。
+										    url: baseUrl + '/user/wxlogin', //仅为示例，并非真实接口地址。
 											method:'POST',
 										    data: {
 										        code: loginRes.code

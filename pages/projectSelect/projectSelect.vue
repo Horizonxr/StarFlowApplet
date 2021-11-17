@@ -72,6 +72,7 @@
 	</view>
 </template>
 <script>
+	import {baseUrl} from '../../utils/config.js';
 	import createProject from '../../components/createProject';
 	import joininProject from '../../components/joininProject';
 	export default {
@@ -121,7 +122,7 @@
 			this.u_id = uni.getStorageSync("u_id")
 			this.userInfo = uni.getStorageSync("userInfo")
 			uni.request({
-			    url: 'http://37446r369t.zicp.vip/repo/showRepo', //仅为示例，并非真实接口地址。
+			    url: baseUrl + '/repo/showRepo', //仅为示例，并非真实接口地址。
 				method:'POST',
 				timeout:2000,
 			    data: {

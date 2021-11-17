@@ -64,6 +64,7 @@
 </template>
 
 <script>
+	import {baseUrl} from '../../utils/config.js';
 	export default {
 		data() {
 			return {
