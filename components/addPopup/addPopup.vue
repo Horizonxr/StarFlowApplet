@@ -64,13 +64,14 @@
 				
 			};
 		},
-		  methods: {
+		methods: {
 		          changeLog(e) {
-		          	console.log('----change事件:', e);
+					  console.log('----change事件:', e);
+				  },
 				  back(){
 					this.$emit("closeaddPopup")
-				  }		        }
-	
+				  }		        
+		}
 	}
 </script>
 

@@ -212,7 +212,7 @@
 				.top-button{
 					position: relative;
 					left:555rpx;
-					top:55rpx;
+					top:38rpx;
 					width: 86rpx;
 					height: 86rpx;
 					.iconfont{
