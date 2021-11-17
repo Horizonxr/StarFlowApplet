@@ -1,5 +1,8 @@
 <template name="joininProject">
 	<view class="body2">
+		<!-- <uni-popup ref="popup" type="dialog">
+		    <uni-popup-dialog type='info' title="提示"mode="base" content="请求加入该项目？"message="成功消息" :duration="2000" :before-close="true" @close="close" @confirm="request_joinin"></uni-popup-dialog>
+		</uni-popup> -->
 		<view class="top-button2">
 			<view class="iconfont icon-fanhui" @click="back"></view>
 		</view>
@@ -8,11 +11,15 @@
 			<input class="input-name2" type="text" placeholder=" 输入项目名称进行查找" />
 			<view class="rectangle2"></view>
 			<view class="iconfont icon-sousuo" @click="search"></view>
+			<view class="list-item2" v-for="(item, key) in repositories_list" :key=item.key>
+				<view class="list-item-repositories2" >{{item.fields.repo_name}}</view>
+				<!-- @click="openPopup(item.pk)" -->
+			</view>
 		</view>
 	</view>
 </template>
-<!--  -->
 <script>
+	import {baseUrl} from '../utils/config.js';
 export default {
   name: 'myinput',
   props: {
@@ -20,16 +27,56 @@ export default {
   },
   data() {
     return {
-        flag:true 
+		userInfo:[],
+		u_id:-1,
+        repositories_list:[],
+		r_id:-1
     }
   },
   methods: {
+	openPopup(pk){
+	  // 通过组件定义的ref调用uni-popup方法 ,如果传入参数 ，type 属性将失效 ，仅支持 ['top','left','bottom','right','center']
+		this.$refs.popup.open('center')
+		this.r_id = pk
+	},
+	close(){
+		this.$refs.popup.close()
+	},
     back(){
 		this.$emit("closeJoininpopup")
 	}, 
-	search(){
-		console.log("okkk")
-	}
+	search(){	
+		uni.showLoading({
+			title:"加载中",
+			mask:true
+		})
+		console.log(baseUrl)
+		this.keyword = ""
+		this.userInfo = uni.getStorageSync("userInfo")
+		console.log("okk")
+		uni.request({
+		    url: baseUrl + '/user/repo_search', //仅为示例，并非真实接口地址。
+			method:'POST',
+			timeout:2000,
+		    data: {
+		        keyword: this.keyword
+		    },
+		    header: {
+		        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+		    },
+		    success: (res) => {
+				this.repositories_list = res.data.data
+				uni.hideLoading()
+		    },
+			fail() {
+				uni.hideLoading()
+				uni.showToast({
+					title: '请求失败',
+					icon:'error'
+				});
+			}
+		})
+	},
   }
 }
 </script>
@@ -92,7 +139,20 @@ export default {
 			height: 100rpx;
 			border:none;
 		}
-		
+		.list-item2{
+			margin: 25rpx 20rpx auto;
+			position: relative;
+			top:130rpx;
+			left:-10rpx;
+			height: 60rpx;
+			width: 500rpx;
+			border-radius: 10rpx;
+			box-shadow: 0 4rpx 12rpx #888888;
+			background-color:rgba($color: #ffff, $alpha: 0.5);
+			.list-item-repositories2{
+				text-align: center;
+			}
+		}	
 		
 	}
 }
