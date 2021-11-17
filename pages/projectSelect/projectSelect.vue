@@ -37,7 +37,7 @@
 			<view class="top">
 				<view class="title">项目选择</view>
 				<view class="account">当前账号：Horizon</view>
-				<navigator class="top-button" url="" hover-class="navigator-hover">
+				<navigator class="top-button" url="/pages/accountSettings/accountSettings" hover-class="navigator-hover">
 				  <view class="iconfont icon-shezhi "></view>
 				</navigator>
 			</view>
@@ -49,7 +49,7 @@
 		<!-- 仓库列表 -->
 		<view class="list-wrapper">
 			<view class="list-item-wrapper">
-				<view class="list-item" v-for="(item, key) in mission_list" :key=item.key>
+				<view class="list-item" v-for="(item, key) in mission_list" :key=item.key @click="toProject()">
 					<view class="list-item-repositories">Horizon/TeamCase</view>
 					<view class="list-item-more">
 						<view class ="member-number">{{}}</view>
@@ -80,6 +80,7 @@
 		},
 		components:{createProject,joininProject},
 		methods:{
+			//弹窗相关方法
 			openPopup(){
 			  // 通过组件定义的ref调用uni-popup方法 ,如果传入参数 ，type 属性将失效 ，仅支持 ['top','left','bottom','right','center']
 				this.$refs.morePopup.open('center')
@@ -99,6 +100,12 @@
 			closeJoininpopup(){
 				this.$refs.joininPopup.close()
 			},
+			toProject(){
+				uni.navigateTo({
+					url:'../projectList/projectList',
+					animationDuration:300
+				})
+			}
 		}
 	}
 </script>

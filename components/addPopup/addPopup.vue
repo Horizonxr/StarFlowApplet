@@ -67,8 +67,10 @@
 		  methods: {
 		          changeLog(e) {
 		          	console.log('----change事件:', e);
-		          }
-		          
+		          },
+		          close(){
+					  
+				  }
 		        }
 	
 	}
