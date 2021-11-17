@@ -33,9 +33,8 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8",
-		"navigationBarBackgroundColor":"#e6e5e6"
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#F8F8F8"
 	},
 	"condition": { //模式配置，仅开发期间生效
 	    "current": 0, //当前激活的模式（list 的索引项）
@@ -47,7 +46,8 @@
 	        },
 			{
 				"name":"List",
-				"path":"pages/projectList/projectList"
+				"path":"pages/projectList/projectList",
+				"query":"repo_id=1&repo_name=仓库名称"
 			}
 	    ]
 	}

@@ -3,19 +3,23 @@
 		<view class="top-wrapper">
 			<view class="top">
 				<view class="title">个人设置</view>
-				<view class="account">账户名称：{{userInfo.nickName}}</view>
+				<view class="account">账户名称：{{userInfo.nickName ? userInfo.nickName : "尚未获取"}}</view>
 				<view class="top-button">
 					<image :src="userInfo.avatarUrl" mode=""></image>
 				</view>
 			</view>
 		</view>
 		<view class="login" @click="weixinLogin()">
-			测试登录
+			<view class="login-content">{{userInfo.length == 0 ? "点击获取用户信息" : "微信名称: " + userInfo.nickName}}</view>
+		</view>
+		<view class="github-login" @click="GitHubLogin()">
+			<view class="login-content">{{userInfo.length == 0 ? "点击绑定GitHub账号" : "GitHub: " + userInfo.nickName}}</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import {baseUrl} from '../../utils/config.js';
 	export default {
 		data() {
 			return {
@@ -35,7 +39,7 @@
 				                success: function (loginRes) {
 									if (loginRes.errMsg == 'login:ok'){
 										uni.request({
-										    url: 'http://37446r369t.zicp.vip/user/wxlogin', //仅为示例，并非真实接口地址。
+										    url: baseUrl + '/user/wxlogin', //仅为示例，并非真实接口地址。
 											method:'POST',
 										    data: {
 										        code: loginRes.code
@@ -45,6 +49,13 @@
 										    },
 										    success: (res) => {
 										        console.log(res.data);
+												uni.setStorage({
+													key:'u_id',
+													data:res.data.id,
+													success:function(){
+														console.log("成功保存用户id"+res.data.id)
+													}
+												})
 										    }
 										})
 									}
@@ -67,12 +78,18 @@
 							    console.log('success');
 							}
 						})
+						
 					},
 					fail: (err) => {
 						console.log(err)
 					}
 				})
+			},
+				
+			GitHubLogin(){
+				console.log("GitHub登录")
 			}
+			
 		},
 		onLoad() {
 			// uni.showLoading({
@@ -81,7 +98,7 @@
 			if(!uni.getStorageSync("userInfo")){
 				uni.showToast({
 					icon: 'error',
-					title:"还未获取用户信息"
+					title:"无用户信息"
 				})
 			}
 			else{
@@ -89,6 +106,7 @@
 					icon:'success',
 					title:"已获取用户信息"
 				})
+				this.userInfo = uni.getStorageSync("userInfo")
 			}
 		}
 	}
@@ -145,9 +163,34 @@
 	}
 	.login{
 		position: relative;
-		width: 300rpx;
-		height: 200rpx;
+		top: 30rpx;
+		width: 615rpx;
+		height: 120rpx;
 		margin: 0 auto;
-		background-color: pink;
+		background-color: white;
+		border-radius: 10rpx;
+		box-shadow: 0 4rpx 12rpx #888888;
+		.login-content{
+			position: absolute;
+			margin-left: 20rpx;
+			line-height: 120rpx;
+			font-size: 60rpx;
+			height: 120rpx;
+		}
+	}
+	.github-login{
+		width: 615rpx;
+		height: 120rpx;
+		margin: 50rpx auto;
+		background-color: white;
+		border-radius: 10rpx;
+		box-shadow: 0 4rpx 12rpx #888888;
+		.login-content{
+			position: absolute;
+			margin-left: 20rpx;
+			line-height: 120rpx;
+			font-size: 60rpx;
+			height: 120rpx;
+		}
 	}
 </style>
