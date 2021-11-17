@@ -18,6 +18,7 @@
 		<view class="github-login" @click="GitHubPopup()">
 			<view class="login-content">{{GitHubAccount == '' || GitHubAccount == '' ? "点击绑定GitHub账号" : "GitHub: " + GitHubAccount}}</view>
 		</view>
+		<button type="default" @click="toProjectSelect">转到项目</button>
 	</view>
 </template>
 
@@ -117,6 +118,11 @@
 			},
 			GitHubPopup(){
 				this.$refs.GitHubPopup.open("center")
+			},
+			toProjectSelect(){
+				uni.redirectTo({
+					url:'../projectSelect/projectSelect'
+				})
 			}
 		},
 		onLoad() {
@@ -216,7 +222,7 @@
 			position: absolute;
 			margin-left: 20rpx;
 			line-height: 120rpx;
-			font-size: 60rpx;
+			font-size: 40rpx;
 			height: 120rpx;
 		}
 	}
@@ -231,7 +237,7 @@
 			position: absolute;
 			margin-left: 20rpx;
 			line-height: 120rpx;
-			font-size: 60rpx;
+			font-size: 40rpx;
 			height: 120rpx;
 		}
 	}
