@@ -106,10 +106,11 @@
 				this.$refs.joininPopup.close()
 			},
 			toProject(key){
-				console.log(this.project_list[key].repo[0].pk)
-				key = this.project_list[key].repo[0].pk
+				console.log(this.project_list[key])
+				let repo = this.project_list[key].repo[0].pk
+				let repo_name = this.project_list[key].repo[0].fields.repo_name
 				uni.navigateTo({
-					url:'../projectList/projectList?repo_id=' + key,
+					url:'../projectList/projectList?repo_id=' + repo + '&' + 'repo_name=' + repo_name,
 					animationDuration:300
 				})
 			}
@@ -132,6 +133,7 @@
 			        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 			    },
 			    success: (res) => {
+					console.log(res.data)
 					this.project_list = res.data.data
 					uni.hideLoading()
 			    },
