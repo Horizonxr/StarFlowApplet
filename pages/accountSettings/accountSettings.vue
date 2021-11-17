@@ -26,6 +26,7 @@
 	export default {
 		data() {
 			return {
+				u_id: -1,
 				GitHubAccount: '',
 				userInfo:[]
 			};
@@ -58,6 +59,7 @@
 													data:res.data.id,
 													success:function(){
 														console.log("成功保存用户id"+res.data.id)
+														_this.u_id = res.data.id
 													}
 												})
 										    }
@@ -97,6 +99,20 @@
 					data:account
 				})
 				this.GitHubAccount = account
+				uni.request({
+				    url: baseUrl + '/user/githublogin', //仅为示例，并非真实接口地址。
+					method:'POST',
+				    data: {
+				        id: this.u_id,
+						username:this.GitHubAccount
+				    },
+				    header: {
+				        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+				    },
+				    success: (res) => {
+				        console.log(res)
+				    }
+				})
 				this.$refs.GitHubPopup.close()
 			},
 			GitHubPopup(){
@@ -107,6 +123,7 @@
 			// uni.showLoading({
 			//     title: '加载中'
 			// });
+			this.u_id = uni.getStorageSync("u_id")
 			if(!uni.getStorageSync("userInfo")){
 				uni.showToast({
 					icon: 'error',
