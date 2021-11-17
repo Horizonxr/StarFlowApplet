@@ -1,5 +1,8 @@
 <template>
 	<view>
+		<uni-popup ref="GitHubPopup" type="dialog">
+			<uni-popup-dialog mode="input" message="成功消息" placeholder="请输入GitHub账号名称" :duration="2000" :before-close="true" @close="this.$refs.GitHubPopup.close()" @confirm="GitHubLogin"></uni-popup-dialog>
+		</uni-popup>
 		<view class="top-wrapper">
 			<view class="top">
 				<view class="title">个人设置</view>
@@ -12,8 +15,8 @@
 		<view class="login" @click="weixinLogin()">
 			<view class="login-content">{{userInfo.length == 0 ? "点击获取用户信息" : "微信名称: " + userInfo.nickName}}</view>
 		</view>
-		<view class="github-login" @click="GitHubLogin()">
-			<view class="login-content">{{userInfo.length == 0 ? "点击绑定GitHub账号" : "GitHub: " + userInfo.nickName}}</view>
+		<view class="github-login" @click="GitHubPopup()">
+			<view class="login-content">{{GitHubAccount == '' || GitHubAccount == '' ? "点击绑定GitHub账号" : "GitHub: " + GitHubAccount}}</view>
 		</view>
 	</view>
 </template>
@@ -23,6 +26,7 @@
 	export default {
 		data() {
 			return {
+				GitHubAccount: '',
 				userInfo:[]
 			};
 		},
@@ -86,10 +90,18 @@
 				})
 			},
 				
-			GitHubLogin(){
-				console.log("GitHub登录")
+			GitHubLogin(account){
+				console.log(account)
+				uni.setStorage({
+					key:"GitHubAccount",
+					data:account
+				})
+				this.GitHubAccount = account
+				this.$refs.GitHubPopup.close()
+			},
+			GitHubPopup(){
+				this.$refs.GitHubPopup.open("center")
 			}
-			
 		},
 		onLoad() {
 			// uni.showLoading({
@@ -107,6 +119,19 @@
 					title:"已获取用户信息"
 				})
 				this.userInfo = uni.getStorageSync("userInfo")
+			}
+			if(!uni.getStorageSync("GitHubAccount")){
+				uni.showToast({
+					icon: 'error',
+					title:"无GitHub账号"
+				})
+			}
+			else{
+				uni.showToast({
+					icon:'success',
+					title:"已获取用户信息"
+				})
+				this.GitHubAccount = uni.getStorageSync("GitHubAccount")
 			}
 		}
 	}
