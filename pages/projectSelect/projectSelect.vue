@@ -36,7 +36,7 @@
 			<!-- 顶部 -->
 			<view class="top">
 				<view class="title">项目选择</view>
-				<view class="account">当前账号：Horizon</view>
+				<view class="account">当前账号：{{userInfo.nickName}}</view>
 				<navigator class="top-button" url="/pages/accountSettings/accountSettings" hover-class="navigator-hover">
 				  <view class="iconfont icon-shezhi "></view>
 				</navigator>
@@ -77,6 +77,7 @@
 	export default {
 		data() {
 			return {
+				userInfo:[],
 				project_list:[],
 				u_id:-1
 			};
@@ -118,6 +119,7 @@
 				mask:true
 			})
 			this.u_id = uni.getStorageSync("u_id")
+			this.userInfo = uni.getStorageSync("userInfo")
 			uni.request({
 			    url: 'http://37446r369t.zicp.vip/repo/showRepo', //仅为示例，并非真实接口地址。
 				method:'POST',
