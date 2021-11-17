@@ -1,8 +1,8 @@
 <template>
 	<view class="back">
 		<view class="top">
-			<view class="cancle">
-				<view class="iconfont icon-fanhui" @click="close">
+			<view class="cancle" @click="back">
+				<view class="iconfont icon-fanhui" @click="back">
 					
 				</view>
 			</view>
@@ -67,11 +67,9 @@
 		  methods: {
 		          changeLog(e) {
 		          	console.log('----change事件:', e);
-		          },
-		          close(){
-					  
-				  }
-		        }
+				  back(){
+					this.$emit("closeaddPopup")
+				  }		        }
 	
 	}
 </script>
