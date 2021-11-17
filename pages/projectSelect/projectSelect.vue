@@ -116,6 +116,11 @@
 			}
 		},
 		onLoad() {
+			if (!uni.getStorageSync("userInfo") || !uni.getStorageSync("GitHubAccount") || !uni.getStorageSync("GitHubAccount")){
+				uni.redirectTo({
+					url:'../accountSettings/accountSettings'
+				})
+			}
 			uni.showLoading({
 				title:"加载中",
 				mask:true
@@ -303,7 +308,7 @@
 					position: relative;
 					top:-10rpx;
 					width: 570rpx;
-					left: 10rpx;
+					left: 22rpx;
 				}
 			}
 		}

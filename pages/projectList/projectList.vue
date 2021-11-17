@@ -1,5 +1,12 @@
 <template>
 	<view class="body">
+		<!-- 任务详情弹窗 -->
+		<uni-popup class="taskPopup" ref="taskPopup" type="center" :mask-click="false">
+			<incomplete v-show="popup_task === 1" @closePopup = "closePopup"></incomplete>
+			<checking v-show="popup_task === 2" @closePopup = "closePopup"></checking>
+			<finish v-show="popup_task === 3" @closePopup = "closePopup"></finish>
+		</uni-popup>
+		<!-- 按钮弹窗 -->
 		<uni-popup class="moremorePopup" ref="moremorePopup" type="center" :mask-click="false">
 			<view class="botton-wrapper">
 				<view class="more-text">添加新任务</view>
@@ -36,21 +43,21 @@
 		</view>
 		<view class="list-wrapper">
 			<view class="list-item-wrapper">
-				<view class="list-item" style="background-color: #8feb9b;" v-for="(item, key) in mission_list.incomplete" :key=item.key>
+				<view class="list-item" @click="taskPopup(1)" style="background-color: #8feb9b;" v-for="(item, key) in mission_list.incomplete" :key=item.key>
 					<view class="list-item-mission">任务：{{item.task_name}}</view>
 					<view class="list-item-DDL">DeadLine: {{DDLcompute(item.deadline)}}</view>
 					<view class="list-item-more">
 						<view class="iconfont icon-gengduo"></view>
 					</view>
 				</view>
-				<view class="list-item" style="background-color: #7fa9f2;" v-for="(item, key) in mission_list.checking" :key=item.key>
+				<view class="list-item" @click="taskPopup(2)" style="background-color: #7fa9f2;" v-for="(item, key) in mission_list.checking" :key=item.key>
 					<view class="list-item-mission">任务：{{item.task_name}}</view>
 					<view class="list-item-DDL">DeadLine: {{DDLcompute(item.deadline)}}</view>
 					<view class="list-item-more">
 						<view class="iconfont icon-gengduo"></view>
 					</view>
 				</view>
-				<view class="list-item" style="background-color: #a6a5a5;" v-for="(item, key) in mission_list.finish" :key=item.key>
+				<view class="list-item" @click="taskPopup(3)" style="background-color: #a6a5a5;" v-for="(item, key) in mission_list.finish" :key=item.key>
 					<view class="list-item-mission">任务：{{item.task_name}}</view>
 					<view class="list-item-DDL">DeadLine: {{DDLcompute(item.deadline)}}</view>
 					<view class="list-item-more">
@@ -79,9 +86,11 @@
 
 <script>
 	import {baseUrl} from '../../utils/config.js';
+	import createProject from '../../components/createProject';
 	export default {
 		data() {
 			return {
+				popup_task:-1,
 				repo_name:'',
 				repo_id:-1,
 				mission_list: {
@@ -91,7 +100,16 @@
 				}
 			};
 		},
+		components:{createProject},
 		methods: {
+			// 弹出层相关函数
+			closePopup(){
+				this.$refs.taskPopup.close()
+			},
+			taskPopup(kind){
+				this.popup_task = kind
+				this.$refs.taskPopup.open("center")
+			},
 			morePopup() {
 				this.$refs.moremorePopup.open("center")
 			},
@@ -110,6 +128,7 @@
 			closemyPopup() {
 				this.$refs.myproject.close("center")
 			},
+			// DDL计算连接字符串函数
 			DDLcompute(DDL){
 				let DDLjoin = DDL[0].toString()
 				for (let i = 1;i<3;i++){
