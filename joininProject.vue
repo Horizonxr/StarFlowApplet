@@ -1,19 +1,21 @@
 <template name="joininProject">
 	<view class="body2">
-		<!-- <uni-popup ref="popup" type="dialog">
-		    <uni-popup-dialog type='info' title="提示"mode="base" content="请求加入该项目？"message="成功消息" :duration="2000" :before-close="true" @close="close" @confirm="request_joinin"></uni-popup-dialog>
-		</uni-popup> -->
+		<!-- 返回 -->
 		<view class="top-button2">
 			<view class="iconfont icon-fanhui" @click="back"></view>
 		</view>
+		<!-- 搜索 -->
 		<view class="title2">项目搜索</view>
 		<view class="search2">
-			<input class="input-name2" type="text" placeholder=" 输入项目名称进行查找" />
+			<input class="input-name2" @input='input':value=keyword type="text" placeholder=" 输入项目名称进行查找" />
 			<view class="rectangle2"></view>
-			<view class="iconfont icon-sousuo" @click="search"></view>
+			<view class="iconfont icon-sousuo"  @click="search"></view>
 			<view class="list-item2" v-for="(item, key) in repositories_list" :key=item.key>
-				<view class="list-item-repositories2" >{{item.fields.repo_name}}</view>
-				<!-- @click="openPopup(item.pk)" -->
+				<view class="list-item-repositories2" @click="openPopup">{{item.fields.repo_name}}</view>
+				<!-- 加入项目提示信息 -->
+				<uni-popup ref="popup" type="dialog">
+				    <uni-popup-dialog type='info' title="提示"mode="base" content="请求加入该项目？"message="成功消息" :duration="2000" :before-close="true" @close="close" @confirm="request_joinin(key)"></uni-popup-dialog>
+				</uni-popup>
 			</view>
 		</view>
 	</view>
@@ -27,39 +29,38 @@ export default {
   },
   data() {
     return {
-		userInfo:[],
-		u_id:-1,
+        userInfo:[],
+        u_id:1,
         repositories_list:[],
-		r_id:-1
+		keyword:''
     }
   },
   methods: {
-	openPopup(pk){
+	openPopup(){
 	  // 通过组件定义的ref调用uni-popup方法 ,如果传入参数 ，type 属性将失效 ，仅支持 ['top','left','bottom','right','center']
-		this.$refs.popup.open('center')
-		this.r_id = pk
+		this.$refs.popup[0].open('center')
 	},
 	close(){
-		this.$refs.popup.close()
-	},
+		this.$refs.popup[0].close()
+	},  
     back(){
 		this.$emit("closeJoininpopup")
 	}, 
-	search(){	
+	input(e){
+		this.keyword=e.target.value
+	},
+	search(){
 		uni.showLoading({
 			title:"加载中",
 			mask:true
 		})
-		console.log(baseUrl)
-		this.keyword = ""
-		this.userInfo = uni.getStorageSync("userInfo")
-		console.log("okk")
+		console.log(this.keyword)
 		uni.request({
 		    url: baseUrl + '/user/repo_search', //仅为示例，并非真实接口地址。
 			method:'POST',
-			timeout:2000,
+			timeout:8000,
 		    data: {
-		        keyword: this.keyword
+		        keyword:this.keyword
 		    },
 		    header: {
 		        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
@@ -77,6 +78,40 @@ export default {
 			}
 		})
 	},
+	request_joinin(key){
+		uni.showLoading({
+			title:"加载中",
+			mask:true
+		})	
+		uni.request({
+		    url: baseUrl + '/user/repo_request', //仅为示例，并非真实接口地址。
+			method:'POST',
+			timeout:8000,
+		    data: {
+				user:this.u_id,
+				repo:this.repositories_list[key].pk
+		    },
+		    header: {
+		        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+		    },
+			success: (res) => {
+				uni.showToast({
+					title: '请求加入成功',
+					icon:'success',
+					duration:2000
+				});
+				uni.hideLoading()
+				this.close();
+			},
+			fail() {
+				uni.hideLoading()
+				uni.showToast({
+					title: '请求失败',
+					icon:'error'
+				});
+			}
+		}) 
+	}
   }
 }
 </script>
