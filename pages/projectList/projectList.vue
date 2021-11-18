@@ -93,12 +93,11 @@
 	export default {
 		data() {
 			return {
-				member_id:-1,
-				repo_name:'',
-				repo_address:'',
+				member_id:-1,//成员在项目中的id
+				repo_name:'',//仓库名称
+				repo_address:'',//GitHub仓库URL
 				role:-1,//role中-1代表加入项目待审核、0表示超级管理员、1表示管理员、2表示开发者、3表示游客
 				popup_task:-1,//1代表未完成，2代表待审核，3代表已完成
-				repo_name:'',
 				repo_id:-1,
 				mission_list: {
 					incomplete:[],
