@@ -12,7 +12,7 @@
 			<view class="mission-content">任务详情:{{taskInfo.task_info}}</view>
 			<view class="unfinished-pull-repositories" @click="getPullRequest">点击拉取</view>
 			<scroll-view class="scroll-area" scroll-y="true">
-				<view class="finished-push" @click="this.pull_request_selected = key; this.pull_request_id = this.pullRequestList[key].request_id" 
+				<view class="finished-push" @click="this.pull_request_selected = key; this.pull_request_id = this.pullRequestList[key].request_id; this.pull_request_selected_title=this.pullRequestList[key].title" 
 				:style="{'background-color':pull_request_selected !== key ? 'white' : '#5091f2'}" 
 				v-for="(item, key) in pullRequestList" :key=item.key>
 					<view class="content">
@@ -54,7 +54,8 @@
 				repositories_list: [],
 				pullRequestList:[],
 				pull_request_selected:-1,
-				pull_request_id:-1
+				pull_request_id:-1,
+				pull_request_selected_title:''
 			}
 		},
 		methods: {
@@ -104,6 +105,7 @@
 					method:'POST',
 					timeout:8000,
 				    data: {
+						title:pull_request_selected_title,
 				        submit_info:this.taskInfo.task_info,
 						submit_id:this.taskInfo.member_id,
 						request_id:this.pull_request_id,
