@@ -27,7 +27,7 @@
 		<view class="unfinished-bottom-button">
 			<view class="iconfont icon-shizhong" @click="taskHistory"></view>
 			<view class="iconfont icon-tijiao" @click="taskSubmit"></view>
-			<view class="iconfont icon-lajitong" @click="taskDelete" v-if="role==1"></view>
+			<view class="iconfont icon-lajitong" @click="taskDelete" v-if="role<=1"></view>
 		</view>
 	</view>
 </template>
@@ -43,6 +43,9 @@
 				required:true
 			},
 			member_id:{
+				required:true
+			},
+			repo_name:{
 				required:true
 			}
 		},
@@ -65,8 +68,8 @@
 					method:'POST',
 					timeout:8000,
 				    data: {
-				        owner_repo: "walter201230/Python",
-						user_id: 3
+				        owner_repo: this.repo_name,
+						user_id: uni.getStorageSync('u_id')
 				    },
 				    header: {
 				        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息

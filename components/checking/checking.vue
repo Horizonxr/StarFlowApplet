@@ -16,9 +16,9 @@
 		</view>
 		<view class="non-checked-bottom-button">
 			<view class="iconfont icon-shizhong" @click=""></view>
-			<view class="iconfont icon-tijiao" @click="taskSubmit" v-if="role==1"></view>
-			<view class="iconfont icon-withdraw" @click="taskRevoke" v-if="role==1"></view>
-			<view class="iconfont icon-lajitong" @click="taskDelete" v-if="role==1"></view>
+			<view class="iconfont icon-tijiao" @click="taskSubmit" v-if="role<=1"></view>
+			<view class="iconfont icon-withdraw" @click="taskRevoke" v-if="role<=1"></view>
+			<view class="iconfont icon-lajitong" @click="taskDelete" v-if="role<=1"></view>
 		</view>
 	</view>
 </template>

@@ -16,7 +16,7 @@
 		</view>
 		<view class="finished-bottom-button">
 			<view class="iconfont icon-shizhong" @click=""></view>
-			<view class="iconfont icon-lajitong" @click="taskDelete" v-if="role==1"></view>
+			<view class="iconfont icon-lajitong" @click="taskDelete" v-if="role<=1"></view>
 		</view>
 	</view>
 </template>
