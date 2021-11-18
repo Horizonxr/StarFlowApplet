@@ -64,7 +64,7 @@ export default {
 	.non-checked-title{
 		position: relative;
 		top: 140rpx;
-		left: -150rpx;
+		left: -130rpx;
 		height: 75rpx;
 		font-size: 95rpx;
 		text-align: center;
@@ -74,8 +74,7 @@ export default {
 	.non-checked-detail{
 		position: relative;
 		top: 210rpx;
-		left: 27rpx;
-		font-size: 34rpx;
+		left: 35rpx;
 		.non-checked-deadline-time{
 			position: relative;
 			top: -50rpx;
@@ -85,22 +84,22 @@ export default {
 		.non-checked-deadline-bar{
 			position: relative;
 			top:-10rpx;
-			width: 600rpx;
-			left: 0rpx;
+			width: 560rpx;
+			left: 15rpx;
 		}
 		.non-checked-mission{
 			position: relative;
 			top:-20rpx;
 			width: 600rpx;
-			left: 10rpx;
+			left: 15rpx;
 			font-size: 37rpx;
 		}
 		.non-checked-info{
 			position: relative;
 			top:-1rpx;
 			width: 600rpx;
-			left: 10rpx;
-			font-size: 30rpx;
+			left: 25rpx;
+			font-size: 20rpx;
 		}
 		.non-checked-push{
 			position: relative;

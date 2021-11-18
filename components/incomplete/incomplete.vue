@@ -62,43 +62,37 @@
 				font-size: 70rpx;
 			}
 		}
-
 		.unfinished-title {
 			position: relative;
 			top: 140rpx;
-			left: -150rpx;
+			left: -130rpx;
 			height: 75rpx;
 			font-size: 95rpx;
 			text-align: center;
 			line-height: 75rpx;
 			letter-spacing: 10rpx;
 		}
-
 		.unfinished-detail {
 			position: relative;
 			top: 210rpx;
-			left: 27rpx;
-			font-size: 34rpx;
-
+			left: 35rpx;
 			.unfinished-deadline-time {
 				position: relative;
 				top: -50rpx;
 				left: 27rpx;
 				font-size: 30rpx;
 			}
-
 			.unfinished-deadline-bar {
 				position: relative;
 				top: -10rpx;
-				width: 600rpx;
-				left: 0rpx;
+				width: 560rpx;
+				left: 15rpx;
 			}
-
 			.unfinished-mission {
 				position: relative;
 				top: -20rpx;
 				width: 600rpx;
-				left: 10rpx;
+				left: 20rpx;
 				font-size: 37rpx;
 			}
 
@@ -107,14 +101,13 @@
 				top: 60rpx;
 				width: 150rpx;
 				height: 50rpx;
-				left: 0rpx;
+				left: 25rpx;
 				font-size: 30rpx;
 				border-radius: 5rpx;
 				text-align: center;
 				border: 1px solid #d2d2d2;
 			}
 		}
-
 		.unfinished-bottom-button {
 			view:nth-child(1) {
 				position: absolute;
