@@ -9,7 +9,7 @@
 				color="#5091f2" percent="60"></progress>
 			<view class="unfinished-deadline-time">Deadline:2021.11.6</view>
 			<view class="unfinished-mission">任务：完成xx特性</view>
-			<view class="unfinished-pull-repositories" @click="">点击拉取</view>
+			<view class="unfinished-pull-repositories" @click="getPullRequest">点击拉取</view>
 		</view>
 		<view class="unfinished-bottom-button">
 			<view class="iconfont icon-shizhong" @click=""></view>
@@ -30,6 +30,31 @@
 			}
 		},
 		methods: {
+			getPullRequest(){
+				uni.request({
+				    url: baseUrl + 'task/pull', //仅为示例，并非真实接口地址。
+					method:'POST',
+					timeout:2000,
+				    data: {
+				        owner_repo: option.repo_id
+				    },
+				    header: {
+				        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+				    },
+				    success: (res) => {
+						console.log(res)
+						
+						uni.hideLoading()
+				    },
+					fail() {
+						uni.hideLoading()
+						uni.showToast({
+							title: '请求失败',
+							icon:'error'
+						});
+					}
+				})
+			},
 			back() {
 				this.$emit("closePopup")
 			},

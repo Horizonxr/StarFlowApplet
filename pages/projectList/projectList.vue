@@ -2,9 +2,9 @@
 	<view class="body">
 		<!-- 任务详情弹窗 -->
 		<uni-popup class="taskPopup" ref="taskPopup" type="center" :mask-click="false">
-			<incomplete v-show="popup_task === 1" @closePopup = "closePopup"></incomplete>
-			<checking v-show="popup_task === 2" @closePopup = "closePopup"></checking>
-			<finish v-show="popup_task === 3" @closePopup = "closePopup"></finish>
+			<incomplete v-show="popup_task === 1" @closePopup = "closePopup" @refresh="refreshList"></incomplete>
+			<checking v-show="popup_task === 2" @closePopup = "closePopup" @refresh="refreshList"></checking>
+			<finish v-show="popup_task === 3" @closePopup = "closePopup" @refresh="refreshList"></finish>
 		</uni-popup>
 		<!-- 按钮弹窗 -->
 		<uni-popup class="moremorePopup" ref="moremorePopup" type="center" :mask-click="false">
@@ -90,6 +90,7 @@
 	export default {
 		data() {
 			return {
+				role:-1,//role中-1代表加入项目待审核、0表示超级管理员、1表示管理员、2表示开发者、3表示游客
 				popup_task:-1,
 				repo_name:'',
 				repo_id:-1,
@@ -135,8 +136,40 @@
 					DDLjoin = DDLjoin + '.' +DDL[i].toString()
 				}
 				return DDLjoin
+			},
+			// 重新获取任务列表
+			refreshList(){
+				// 调用方法:this.$options.methods.refreshList.bind(this)()
+				uni.showLoading({
+					title:'加载中'
+				})
+				console.log("调用页面刷新")
+				uni.request({
+				    url: baseUrl + '/repo/showTask', //仅为示例，并非真实接口地址。
+					method:'POST',
+					timeout:2000,
+				    data: {
+				        repo_id: this.repo_id
+				    },
+				    header: {
+				        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+				    },
+				    success: (res) => {
+						console.log(res)
+						this.mission_list.incomplete = res.data.incomplete
+						this.mission_list.checking = res.data.checking
+						this.mission_list.finish = res.data.finish
+						uni.hideLoading()
+				    },
+					fail() {
+						uni.hideLoading()
+						uni.showToast({
+							title: '请求失败',
+							icon:'error'
+						});
+					}
+				})
 			}
-
 		},
 		onLoad(option) { //option为object类型，会序列化上个页面传递的参数
 		    console.log(option);
@@ -145,6 +178,11 @@
 			})
 			this.repo_name = option.repo_name
 			this.repo_id = option.repo_id
+			this.role = option.role
+			uni.setStorage({
+				key:'temp_role',
+				data:this.role
+			})
 			uni.request({
 			    url: baseUrl + '/repo/showTask', //仅为示例，并非真实接口地址。
 				method:'POST',
@@ -156,7 +194,7 @@
 			        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 			    },
 			    success: (res) => {
-					console.log(res.data)
+					console.log(res)
 					this.mission_list.incomplete = res.data.incomplete
 					this.mission_list.checking = res.data.checking
 					this.mission_list.finish = res.data.finish
