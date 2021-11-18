@@ -5,7 +5,7 @@
 		</view>
 		<view class="finished-title">已完成</view>
 		<view class="finished-detail">
-			<progress class="finished-deadline-bar" stroke-width="45rpx" border-radius="300" active="true"
+			<progress duration=7 class="finished-deadline-bar" stroke-width="45rpx" border-radius="300" active="true"
 				color="#5091f2" :percent="DDLProgress(taskInfo.deadline)"></progress>
 			<view class="finished-deadline-time">Deadline:{{DDLcompute(taskInfo.deadline)}}</view>
 			<view class="finished-mission">任务：{{taskInfo.task_name}}</view>
@@ -16,11 +16,12 @@
 		</view>
 		<view class="finished-bottom-button">
 			<view class="iconfont icon-shizhong" @click=""></view>
-			<view class="iconfont icon-lajitong" @click=""></view>
+			<view class="iconfont icon-lajitong" @click="taskDelete" v-if="role<=1"></view>
 		</view>
 	</view>
 </template>
 <script>
+	import {baseUrl} from '../../utils/config.js';
 	export default {
 		name: 'myinput',
 		props: {
@@ -34,6 +35,40 @@
 			}
 		},
 		methods: {
+			taskDelete(){
+				console.log("删除任务")
+				uni.showLoading({
+					title:'正在删除'
+				})
+				uni.request({
+				    url: baseUrl + '/task/delete', //仅为示例，并非真实接口地址。
+					method:'POST',
+					timeout:8000,
+				    data: {
+				        repo_id: this.taskInfo.repo_id,
+						task_id: this.taskInfo.task_id
+				    },
+				    header: {
+				        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+				    },
+				    success: (res) => {
+						console.log(res)
+						uni.showToast({
+							title: '删除成功',
+							icon:'success'
+						});
+						uni.hideLoading()
+						this.$emit("closePopup")
+				    },
+					fail() {
+						uni.hideLoading()
+						uni.showToast({
+							title: '删除失败',
+							icon:'error'
+						});
+					}
+				})
+			},
 			back() {
 				this.$emit("closePopup")
 			},
