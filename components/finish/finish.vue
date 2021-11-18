@@ -62,7 +62,7 @@ export default {
 	.finished-title{
 		position: relative;
 		top: 140rpx;
-		left: -150rpx;
+		left: -130rpx;
 		height: 75rpx;
 		font-size: 95rpx;
 		text-align: center;
@@ -72,8 +72,7 @@ export default {
 	.finished-detail{
 		position: relative;
 		top: 210rpx;
-		left: 27rpx;
-		font-size: 34rpx;
+		left: 35rpx;
 		.finished-deadline-time{
 			position: relative;
 			top: -50rpx;
@@ -83,22 +82,15 @@ export default {
 		.finished-deadline-bar{
 			position: relative;
 			top:-10rpx;
-			width: 600rpx;
-			left: 0rpx;
+			width: 560rpx;
+			left: 15rpx;
 		}
 		.finished-mission{
 			position: relative;
 			top:-20rpx;
 			width: 600rpx;
-			left: 10rpx;
+			left: 20rpx;
 			font-size: 37rpx;
-		}
-		.finished-info{
-			position: relative;
-			top:-1rpx;
-			width: 600rpx;
-			left: 10rpx;
-			font-size: 30rpx;
 		}
 		.finished-push{
 			position: relative;
