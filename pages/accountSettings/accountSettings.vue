@@ -1,5 +1,8 @@
 <template>
 	<view>
+		<uni-popup ref="GitHubPopup" type="dialog">
+			<uni-popup-dialog mode="input" message="成功消息" placeholder="请输入GitHub账号名称" :duration="2000" :before-close="true" @close="this.$refs.GitHubPopup.close()" @confirm="GitHubLogin"></uni-popup-dialog>
+		</uni-popup>
 		<view class="top-wrapper">
 			<view class="top">
 				<view class="title">个人设置</view>
@@ -12,9 +15,10 @@
 		<view class="login" @click="weixinLogin()">
 			<view class="login-content">{{userInfo.length == 0 ? "点击获取用户信息" : "微信名称: " + userInfo.nickName}}</view>
 		</view>
-		<view class="github-login" @click="GitHubLogin()">
-			<view class="login-content">{{userInfo.length == 0 ? "点击绑定GitHub账号" : "GitHub: " + userInfo.nickName}}</view>
+		<view class="github-login" @click="GitHubPopup()">
+			<view class="login-content">{{GitHubAccount == '' || GitHubAccount == '' ? "点击绑定GitHub账号" : "GitHub: " + GitHubAccount}}</view>
 		</view>
+		<button type="default" @click="toProjectSelect">转到项目</button>
 	</view>
 </template>
 
@@ -23,6 +27,8 @@
 	export default {
 		data() {
 			return {
+				u_id: -1,
+				GitHubAccount: '',
 				userInfo:[]
 			};
 		},
@@ -54,6 +60,7 @@
 													data:res.data.id,
 													success:function(){
 														console.log("成功保存用户id"+res.data.id)
+														_this.u_id = res.data.id
 													}
 												})
 										    }
@@ -86,19 +93,47 @@
 				})
 			},
 				
-			GitHubLogin(){
-				console.log("GitHub登录")
+			GitHubLogin(account){
+				console.log(account)
+				uni.setStorage({
+					key:"GitHubAccount",
+					data:account
+				})
+				this.GitHubAccount = account
+				uni.request({
+				    url: baseUrl + '/user/githublogin', //仅为示例，并非真实接口地址。
+					method:'POST',
+				    data: {
+				        id: this.u_id,
+						username:this.GitHubAccount
+				    },
+				    header: {
+				        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+				    },
+				    success: (res) => {
+				        console.log(res)
+				    }
+				})
+				this.$refs.GitHubPopup.close()
+			},
+			GitHubPopup(){
+				this.$refs.GitHubPopup.open("center")
+			},
+			toProjectSelect(){
+				uni.redirectTo({
+					url:'../projectSelect/projectSelect'
+				})
 			}
-			
 		},
 		onLoad() {
 			// uni.showLoading({
 			//     title: '加载中'
 			// });
+			this.u_id = uni.getStorageSync("u_id")
 			if(!uni.getStorageSync("userInfo")){
 				uni.showToast({
 					icon: 'error',
-					title:"无用户信息"
+					title:"缺少用户信息"
 				})
 			}
 			else{
@@ -107,6 +142,9 @@
 					title:"已获取用户信息"
 				})
 				this.userInfo = uni.getStorageSync("userInfo")
+			}
+			if(uni.getStorageSync("GitHubAccount")){
+				this.GitHubAccount = uni.getStorageSync("GitHubAccount")
 			}
 		}
 	}
@@ -174,7 +212,7 @@
 			position: absolute;
 			margin-left: 20rpx;
 			line-height: 120rpx;
-			font-size: 60rpx;
+			font-size: 40rpx;
 			height: 120rpx;
 		}
 	}
@@ -189,7 +227,7 @@
 			position: absolute;
 			margin-left: 20rpx;
 			line-height: 120rpx;
-			font-size: 60rpx;
+			font-size: 40rpx;
 			height: 120rpx;
 		}
 	}

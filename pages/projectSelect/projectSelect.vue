@@ -109,13 +109,19 @@
 				console.log(this.project_list[key])
 				let repo = this.project_list[key].repo[0].pk
 				let repo_name = this.project_list[key].repo[0].fields.repo_name
+				let role = this.project_list[key].role
 				uni.navigateTo({
-					url:'../projectList/projectList?repo_id=' + repo + '&' + 'repo_name=' + repo_name,
+					url:'../projectList/projectList?repo_id=' + repo + '&repo_name=' + repo_name + '&role=' + role,
 					animationDuration:300
 				})
 			}
 		},
 		onLoad() {
+			if (!uni.getStorageSync("userInfo") || !uni.getStorageSync("GitHubAccount") || !uni.getStorageSync("GitHubAccount")){
+				uni.redirectTo({
+					url:'../accountSettings/accountSettings'
+				})
+			}
 			uni.showLoading({
 				title:"加载中",
 				mask:true
@@ -133,7 +139,7 @@
 			        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 			    },
 			    success: (res) => {
-					console.log(res.data)
+					console.log(res.data.data)
 					this.project_list = res.data.data
 					uni.hideLoading()
 			    },
@@ -303,7 +309,7 @@
 					position: relative;
 					top:-10rpx;
 					width: 570rpx;
-					left: 10rpx;
+					left: 22rpx;
 				}
 			}
 		}
