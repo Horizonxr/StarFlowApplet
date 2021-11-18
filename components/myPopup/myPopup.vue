@@ -40,7 +40,7 @@
 	} from '../../utils/config.js';
 	export default {
 		name: "myPopup",
-		props: ["reciveProjectid"],
+		props: ["projectid"],
 		data() {
 			return {
 				member_list: [],
@@ -62,7 +62,7 @@
 				method: 'POST',
 				timeout: 2000,
 				data: {
-					repo_id: this.reciveProjectid
+					repo_id: this.projectid
 				},
 				header: {
 					"content-type": "application/x-www-form-urlencoded" //自定义请求头信息

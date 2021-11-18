@@ -27,10 +27,10 @@
 			</view>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="addaddPopup" type="center" :mask-click="false">
-			<addPopup @closeaddPopup="closeaddPopup"></addPopup>
+			<addPopup @closeaddPopup="closeaddPopup" ></addPopup>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="myproject" type="center" :mask-click="false">
-			<myPopup @closemyPopup="closemyPopup"></myPopup>
+			<myPopup @closemyPopup="closemyPopup" ></myPopup>
 		</uni-popup>
 		<view class="top-wrapper">
 			<view class="top">

@@ -43,7 +43,7 @@
 	} from '../../utils/config.js';
 	export default {
 		name: "test",
-		props: ["reciveUserInfo"],
+		props: ["projectid"],
 		data() {
 			return {
 				user_list: [],
@@ -61,10 +61,7 @@
 			back() {
 				this.$emit("closeaddPopup")
 			},
-			test() {
-				console.log(reciveUserInfo)
-			}
-
+			
 		},
 		mounted() {
 			uni.showLoading({
@@ -76,7 +73,7 @@
 				method: 'POST',
 				timeout: 2000,
 				data: {
-					repo_id: this.reciveUserInfo
+					repo_id: this.projectid
 				},
 				header: {
 					"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
