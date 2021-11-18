@@ -9,8 +9,8 @@
 		<view class="search2">
 			<input class="input-name2" type="text" placeholder=" 输入项目名称进行查找" />
 			<view class="rectangle2"></view>
-			<view class="iconfont icon-sousuo" @click="search"></view>
-			<view class="list-item2" v-for="(item, key) in repositories_list" :key=item.key @click="openPopup(key)">
+			<view class="iconfont icon-sousuo" @input="input" @click="search"></view>
+			<view class="list-item2" v-for="(item, key) in repositories_list" :key=item.key>
 				<view class="list-item-repositories2" @click="openPopup">{{item.fields.repo_name}}</view>
 				<!-- 加入项目提示信息 -->
 				<uni-popup ref="popup" type="dialog">
@@ -32,7 +32,9 @@ export default {
         userInfo:[],
         u_id:-1,
         repositories_list:[],
+		keyword:''
     }
+	
   },
   methods: {
 	openPopup(){
@@ -45,18 +47,23 @@ export default {
     back(){
 		this.$emit("closeJoininpopup")
 	}, 
+	input(e){
+		this.keyword=e.target.value
+		//console.log(this.keyword)
+	},
 	search(){
 		uni.showLoading({
 			title:"加载中",
 			mask:true
 		})
+		// console.log("okkk")
 		this.userInfo = uni.getStorageSync("userInfo")
 		uni.request({
 		    url: baseUrl + '/user/repo_search', //仅为示例，并非真实接口地址。
 			method:'POST',
 			timeout:2000,
 		    data: {
-		        keyword: this.keyword
+		        keyword:this.keyword
 		    },
 		    header: {
 		        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
