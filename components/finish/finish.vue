@@ -5,11 +5,14 @@
 		</view>
 		<view class="finished-title">已完成</view>
 		<view class="finished-detail">
-			<progress class="finished-deadline-bar" stroke-width="45rpx" border-radius="300" active="true" color= "#5091f2" percent="60"></progress>
-			<view class="finished-deadline-time">END: 2021.11.6</view>
-			<view class="finished-mission">任务：完成xx特性</view>
-			<view class="finished-push">Feature:完成xx特性</view>
-			<view class="iconfont icon-git-merge"></view>
+			<progress class="finished-deadline-bar" stroke-width="45rpx" border-radius="300" active="true"
+				color="#5091f2" :percent="DDLProgress(taskInfo.deadline)"></progress>
+			<view class="finished-deadline-time">Deadline:{{DDLcompute(taskInfo.deadline)}}</view>
+			<view class="finished-mission">任务：{{taskInfo.task_name}}</view>
+			<view class="mission-content">任务详情:{{taskInfo.task_info}}</view>
+			<view class="finished-push">Feature:完成xx特性
+				<view class="iconfont icon-git-merge"></view>
+			</view>
 		</view>
 		<view class="finished-bottom-button">
 			<view class="iconfont icon-shizhong" @click=""></view>
@@ -18,114 +21,154 @@
 	</view>
 </template>
 <script>
-export default {
-  name: 'myinput',
-  props: {
-            
-  },
-  data() {
-    return {
-        repositories_list:[]
-    }
-  },
-  methods: {
-    back(){
-		this.$emit("closePopup")
-	}, 
-	
-  }
-}
+	export default {
+		name: 'myinput',
+		props: {
+			taskInfo: {
+				required: true,
+			}
+		},
+		data() {
+			return {
+				repositories_list: []
+			}
+		},
+		methods: {
+			back() {
+				this.$emit("closePopup")
+			},
+			// DDL计算连接字符串函数
+			DDLcompute(DDL){
+				if (DDL!==undefined){
+					let DDLjoin = DDL[0].toString()
+					for (let i = 1;i<3;i++){
+						DDLjoin = DDLjoin + '.' +DDL[i].toString()
+					}
+					return DDLjoin
+				}
+			},
+			DDLProgress(DDL){
+				if (DDL!==undefined){
+					let date = new Date()
+					let year_now = date.getFullYear()
+					let month_now = date.getMonth()+1
+					let day_now = date.getDate()
+					let timeRemain = 365*(DDL[0]-year_now) + 30*(DDL[1]-month_now) + (DDL[2]-day_now)
+					return 100-timeRemain*10
+				}
+			}
+
+		}
+	}
 </script>
 
 <style lang="scss">
-.finished-body{
-	height: 100vh;
-	position: relative;
-	width: 660rpx;
-	height: 1050rpx;
-	top:30rpx;
-	margin: 0 auto;
-	background-color: white;
-	border-radius: 30rpx;
-	box-shadow: 0 4rpx 12rpx #888888;
-	.finished-top-button{
-		position: absolute;
-		z-index: 100;
-		left:40rpx;
-		top:25rpx;
-		width: 86rpx;
-		height: 86rpx;
-		.iconfont{
-			font-size: 70rpx;
-			}
-	}
-	.finished-title{
+	.finished-body {
+		height: 100vh;
 		position: relative;
-		top: 140rpx;
-		left: -130rpx;
-		height: 75rpx;
-		font-size: 95rpx;
-		text-align: center;
-		line-height: 75rpx;
-		letter-spacing: 10rpx;
-	}
-	.finished-detail{
-		position: relative;
-		top: 210rpx;
-		left: 35rpx;
-		.finished-deadline-time{
-			position: relative;
-			top: -50rpx;
-			left: 27rpx;
-			font-size: 30rpx;
-		}
-		.finished-deadline-bar{
-			position: relative;
-			top:-10rpx;
-			width: 560rpx;
-			left: 15rpx;
-		}
-		.finished-mission{
-			position: relative;
-			top:-20rpx;
-			width: 600rpx;
-			left: 20rpx;
-			font-size: 37rpx;
-		}
-		.finished-push{
-			position: relative;
-			top:100rpx;
-			width: 550rpx;
-			height:70rpx;
-			left: 26rpx;
-			font-size: 35rpx;
-			border-radius: 5rpx;
-			background-color:$pending-mission;
-			text-align: center;
-			line-height:60rpx;
-			border:1px solid #d2d2d2;
-		}
-		.iconfont{
-			position: relative;
-			left: 45rpx;
-			top:37rpx;
-			font-size: 55rpx;
-		}
-	}
-	.finished-bottom-button{
-		view:nth-child(1){
-			position: absolute;
-			left: 200rpx;
-			top:900rpx;
-			font-size: 80rpx;
-		}
-		view:nth-child(2){
-			position: absolute;
-			left: 400rpx;
-			top:900rpx;
-			font-size: 85rpx;
-		}
-	}
+		width: 660rpx;
+		height: 1050rpx;
+		top: 30rpx;
+		margin: 0 auto;
+		background-color: white;
+		border-radius: 30rpx;
+		box-shadow: 0 4rpx 12rpx #888888;
 
-}
+		.finished-top-button {
+			position: absolute;
+			z-index: 100;
+			left: 40rpx;
+			top: 25rpx;
+			width: 86rpx;
+			height: 86rpx;
+
+			.iconfont {
+				font-size: 70rpx;
+			}
+		}
+
+		.finished-title {
+			position: relative;
+			top: 140rpx;
+			left: -130rpx;
+			height: 75rpx;
+			font-size: 95rpx;
+			text-align: center;
+			line-height: 75rpx;
+			letter-spacing: 10rpx;
+		}
+
+		.finished-detail {
+			position: relative;
+			top: 210rpx;
+			left: 35rpx;
+
+			.finished-deadline-time {
+				position: relative;
+				top: -50rpx;
+				left: 27rpx;
+				font-size: 30rpx;
+			}
+
+			.finished-deadline-bar {
+				position: relative;
+				top: -10rpx;
+				width: 560rpx;
+				left: 15rpx;
+			}
+
+			.finished-mission {
+				position: relative;
+				top: -20rpx;
+				width: 600rpx;
+				left: 20rpx;
+				font-size: 37rpx;
+			}
+			.mission-content{
+				position: relative;
+				top: 0rpx;
+				width: 600rpx;
+				left: 20rpx;
+				font-size: 30rpx;
+			}
+			.finished-push {
+				position: relative;
+				top: 100rpx;
+				width: 550rpx;
+				height: 70rpx;
+				left: 26rpx;
+				font-size: 35rpx;
+				border-radius: 5rpx;
+				background-color: $pending-mission;
+				text-align: center;
+				line-height: 70rpx;
+				border: 1px solid #d2d2d2;
+				.iconfont {
+					position: relative;
+					height: 55rpx;
+					width: 55rpx;
+					left: 40rpx;
+					top: -97rpx;
+					font-size: 55rpx;
+				}
+			}
+		}
+
+		.finished-bottom-button {
+			view:nth-child(1) {
+				position: absolute;
+				left: 200rpx;
+				top: 900rpx;
+				font-size: 80rpx;
+			}
+
+			view:nth-child(2) {
+				position: absolute;
+				left: 400rpx;
+				top: 900rpx;
+				font-size: 85rpx;
+			}
+		}
+
+	}
 </style>

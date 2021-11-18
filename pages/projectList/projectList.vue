@@ -2,9 +2,9 @@
 	<view class="body">
 		<!-- 任务详情弹窗 -->
 		<uni-popup class="taskPopup" ref="taskPopup" type="center" :mask-click="false">
-			<incomplete v-show="popup_task === 1" @closePopup = "closePopup" @refresh="refreshList"></incomplete>
-			<checking v-show="popup_task === 2" @closePopup = "closePopup" @refresh="refreshList"></checking>
-			<finish v-show="popup_task === 3" @closePopup = "closePopup" @refresh="refreshList"></finish>
+			<incomplete v-show="popup_task === 1" @closePopup = "closePopup" @refresh="refreshList" :taskInfo="taskInfo"></incomplete>
+			<checking v-show="popup_task === 2" @closePopup = "closePopup" @refresh="refreshList" :taskInfo="taskInfo"></checking>
+			<finish v-show="popup_task === 3" @closePopup = "closePopup" @refresh="refreshList" :taskInfo="taskInfo"></finish>
 		</uni-popup>
 		<!-- 按钮弹窗 -->
 		<uni-popup class="moremorePopup" ref="moremorePopup" type="center" :mask-click="false">
@@ -100,7 +100,8 @@
 					incomplete:[],
 					checking:[],
 					finish:[]
-				}
+				},
+				taskInfo:[]
 			};
 		},
 		components:{createProject},
@@ -112,7 +113,14 @@
 			taskPopup(kind, index){
 				console.log("任务编号是"+index)
 				this.popup_task = kind
+				let taskInfo = []
+				if (kind == 1) taskInfo = this.mission_list.incomplete[index]
+				else if (kind == 2) taskInfo = this.mission_list.checking[index]
+				else if (kind == 3) taskInfo = this.mission_list.finish[index]
+				console.log(taskInfo)
+				this.taskInfo = taskInfo
 				this.$refs.taskPopup.open("center")
+				
 			},
 			morePopup() {
 				this.$refs.moremorePopup.open("center")
