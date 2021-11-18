@@ -2,9 +2,12 @@
 	<view class="body">
 		<!-- 任务详情弹窗 -->
 		<uni-popup class="taskPopup" ref="taskPopup" type="center" :mask-click="false">
-			<incomplete v-show="popup_task === 1" @closePopup = "closePopup" @refresh="refreshList" :taskInfo="taskInfo"></incomplete>
-			<checking v-show="popup_task === 2" @closePopup = "closePopup" @refresh="refreshList" :taskInfo="taskInfo"></checking>
-			<finish v-show="popup_task === 3" @closePopup = "closePopup" @refresh="refreshList" :taskInfo="taskInfo"></finish>
+			<incomplete v-show="popup_task === 1" @closePopup = "closePopup" @refresh="refreshList" 
+			:taskInfo="taskInfo" :role="role" :member_id="member_id"></incomplete>
+			<checking v-show="popup_task === 2" @closePopup = "closePopup" @refresh="refreshList" 
+			:taskInfo="taskInfo" :role="role" :member_id="member_id"></checking>
+			<finish v-show="popup_task === 3" @closePopup = "closePopup" @refresh="refreshList" 
+			:taskInfo="taskInfo" :role="role" :member_id="member_id"></finish>
 		</uni-popup>
 		<!-- 按钮弹窗 -->
 		<uni-popup class="moremorePopup" ref="moremorePopup" type="center" :mask-click="false">
@@ -90,6 +93,7 @@
 	export default {
 		data() {
 			return {
+				member_id:-1,
 				repo_name:'',
 				repo_address:'',
 				role:-1,//role中-1代表加入项目待审核、0表示超级管理员、1表示管理员、2表示开发者、3表示游客
@@ -110,6 +114,7 @@
 			// 弹出层相关函数
 			closePopup(){
 				this.$refs.taskPopup.close()
+				this.$options.methods.refreshList.bind(this)()
 			},
 			taskPopup(kind, index){
 				console.log("任务编号是"+index)
@@ -159,7 +164,7 @@
 				uni.request({
 				    url: baseUrl + '/repo/showTask', //仅为示例，并非真实接口地址。
 					method:'POST',
-					timeout:2000,
+					timeout:8000,
 				    data: {
 				        repo_id: this.repo_id
 				    },
@@ -190,6 +195,7 @@
 			this.repo_name = option.repo_name
 			this.repo_id = option.repo_id
 			this.role = option.role
+			this.member_id = option.member_id
 			this.repo_address = option.url
 			this.progress = option.progress
 			uni.setStorage({
@@ -199,7 +205,7 @@
 			uni.request({
 			    url: baseUrl + '/repo/showTask', //仅为示例，并非真实接口地址。
 				method:'POST',
-				timeout:2000,
+				timeout:8000,
 			    data: {
 			        repo_id: option.repo_id
 			    },
@@ -328,7 +334,7 @@
 		}
 
 		.top-wrapper {
-			top: 0rpx;
+			top: 4rpx;
 			position: sticky;
 			width: 100%;
 			height: 200rpx;
