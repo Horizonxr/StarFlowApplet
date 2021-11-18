@@ -43,7 +43,7 @@
 	} from '../../utils/config.js';
 	export default {
 		name: "test",
-		props: ["projectid"],
+		props: ["repo_id"],
 		data() {
 			return {
 				user_list: [],
@@ -73,7 +73,7 @@
 				method: 'POST',
 				timeout: 2000,
 				data: {
-					repo_id: this.projectid
+					repo_id: this.repo_id
 				},
 				header: {
 					"content-type": "application/x-www-form-urlencoded" //自定义请求头信息

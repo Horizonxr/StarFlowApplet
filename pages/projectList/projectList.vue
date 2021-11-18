@@ -2,9 +2,9 @@
 	<view class="body">
 		<!-- 任务详情弹窗 -->
 		<uni-popup class="taskPopup" ref="taskPopup" type="center" :mask-click="false">
-			<incomplete v-show="popup_task === 1" @closePopup = "closePopup" @refresh="refreshList"></incomplete>
-			<checking v-show="popup_task === 2" @closePopup = "closePopup" @refresh="refreshList"></checking>
-			<finish v-show="popup_task === 3" @closePopup = "closePopup" @refresh="refreshList"></finish>
+			<incomplete v-show="popup_task === 1" @closePopup = "closePopup" @refresh="refreshList" :taskInfo="taskInfo"></incomplete>
+			<checking v-show="popup_task === 2" @closePopup = "closePopup" @refresh="refreshList" :taskInfo="taskInfo"></checking>
+			<finish v-show="popup_task === 3" @closePopup = "closePopup" @refresh="refreshList" :taskInfo="taskInfo"></finish>
 		</uni-popup>
 		<!-- 按钮弹窗 -->
 		<uni-popup class="moremorePopup" ref="moremorePopup" type="center" :mask-click="false">
@@ -27,10 +27,13 @@
 			</view>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="addaddPopup" type="center" :mask-click="false">
-			<addPopup @closeaddPopup="closeaddPopup" ></addPopup>
+			<addPopup @closeaddPopup="closeaddPopup" :repo_id="repo_id"></addPopup>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="myproject" type="center" :mask-click="false">
-			<myPopup @closemyPopup="closemyPopup" ></myPopup>
+			<myPopup @closemyPopup="closemyPopup" @openmemberAudit="openmemberAudit" :repo_name="repo_name" :repo_address="repo_address" :repo_id="repo_id"></myPopup>
+		</uni-popup>
+		<uni-popup class="addaddPopup" ref="memberAudit" type="center" :mask-click="false">
+					<memberAudit @closememberAudit="closememberAudit"></memberAudit>
 		</uni-popup>
 		<view class="top-wrapper">
 			<view class="top">
@@ -43,21 +46,21 @@
 		</view>
 		<view class="list-wrapper">
 			<view class="list-item-wrapper">
-				<view class="list-item" @click="taskPopup(1)" style="background-color: #8feb9b;" v-for="(item, key) in mission_list.incomplete" :key=item.key>
+				<view class="list-item" @click="taskPopup(1, key)" style="background-color: #8feb9b;" v-for="(item, key) in mission_list.incomplete" :key=item.key>
 					<view class="list-item-mission">任务：{{item.task_name}}</view>
 					<view class="list-item-DDL">DeadLine: {{DDLcompute(item.deadline)}}</view>
 					<view class="list-item-more">
 						<view class="iconfont icon-gengduo"></view>
 					</view>
 				</view>
-				<view class="list-item" @click="taskPopup(2)" style="background-color: #7fa9f2;" v-for="(item, key) in mission_list.checking" :key=item.key>
+				<view class="list-item" @click="taskPopup(2, key)" style="background-color: #7fa9f2;" v-for="(item, key) in mission_list.checking" :key=item.key>
 					<view class="list-item-mission">任务：{{item.task_name}}</view>
 					<view class="list-item-DDL">DeadLine: {{DDLcompute(item.deadline)}}</view>
 					<view class="list-item-more">
 						<view class="iconfont icon-gengduo"></view>
 					</view>
 				</view>
-				<view class="list-item" @click="taskPopup(3)" style="background-color: #a6a5a5;" v-for="(item, key) in mission_list.finish" :key=item.key>
+				<view class="list-item" @click="taskPopup(3, key)" style="background-color: #a6a5a5;" v-for="(item, key) in mission_list.finish" :key=item.key>
 					<view class="list-item-mission">任务：{{item.task_name}}</view>
 					<view class="list-item-DDL">DeadLine: {{DDLcompute(item.deadline)}}</view>
 					<view class="list-item-more">
@@ -68,7 +71,7 @@
 		</view>
 		<view class="botton-wrapper2">
 			<view class="progress-box">
-				<progress show-info percent="60" stroke-width="23rpx" backgroundColor="#999" activeColor="#007AFF"
+				<progress show-info :percent="progress" stroke-width="23rpx" backgroundColor="#999" activeColor="#007AFF"
 					font-size="20rpx" border-radius="20rpx" />
 			</view>
 			<view class="button-add" @click="morePopup">
@@ -90,15 +93,19 @@
 	export default {
 		data() {
 			return {
+				repo_name:'',
+				repo_address:'',
 				role:-1,//role中-1代表加入项目待审核、0表示超级管理员、1表示管理员、2表示开发者、3表示游客
-				popup_task:-1,
+				popup_task:-1,//1代表未完成，2代表待审核，3代表已完成
 				repo_name:'',
 				repo_id:-1,
 				mission_list: {
 					incomplete:[],
 					checking:[],
 					finish:[]
-				}
+				},
+				taskInfo:[],
+				progress:0
 			};
 		},
 		components:{createProject},
@@ -107,9 +114,17 @@
 			closePopup(){
 				this.$refs.taskPopup.close()
 			},
-			taskPopup(kind){
+			taskPopup(kind, index){
+				console.log("任务编号是"+index)
 				this.popup_task = kind
+				let taskInfo = []
+				if (kind == 1) taskInfo = this.mission_list.incomplete[index]
+				else if (kind == 2) taskInfo = this.mission_list.checking[index]
+				else if (kind == 3) taskInfo = this.mission_list.finish[index]
+				console.log(taskInfo)
+				this.taskInfo = taskInfo
 				this.$refs.taskPopup.open("center")
+				
 			},
 			morePopup() {
 				this.$refs.moremorePopup.open("center")
@@ -129,6 +144,9 @@
 			closemyPopup() {
 				this.$refs.myproject.close("center")
 			},
+			openmemberAudit(){
+				this.$refs.memberAudit.open("center")
+			},
 			// DDL计算连接字符串函数
 			DDLcompute(DDL){
 				let DDLjoin = DDL[0].toString()
@@ -147,7 +165,7 @@
 				uni.request({
 				    url: baseUrl + '/repo/showTask', //仅为示例，并非真实接口地址。
 					method:'POST',
-					timeout:2000,
+					timeout:8000,
 				    data: {
 				        repo_id: this.repo_id
 				    },
@@ -172,13 +190,14 @@
 			}
 		},
 		onLoad(option) { //option为object类型，会序列化上个页面传递的参数
-		    console.log(option);
 			uni.showLoading({
 				title:'加载中'
 			})
 			this.repo_name = option.repo_name
 			this.repo_id = option.repo_id
 			this.role = option.role
+			this.repo_address = option.url
+			this.progress = option.progress
 			uni.setStorage({
 				key:'temp_role',
 				data:this.role
@@ -422,7 +441,6 @@
 		.botton-wrapper2 {
 			position: fixed;
 			height: 227rpx;
-			width: 100%;
 			bottom: 0;
 			z-index: 9;
 

@@ -1,0 +1,166 @@
+<template>
+	<view>
+		<view class="back">
+			<uni-popup ref="popup" type="dialog">
+			   <view class="prompt">
+					<view class="title">是否同意加入</view>
+					<view class="iconfont icon-duigou" @click="agree"></view>
+					<view class="iconfont icon-chahao" @click="disagree"></view>
+			   </view>
+			</uni-popup>
+			<view class="iconfont icon-fanhui" @click="close"></view>
+			<view class="title">人员审核</view>
+			<view class="personalManagement">
+				<view class="list">申请加入列表</view>
+				<scroll-view scroll-y="true" class="scroll">
+					<view class="list-item" v-for="(item, key) in apply_list" :key=item.key @click="Audit">
+						<view class="name">{{item.user_name}}</view>
+						<view class="time">2001.11.17</view>
+					</view>
+				</scroll-view>
+			</view>
+		</view>
+	</view>
+	</view>
+</template>
+
+<script>
+	import {baseUrl} from '../../utils/config.js';
+	export default {
+		name: "memberAudit",
+		data() {
+			return {
+				apply_list: [],
+			};
+	
+		},
+		methods:{
+			Audit(){
+				this .$refs.popup.open("center")
+			},
+			agree(){
+				this.$refs.popup.close()
+			},
+			disagree(){
+				this.$refs.popup.close()
+			},
+		},
+		mounted() {
+			uni.showLoading({
+				title: '加载中'
+			})
+		
+			uni.request({
+				url: baseUrl + '/user/request_info', //仅为示例，并非真实接口地址。
+				method: 'POST',
+				timeout: 8000,
+				data: {
+					user: 1
+				},
+				header: {
+					"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+				},
+				success: (res) => {
+					console.log(res.data.data)
+					this.apply_list=res.data.data
+					uni.hideLoading()
+				},
+				fail() {
+					uni.hideLoading()
+					uni.showToast({
+						title: '请求失败',
+						icon: 'error'
+					});
+				}
+			})
+		
+		},
+	}
+</script>
+
+<style lang="scss">
+	
+	.back {
+		position: relative;
+		height: 1110rpx;
+		width: 670rpx;
+		background-color: #FFFFFF;
+		.prompt{
+			position: relative;
+			height: 250rpx;
+			width: 590rpx;
+			background-color: #fff;
+			.title{
+				position: relative;
+				font-size: 60rpx;
+				top: 40rpx;
+				left: 110rpx;
+			}
+			.icon-duigou{
+				position: relative;
+				top: 60rpx;
+				left: -90rpx;
+			}
+			.icon-chahao{
+				position: relative;
+				top: -70rpx;
+			    left: 90rpx;
+				
+			}
+		}
+		.iconfont {
+			font-size: 86rpx;
+			position: absolute;
+			top: 25rpx;
+			left: 40rpx;
+		}
+
+		.title {
+			font-size: 100rpx;
+			color: #000;
+			position: absolute;
+			top: 130rpx;
+			left: 40rpx;
+		}
+		.personalManagement{
+			position: absolute;
+			top: 245rpx;
+			height:865rpx;
+			width: 670rpx;
+			.list{
+				position: relative;
+				top: 30rpx;
+				left: 40rpx;
+				font-size: 35rpx;
+			}
+			.scroll{
+				    position: relative;
+				    top: 45rpx;
+				    height: 800rpx;
+				    width: 670rpx;
+				.list-item{
+					position:relative;
+					left: 40rpx;
+					height: 80rpx;
+					width: 590rpx;
+					border: 0.5rpx solid #7c787a;
+					border-radius: 10rpx;
+					margin-top: 20rpx ;
+					line-height: 80rpx;
+					.name{
+						position: relative;
+						left: 20rpx;
+					}
+					.time{
+						    position: relative;
+						    left: 400rpx;
+						    top: -50rpx;
+						    font-size: 30rpx;
+						    line-height: 25rpx;
+						    color:  #7c787a;
+					}
+				}
+			}
+		}
+	}
+</style>

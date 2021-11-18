@@ -6,11 +6,11 @@
 			<view class="slogan">This is a test case for Todolist</view>
 			<view class="projectName">
 				<view class="project">项目名称:</view>
-				<input class="name" type="text" value="Horizon/TeamCase"></input>
+				<view class="name"  >{{repo_name}}</view>
 			</view>
 			<view class="warehouseName">
 				<view class="warehouse">GitHub仓库：</view>
-				<input class="address" value="http//"> </input>
+				<view class="address" > {{repo_address}}</view>
 				<view class="iconfont icon-chengong"></view>
 			</view>
 			<view class="personalManagement">
@@ -27,7 +27,7 @@
 			</view>
 			<view class="bottom">
 				<view class="iconfont icon-fenxiang"></view>
-				<view class="iconfont icon-yishenpi"></view>
+				<view class="iconfont icon-yishenpi" @click="audit"></view>
 				<view class="iconfont icon-duigou"></view>
 			</view>
 		</view>
@@ -40,7 +40,7 @@
 	} from '../../utils/config.js';
 	export default {
 		name: "myPopup",
-		props: ["projectid"],
+		props: ["repo_name","repo_address","repo_id"],
 		data() {
 			return {
 				member_list: [],
@@ -50,6 +50,9 @@
 		methods: {
 			close() {
 				this.$emit("closemyPopup")
+			},
+			audit(){
+				this.$emit("openmemberAudit")
 			}
 		},
 		mounted() {
@@ -62,7 +65,7 @@
 				method: 'POST',
 				timeout: 2000,
 				data: {
-					repo_id: this.projectid
+					repo_id: this.repo_id
 				},
 				header: {
 					"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
@@ -120,10 +123,9 @@
 			top: 292rpx;
 			height: 75rpx;
 			width: 670rpx;
-
+			line-height: 75rpx;
 			.project {
 				position: absolute;
-				top: 15rpx;
 				left: 40rpx;
 				font-size: 48rpx;
 				color: #000000;
@@ -131,14 +133,13 @@
 
 			.name {
 				position: absolute;
-				height: 77rpx;
+				height: 75rpx;
 				width: 350rpx;
 				top: 0;
 				left: 270rpx;
 				font-size: 33rpx;
 				color: #000000;
-				border: 0.5rpx solid #817d7e;
-				border-radius: 10rpx;
+			
 				text-align: center;
 			}
 
@@ -163,7 +164,7 @@
 				left: 40rpx;
 				height: 75rpx;
 				width: 577rpx;
-				border: 0.5rpx solid #817d7e;
+				line-height: 75rpx;
 				border-radius: 10rpx;
 				padding-left: 20rpx;
 			}
