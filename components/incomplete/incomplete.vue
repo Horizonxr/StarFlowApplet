@@ -6,10 +6,11 @@
 		<view class="unfinished-title">待完成</view>
 		<view class="unfinished-detail">
 			<progress class="unfinished-deadline-bar" stroke-width="45rpx" border-radius="300" active="true"
-				color="#5091f2" percent="60"></progress>
-			<view class="unfinished-deadline-time">Deadline:2021.11.6</view>
-			<view class="unfinished-mission">任务：完成xx特性</view>
-			<view class="unfinished-pull-repositories" @click="">点击拉取</view>
+				color="#5091f2" :percent="DDLProgress(taskInfo.deadline)"></progress>
+			<view class="unfinished-deadline-time">Deadline:{{DDLcompute(taskInfo.deadline)}}</view>
+			<view class="unfinished-mission">任务：{{taskInfo.task_name}}</view>
+			<view class="mission-content">任务详情:{{taskInfo.task_info}}</view>
+			<view class="unfinished-pull-repositories" @click="getPullRequest">点击拉取</view>
 		</view>
 		<view class="unfinished-bottom-button">
 			<view class="iconfont icon-shizhong" @click=""></view>
@@ -19,10 +20,13 @@
 	</view>
 </template>
 <script>
+	import {baseUrl} from '../../utils/config.js';
 	export default {
 		name: 'myinput',
 		props: {
-
+			taskInfo:{
+				required: true,
+			}
 		},
 		data() {
 			return {
@@ -30,9 +34,55 @@
 			}
 		},
 		methods: {
+			getPullRequest(){
+				uni.request({
+				    url: baseUrl + 'task/pull', //仅为示例，并非真实接口地址。
+					method:'POST',
+					timeout:2000,
+				    data: {
+				        owner_repo: 1
+				    },
+				    header: {
+				        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+				    },
+				    success: (res) => {
+						console.log(res)
+						
+						uni.hideLoading()
+				    },
+					fail() {
+						uni.hideLoading()
+						uni.showToast({
+							title: '请求失败',
+							icon:'error'
+						});
+					}
+				})
+			},
 			back() {
 				this.$emit("closePopup")
 			},
+			// DDL计算连接字符串函数
+			DDLcompute(DDL){
+				if (DDL!==undefined){
+					let DDLjoin = DDL[0].toString()
+					for (let i = 1;i<3;i++){
+						DDLjoin = DDLjoin + '.' +DDL[i].toString()
+					}
+					return DDLjoin
+				}
+				
+			},
+			DDLProgress(DDL){
+				if (DDL!==undefined){
+					let date = new Date()
+					let year_now = date.getFullYear()
+					let month_now = date.getMonth()+1
+					let day_now = date.getDate()
+					let timeRemain = 365*(DDL[0]-year_now) + 30*(DDL[1]-month_now) + (DDL[2]-day_now)
+					return 100-timeRemain*10
+				}
+			}
 
 		}
 	}
@@ -95,7 +145,13 @@
 				left: 20rpx;
 				font-size: 37rpx;
 			}
-
+			.mission-content{
+				position: relative;
+				top: 0rpx;
+				width: 600rpx;
+				left: 20rpx;
+				font-size: 30rpx;
+			}
 			.unfinished-pull-repositories {
 				position: relative;
 				top: 60rpx;
