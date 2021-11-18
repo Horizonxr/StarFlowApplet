@@ -109,9 +109,10 @@
 				console.log(this.project_list[key])
 				let repo = this.project_list[key].repo[0].pk
 				let repo_name = this.project_list[key].repo[0].fields.repo_name
+				let url = this.project_list[key].repo[0].fields.url
 				let role = this.project_list[key].role
 				uni.navigateTo({
-					url:'../projectList/projectList?repo_id=' + repo + '&repo_name=' + repo_name + '&role=' + role,
+					url:'../projectList/projectList?repo_id=' + repo + '&repo_name=' + repo_name +'&url='+ url + '&role=' + role,
 					animationDuration:300
 				})
 			}

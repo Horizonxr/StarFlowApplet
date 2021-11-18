@@ -27,10 +27,10 @@
 			</view>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="addaddPopup" type="center" :mask-click="false">
-			<addPopup @closeaddPopup="closeaddPopup"></addPopup>
+			<addPopup @closeaddPopup="closeaddPopup" :repo_id="repo_id"></addPopup>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="myproject" type="center" :mask-click="false">
-			<myPopup @closemyPopup="closemyPopup"></myPopup>
+			<myPopup @closemyPopup="closemyPopup" :repo_name="repo_name" :repo_address="repo_address" :repo_id="repo_id"></myPopup>
 		</uni-popup>
 		<view class="top-wrapper">
 			<view class="top">
@@ -43,21 +43,21 @@
 		</view>
 		<view class="list-wrapper">
 			<view class="list-item-wrapper">
-				<view class="list-item" @click="taskPopup(1)" style="background-color: #8feb9b;" v-for="(item, key) in mission_list.incomplete" :key=item.key>
+				<view class="list-item" @click="taskPopup(1, key)" style="background-color: #8feb9b;" v-for="(item, key) in mission_list.incomplete" :key=item.key>
 					<view class="list-item-mission">任务：{{item.task_name}}</view>
 					<view class="list-item-DDL">DeadLine: {{DDLcompute(item.deadline)}}</view>
 					<view class="list-item-more">
 						<view class="iconfont icon-gengduo"></view>
 					</view>
 				</view>
-				<view class="list-item" @click="taskPopup(2)" style="background-color: #7fa9f2;" v-for="(item, key) in mission_list.checking" :key=item.key>
+				<view class="list-item" @click="taskPopup(2, key)" style="background-color: #7fa9f2;" v-for="(item, key) in mission_list.checking" :key=item.key>
 					<view class="list-item-mission">任务：{{item.task_name}}</view>
 					<view class="list-item-DDL">DeadLine: {{DDLcompute(item.deadline)}}</view>
 					<view class="list-item-more">
 						<view class="iconfont icon-gengduo"></view>
 					</view>
 				</view>
-				<view class="list-item" @click="taskPopup(3)" style="background-color: #a6a5a5;" v-for="(item, key) in mission_list.finish" :key=item.key>
+				<view class="list-item" @click="taskPopup(3, key)" style="background-color: #a6a5a5;" v-for="(item, key) in mission_list.finish" :key=item.key>
 					<view class="list-item-mission">任务：{{item.task_name}}</view>
 					<view class="list-item-DDL">DeadLine: {{DDLcompute(item.deadline)}}</view>
 					<view class="list-item-more">
@@ -90,8 +90,10 @@
 	export default {
 		data() {
 			return {
+				repo_name:'',
+				repo_address:'',
 				role:-1,//role中-1代表加入项目待审核、0表示超级管理员、1表示管理员、2表示开发者、3表示游客
-				popup_task:-1,
+				popup_task:-1,//1代表未完成，2代表待审核，3代表已完成
 				repo_name:'',
 				repo_id:-1,
 				mission_list: {
@@ -107,7 +109,8 @@
 			closePopup(){
 				this.$refs.taskPopup.close()
 			},
-			taskPopup(kind){
+			taskPopup(kind, index){
+				console.log("任务编号是"+index)
 				this.popup_task = kind
 				this.$refs.taskPopup.open("center")
 			},
@@ -179,6 +182,7 @@
 			this.repo_name = option.repo_name
 			this.repo_id = option.repo_id
 			this.role = option.role
+			this.repo_address = option.url
 			uni.setStorage({
 				key:'temp_role',
 				data:this.role
@@ -422,7 +426,6 @@
 		.botton-wrapper2 {
 			position: fixed;
 			height: 227rpx;
-			width: 100%;
 			bottom: 0;
 			z-index: 9;
 
