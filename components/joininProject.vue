@@ -7,9 +7,10 @@
 		<!-- 搜索 -->
 		<view class="title2">项目搜索</view>
 		<view class="search2">
-			<input class="input-name2" type="text" placeholder=" 输入项目名称进行查找" />
+			<input class="input-name2" @input='input':value=keyword type="text" placeholder=" 输入项目名称进行查找" />
 			<view class="rectangle2"></view>
 			<view class="iconfont icon-sousuo" @input="input" @click="search"></view>
+			<scroll-view class="joinin-scroll-area" show-scrollbar='true' scroll-y="true">
 			<view class="list-item2" v-for="(item, key) in repositories_list" :key=item.key>
 				<view class="list-item-repositories2" @click="openPopup">{{item.fields.repo_name}}</view>
 				<!-- 加入项目提示信息 -->
@@ -17,6 +18,7 @@
 				    <uni-popup-dialog type='info' title="提示"mode="base" content="请求加入该项目？"message="成功消息" :duration="2000" :before-close="true" @close="close" @confirm="request_joinin(key)"></uni-popup-dialog>
 				</uni-popup>
 			</view>
+			</scroll-view>
 		</view>
 	</view>
 </template>
@@ -45,6 +47,8 @@ export default {
 		this.$refs.popup[0].close()
 	},  
     back(){
+		this.keyword=''
+		this.repositories_list=[]
 		this.$emit("closeJoininpopup")
 	}, 
 	input(e){
@@ -56,12 +60,11 @@ export default {
 			title:"加载中",
 			mask:true
 		})
-		// console.log("okkk")
-		this.userInfo = uni.getStorageSync("userInfo")
+		this.repositories_list=[]
 		uni.request({
 		    url: baseUrl + '/user/repo_search', //仅为示例，并非真实接口地址。
 			method:'POST',
-			timeout:2000,
+			timeout:8000,
 		    data: {
 		        keyword:this.keyword
 		    },
@@ -86,11 +89,10 @@ export default {
 			title:"加载中",
 			mask:true
 		})	
-		this.u_id = uni.getStorageSync("u_id")
 		uni.request({
 		    url: baseUrl + '/user/repo_request', //仅为示例，并非真实接口地址。
 			method:'POST',
-			timeout:2000,
+			timeout:8000,
 		    data: {
 				user:this.u_id,
 				repo:this.repositories_list[key].pk
@@ -99,6 +101,11 @@ export default {
 		        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 		    },
 			success: (res) => {
+				uni.showToast({
+					title: '请求加入成功',
+					icon:'success',
+					duration:2000
+				});
 				uni.hideLoading()
 				this.close();
 			},
@@ -110,7 +117,7 @@ export default {
 				});
 			}
 		}) 
-		console.log(this.repositories_list[key].pk)
+		//console.log(this.repositories_list[key].pk)
 	}
   }
 }
@@ -163,6 +170,7 @@ export default {
 		}
 		.iconfont{
 			position: absolute;
+			z-index: 99;
 			left: 450rpx;
 			font-size: 100rpx;
 		}
@@ -188,7 +196,11 @@ export default {
 				text-align: center;
 			}
 		}	
-		
+		.joinin-scroll-area{
+			position: relative;
+			top:5rpx;
+			height: 660rpx;
+		}
 	}
 }
 </style>
