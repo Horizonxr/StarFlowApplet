@@ -111,12 +111,14 @@
 				let repo_name = this.project_list[key].repo[0].fields.repo_name
 				let url = this.project_list[key].repo[0].fields.url
 				let role = this.project_list[key].role
+				let member_id = this.project_list[key].member_id
 				// item.repo[0].fields.finished * 100 / (item.repo[0].fields.checking+item.repo[0].fields.finished+item.repo[0].fields.incomplete)
 				let f = this.project_list[key].repo[0].fields
 				let progress = f.incomplete*100 / (f.incomplete + f.checking + f.finished)
 				progress = parseInt(progress)
 				uni.navigateTo({
-					url:'../projectList/projectList?repo_id=' + repo + '&repo_name=' + repo_name +'&url='+ url + '&role=' + role + '&progress=' + progress,
+					url:'../projectList/projectList?repo_id=' + repo + '&repo_name=' + repo_name +'&url='+ url + 
+					'&role=' + role + '&member_id='+ member_id + '&progress=' + progress,
 					animationDuration:300
 				})
 			},
@@ -137,7 +139,7 @@
 			uni.request({
 			    url: baseUrl + '/repo/showRepo', //仅为示例，并非真实接口地址。
 				method:'POST',
-				timeout:2000,
+				timeout:8000,
 			    data: {
 			        u_id: this.u_id
 			    },
@@ -212,7 +214,7 @@
 		}
 	}
 	.top-wrapper{
-		top:0rpx;
+		top:4rpx;
 		position: sticky;
 		width: 100%;
 		height: 200rpx;
