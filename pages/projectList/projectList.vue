@@ -33,7 +33,7 @@
 			<addPopup @closeaddPopup="closeaddPopup" :repo_id="repo_id"></addPopup>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="myproject" type="center" :mask-click="false">
-			<myPopup @closemyPopup="closemyPopup" :repo_name="repo_name" :repo_address="repo_address"
+			<myPopup @openmemberAudit="openmemberAudit" @closemyPopup="closemyPopup" :repo_name="repo_name" :repo_address="repo_address"
 				:repo_id="repo_id"></myPopup>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="memberAudit" type="center" :mask-click="false">
@@ -158,6 +158,9 @@
 			},
 			openmemberAudit() {
 				this.$refs.memberAudit.open("center")
+			},
+			closememberAudit(){
+				this.$refs.memberAudit.close()
 			},
 			// DDL计算连接字符串函数
 			DDLcompute(DDL) {
