@@ -35,6 +35,9 @@
 	
 		},
 		methods:{
+			close(){
+				this.$emit("closememberAudit")
+			},
 			Audit(){
 				this .$refs.popup.open("center")
 			},
