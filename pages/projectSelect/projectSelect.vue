@@ -111,11 +111,16 @@
 				let repo_name = this.project_list[key].repo[0].fields.repo_name
 				let url = this.project_list[key].repo[0].fields.url
 				let role = this.project_list[key].role
+				// item.repo[0].fields.finished * 100 / (item.repo[0].fields.checking+item.repo[0].fields.finished+item.repo[0].fields.incomplete)
+				let f = this.project_list[key].repo[0].fields
+				let progress = f.incomplete*100 / (f.incomplete + f.checking + f.finished)
+				progress = parseInt(progress)
 				uni.navigateTo({
-					url:'../projectList/projectList?repo_id=' + repo + '&repo_name=' + repo_name +'&url='+ url + '&role=' + role,
+					url:'../projectList/projectList?repo_id=' + repo + '&repo_name=' + repo_name +'&url='+ url + '&role=' + role + '&progress=' + progress,
 					animationDuration:300
 				})
-			}
+			},
+
 		},
 		onLoad() {
 			if (!uni.getStorageSync("userInfo") || !uni.getStorageSync("GitHubAccount") || !uni.getStorageSync("GitHubAccount")){

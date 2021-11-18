@@ -68,7 +68,7 @@
 		</view>
 		<view class="botton-wrapper2">
 			<view class="progress-box">
-				<progress show-info percent="60" stroke-width="23rpx" backgroundColor="#999" activeColor="#007AFF"
+				<progress show-info :percent="progress" stroke-width="23rpx" backgroundColor="#999" activeColor="#007AFF"
 					font-size="20rpx" border-radius="20rpx" />
 			</view>
 			<view class="button-add" @click="morePopup">
@@ -101,7 +101,8 @@
 					checking:[],
 					finish:[]
 				},
-				taskInfo:[]
+				taskInfo:[],
+				progress:0
 			};
 		},
 		components:{createProject},
@@ -183,7 +184,6 @@
 			}
 		},
 		onLoad(option) { //option为object类型，会序列化上个页面传递的参数
-		    console.log(option);
 			uni.showLoading({
 				title:'加载中'
 			})
@@ -191,6 +191,7 @@
 			this.repo_id = option.repo_id
 			this.role = option.role
 			this.repo_address = option.url
+			this.progress = option.progress
 			uni.setStorage({
 				key:'temp_role',
 				data:this.role
