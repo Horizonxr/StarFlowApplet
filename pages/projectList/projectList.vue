@@ -146,6 +146,8 @@
 			},
 			closeaddPopup() {
 				this.$refs.addaddPopup.close("center")
+				this.$refs.moremorePopup.close("center")
+				this.$options.methods.refreshList.bind(this)()
 			},
 			canclePopup() {
 				this.$refs.moremorePopup.close("center")

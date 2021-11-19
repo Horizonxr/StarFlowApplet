@@ -8,7 +8,7 @@
 			<view class="title"> 添加任务:</view>
 			<view class="popupName">
 				<view class="inputText">任务名称</view>
-				<input class="input" type="text" v-model:value="name">
+				<input placeholder="请输入任务名称" class="input" type="text" v-model:value="name">
 			</view>
 			<view class="deadline">
 				<view class="deadlineText">Deadline</view>
@@ -17,7 +17,7 @@
 						:end="end" @change="changeLog" />
 				</view>
 			</view>
-			<textarea v-model:value="task_info" class="details" />
+			<textarea placeholder="请输入任务内容" v-model:value="task_info" class="details" />
 			<view class="release">
 				任务发放：
 			</view>
@@ -53,8 +53,8 @@
 				end: Date.now() + 1000000000,
 				pull_user_name:"hhh",
 				pull_ddl:"2021.11.19",
-				name:"请输入任务名称",
-				task_info:"请输入任务详情",
+				name:"",
+				task_info:"",
 				pull_task_info:"请输入任务详情",
 				pull_task_name:"请输入任务名称",
 				
