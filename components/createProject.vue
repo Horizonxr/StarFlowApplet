@@ -44,6 +44,15 @@ export default {
 			this.$refs.popup.close()
         },  
         request_joinin(){
+			this.receivelist.forEach((item,index)=>{    //遍历数组,判断选中项目是否已经添加过
+				if(item.repo[0].fields.url==this.middle.url){  
+					uni.showToast({
+						title: '已添加过',
+						icon:'error',
+						duration:2000
+					});
+				}
+			})
 			console.log(this.middle.url)
 			console.log(this.middle.repo_name)
 			console.log(this.u_id)
