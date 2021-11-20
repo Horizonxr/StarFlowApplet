@@ -7,7 +7,7 @@
 		<!-- 返回按钮 -->
 		<view class="top-button1"><view class="iconfont icon-fanhui" @click="back"></view></view>
 		<view class="title1">创建项目</view>
-		<view class="account1">当前帐号 Horizon</view>
+		<view class="account1">当前帐号{{ Horizon}}</view>
 		<!-- 搜索 -->
 		<view class="search1">
 			<view class="repositories-list1">仓库列表</view>
@@ -27,13 +27,16 @@
 	import {baseUrl} from '../utils/config.js';
 export default {
     name: 'myinput',
-	props: {},
+	props: {
+		receivelist:{},
+	},
 	data() {
 		return {
             u_id:1,
             repositories_list:[],
             keyword:'' ,
 			middle:-1,
+			GitHubAccount:''
 		}
 	},
     methods: {
@@ -41,6 +44,9 @@ export default {
 			this.$refs.popup.close()
         },  
         request_joinin(){
+			console.log(this.middle.url)
+			console.log(this.middle.repo_name)
+			console.log(this.u_id)
 			uni.request({
 			    url: baseUrl + '/repo/addRepo', //仅为示例，并非真实接口地址。
 				method:'POST',
@@ -199,8 +205,11 @@ export default {
 		left: 50rpx;
 		font-size: 34rpx;
 		.scroll-area{
-			height: 660rpx;
-		}
+			position: relative;
+			top:25rpx;
+			height: 600rpx;
+			// background-color: #007AFF;
+		}	
 		.repositories-list1{
 			position: relative;
 			font-size: 40rpx;
@@ -234,15 +243,16 @@ export default {
 		.list-item1{
 			margin: 25rpx 20rpx auto;
 			position: relative;
-			top:40rpx;
+			top:-20rpx;
+			border-radius: 10rpx;
 			left:-10rpx;
 			height: 60rpx;
 			width: 500rpx;
-			border-radius: 10rpx;
 			box-shadow: 0 4rpx 12rpx #888888;
 			background-color:rgba($color: #ffff, $alpha: 0.5);
 			.list-item-repositories1{
 				text-align: center;
+				overflow:hidden
 			}
 		}
 	}
