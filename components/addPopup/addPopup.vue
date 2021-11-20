@@ -8,7 +8,7 @@
 			<view class="title"> 添加任务:</view>
 			<view class="popupName">
 				<view class="inputText">任务名称</view>
-				<input placeholder="请输入任务名称" class="input" type="text" v-model:value="name">
+				<input placeholder-style="color: black" placeholder="请输入任务名称" class="input" type="text" v-model:value="name">
 			</view>
 			<view class="deadline">
 				<view class="deadlineText">Deadline</view>
@@ -17,7 +17,7 @@
 						:end="end" @change="changeLog" />
 				</view>
 			</view>
-			<textarea placeholder="请输入任务内容" v-model:value="task_info" class="details" />
+			<textarea placeholder="请输入任务内容" v-model:value="task_info" class="details" placeholder-style="placeholderClass" />
 			<view class="release">
 				任务发放：
 			</view>
@@ -147,11 +147,15 @@
 
 <style lang="scss">
 	.back {
+		height: 100vh;
 		position: relative;
-		background-color: #FFFFFF;
-		width: 664rpx;
-		height: 1112rpx;
-
+		width: 660rpx;
+		height: 1050rpx;
+		top: 30rpx;
+		margin: 0 auto;
+		background-color: white;
+		border-radius: 30rpx;
+		box-shadow: 0 4rpx 12rpx #888888;
 		.top {
 			position: absolute;
 			top: 0rpx;
@@ -183,6 +187,7 @@
 
 				.inputText {
 					position: absolute;
+					top: 9rpx;
 					left: 40rpx;
 					font-size: 48rpx;
 					color: #000;
@@ -191,6 +196,7 @@
 
 				.input {
 					position: absolute;
+					top: 7rpx;
 					height: 74rpx;
 					left: 280rpx;
 					border: 0.5rpx solid #5c5c5c;
@@ -239,10 +245,9 @@
 				color: #5c5c5c;
 				text-align: center;
 			}
-
 			.release {
 				position: absolute;
-				top: 632rpx;
+				top: 620rpx;
 				left: 40rpx;
 				font-size: 48rpx;
 				color: #000;
@@ -254,7 +259,7 @@
 
 		.bottom {
 			position: absolute;
-			bottom: 148rpx;
+			bottom: 108rpx;
 			left: 40rpx;
 			height: 246rpx;
 			width: 572rpx;
@@ -313,7 +318,7 @@
 			.iconfont {
 				position: absolute;
 				font-size: 86rpx;
-				top: 100rpx;
+				top: 64rpx;
 				left: 292rpx;
 			}
 

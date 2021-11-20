@@ -19,7 +19,7 @@
 			<view class="personalManagement">
 				<view class="list">申请加入列表</view>
 				<scroll-view scroll-y="true" class="scroll">
-					<view class="list-item" v-for="(item, key) in apply_list" :key=item.key @click="Audit(item.user_id)">
+					<view class="list-item" v-for="(item, key) in apply_list" :key=item.key @click="Audit(apply_list[key].pk)">
 						<view class="name">{{item.user_name}}</view>
 						<view class="time">2001.11.17</view>
 					</view>
@@ -35,11 +35,13 @@
 	} from '../../utils/config.js';
 	export default {
 		name: "memberAudit",
+		props:["repo_id"],
 		data() {
 			return {
 				apply_list: [],
 				pull_request_id: 0,
-				pull_identity: 0
+				pull_identity: 0,
+				u_id:-1,
 			};
 
 		},
@@ -47,12 +49,55 @@
 			close() {
 				this.$emit("closememberAudit")
 			},
-			Audit(user_id) {
-				this.pull_request_id=user_id
-				console.log(user_id)
+			Audit(pk) {
+				this.pull_request_id=pk
+				console.log(pk)
 				this.$refs.popup.open("center")
 			},
+			rfreshMemberList(){
+				this.$emit("refreshMemberList")
+			},
+			refreshApplyList(){
+				uni.showLoading({
+					title: '加载中'
+				})
+				console.log('这是刷新后')
+				this.u_id = uni.getStorageSync("u_id")
+				console.log(111111)
+				console.log(this.u_id)
+				uni.request({
+					url: baseUrl + '/user/request_info', //仅为示例，并非真实接口地址。
+					method: 'POST',
+					timeout: 8000,
+					data: {
+						user: 1,
+						repo:this.repo_id,
+					},
+					header: {
+						"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+					},
+					success: (res) => {
+						console.log("这是刷新后申请人")
+						console.log(res.data)
+						this.apply_list = res.data.data
+						uni.hideLoading()
+					},
+					fail() {
+						uni.hideLoading()
+						uni.showToast({
+							title: '请求失败',
+							icon: 'error'
+						});
+					}
+				})
+				
+			},
 			apply_request() {
+				uni.showLoading({
+					title:"加载中"
+				})
+				console.log(this.pull_request_id),
+				console.log(this.pull_identity)
 				uni.request({
 					url: baseUrl + '/user/reply_request', //仅为示例，并非真实接口地址。
 					method: 'POST',
@@ -65,44 +110,55 @@
 						"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 					},
 					success: (res) => {
-						console.log(res.data)
+						console.log("xiugai")
+						console.log(res)
 						uni.showToast({
 							title: '修改成功',
 							icon:'success'
 						});
+						uni.hideLoading()
 					},
 					fail(err) {
 						console.log(err)
+						uni.hideLoading()
 						uni.showToast({
 							title: '请求失败',
 							icon:'error'
 						});
 					}
 				})
+				this.$options.methods.refreshApplyList.bind(this)()
+				this.$options.methods.rfreshMemberList.bind(this)()
 				this.$refs.popup.close()
+				
 			},
 			disagree(){
+				console.log("disagree")
 				this.pull_identity = -1
-				this.apply_request()
+				this.$options.methods.apply_request.bind(this)()
 			}
 		},
 		mounted() {
 			uni.showLoading({
 				title: '加载中'
 			})
-
+			this.u_id = uni.getStorageSync("u_id")
+			console.log(111111)
+			console.log(this.u_id)
 			uni.request({
 				url: baseUrl + '/user/request_info', //仅为示例，并非真实接口地址。
 				method: 'POST',
 				timeout: 8000,
 				data: {
-					user: 1
+					user: 1,
+					repo:this.repo_id,
 				},
 				header: {
 					"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 				},
 				success: (res) => {
-					console.log(res.data.data)
+					console.log("这是申请人")
+					console.log(res.data)
 					this.apply_list = res.data.data
 					uni.hideLoading()
 				},
@@ -125,22 +181,22 @@
 		height: 1110rpx;
 		width: 670rpx;
 		background-color: #FFFFFF;
-
 		.prompt {
 			position: relative;
 			height: 400rpx;
 			width: 590rpx;
 			background-color: #fff;
-
+		
 			.title {
 				position: relative;
 				font-size: 60rpx;
 				top: 40rpx;
 				left: 110rpx;
 			}
-
+		
 			.root-name {
 				position: relative;
+				width: 120rpx;
 				top: 65rpx;
 				left: 230rpx;
 				font-size: 40rpx;
@@ -148,17 +204,20 @@
 			
 			.icon-duigou {
 				position: relative;
+				width: 100rpx;
 				top: 60rpx;
-				left: -90rpx;
+				left: 140rpx;
 			}
 			
 			.icon-chahao {
-				position: relative;
-				top: -70rpx;
-				left: 90rpx;
+				    position: relative;
+				    width: 100rpx;
+				    top: -70rpx;
+				    left: 320rpx;
 			
 			}
 		}
+		  
 
 	
 

@@ -36,9 +36,7 @@
 			<myPopup @openmemberAudit="openmemberAudit" @closemyPopup="closemyPopup" :repo_name="repo_name" :repo_address="repo_address"
 				:repo_id="repo_id"></myPopup>
 		</uni-popup>
-		<uni-popup class="addaddPopup" ref="memberAudit" type="center" :mask-click="false">
-			<memberAudit @closememberAudit="closememberAudit"></memberAudit>
-		</uni-popup>
+		
 		<view class="top-wrapper">
 			<view class="top">
 				<view class="title">项目名称</view>
@@ -157,12 +155,6 @@
 			},
 			closemyPopup() {
 				this.$refs.myproject.close("center")
-			},
-			openmemberAudit() {
-				this.$refs.memberAudit.open("center")
-			},
-			closememberAudit(){
-				this.$refs.memberAudit.close()
 			},
 			// DDL计算连接字符串函数
 			DDLcompute(DDL) {
