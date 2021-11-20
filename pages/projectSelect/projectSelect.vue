@@ -25,12 +25,15 @@
 			</view>
 		</uni-popup>
 		<!-- 第二层弹窗 -->
-		</uni-popup>
 		<uni-popup class="createPopup" ref="createPopup" type="center" :mask-click="false">
 			<createProject @closeCreatepopup="closeCreatepopup"></createProject>
 		</uni-popup>
 		<uni-popup class="joininPopup"  ref="joininPopup" type="center" :mask-click="false">
 			<joininProject  @closeJoininpopup="closeJoininpopup"></joininProject>
+		</uni-popup>
+		<!-- 删除项目提示信息 -->
+		<uni-popup ref="deletepopup" type="dialog">
+			<uni-popup-dialog type='info' title="提示"mode="base" content="确认删除该项目？"message="成功消息" :duration="2000" :before-close="true" @close="close" @confirm="request_delete"></uni-popup-dialog>
 		</uni-popup>
 		<view class="top-wrapper">
 			<!-- 顶部 -->
@@ -68,7 +71,6 @@
 			<view class='blue'></view>
 			<view class='green'></view>
 		</view>
-		
 	</view>
 </template>
 <script>
@@ -98,6 +100,7 @@
 			 },
 			closeCreatepopup(){
 				this.$refs.createPopup.close()
+				// 刷新
 			},
 			joininPopup(){
 				this.$refs.joininPopup.open('center')
@@ -105,6 +108,12 @@
 			closeJoininpopup(){
 				this.$refs.joininPopup.close()
 			},
+			deleteproject(){
+				this.$refs.deletepopup.open()
+			},
+			close(){
+				this.$refs.deletepopup.close()
+			}, 
 			toProject(key){
 				console.log(this.project_list[key])
 				let repo = this.project_list[key].repo[0].pk
