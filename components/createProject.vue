@@ -209,6 +209,21 @@ export default {
 			top:25rpx;
 			height: 600rpx;
 			// background-color: #007AFF;
+			.list-item1{
+				margin: 25rpx 20rpx auto;
+				position: relative;
+				top:-20rpx;
+				border-radius: 10rpx;
+				left:-10rpx;
+				height: 60rpx;
+				width: 500rpx;
+				box-shadow: 0 4rpx 12rpx #888888;
+				background-color:rgba($color: #ffff, $alpha: 0.5);
+				.list-item-repositories1{
+					text-align: center;
+					overflow:hidden
+				}
+			}
 		}	
 		.repositories-list1{
 			position: relative;
@@ -239,21 +254,6 @@ export default {
 			top: 1rpx;
 			left: 525rpx;
 			font-size: 64rpx;
-		}
-		.list-item1{
-			margin: 25rpx 20rpx auto;
-			position: relative;
-			top:-20rpx;
-			border-radius: 10rpx;
-			left:-10rpx;
-			height: 60rpx;
-			width: 500rpx;
-			box-shadow: 0 4rpx 12rpx #888888;
-			background-color:rgba($color: #ffff, $alpha: 0.5);
-			.list-item-repositories1{
-				text-align: center;
-				overflow:hidden
-			}
 		}
 	}
 }
