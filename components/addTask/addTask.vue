@@ -8,7 +8,7 @@
 			<view class="title"> 添加任务:</view>
 			<view class="popupName">
 				<view class="inputText">任务名称</view>
-				<input class="input" type="text" value="请输入任务名称">
+				<input placeholder-style="color: black" placeholder="请输入任务名称" class="input" type="text" v-model:value="name">
 			</view>
 			<view class="deadline">
 				<view class="deadlineText">Deadline</view>
@@ -17,7 +17,7 @@
 						:end="end" @change="changeLog" />
 				</view>
 			</view>
-			<textarea value="请输入任务详情" class="details" />
+			<textarea placeholder="请输入任务内容" v-model:value="task_info" class="details" placeholder-style="placeholderClass" />
 			<view class="release">
 				任务发放：
 			</view>
@@ -27,12 +27,12 @@
 				<view class="list-item" v-for="(item, key) in user_list" :key=item.key>
 					<view class="name">{{item.username}}</view>
 					<view class="jurisdiction">开发者</view>
-					<view class="circle"></view>
+					<view class="circle" @click="this.pull_user_name=user_list[key].username" :style="{'background-color':pull_user_name!==item.username ? 'white' : '#5091f2'}"></view>
 				</view>
 			</scroll-view>
 		</view>
 		<view class="icon">
-			<view class="iconfont icon-duigou"></view>
+			<view class="iconfont icon-duigou" @click="pullrequest()"></view>
 		</view>
 	</view>
 </template>
@@ -50,17 +50,64 @@
 				datetimesingle: '',
 				datetimerange: [],
 				start: Date.now(),
-				end: Date.now() + 1000000000
+				end: Date.now() + 1000000000,
+				pull_user_name:"hhh",
+				pull_ddl:"2021.11.19",
+				name:"",
+				task_info:"",
+				pull_task_info:"请输入任务详情",
+				pull_task_name:"请输入任务名称",
+				
 
 			};
 		},
 		methods: {
 			changeLog(e) {
 				console.log('----change事件:', e);
+				this.pull_ddl=e;
 			},
 			back() {
 				this.$emit("closeaddPopup")
 			},
+			pullrequest(){
+				this.pull_task_name=this.name,
+				this.pull_task_info=this.task_info,
+				console.log("这是任务名称"+this.pull_task_name),
+				console.log(this.pull_task_info),
+				console.log(this.pull_ddl),
+				console.log(this.repo_id),
+				console.log(this.pull_user_name)
+				uni.request({
+					url: baseUrl + '/task/addtask', //仅为示例，并非真实接口地址。
+					method: 'POST',
+					timeout: 2000,
+					data: {
+						task_name:this.pull_task_name,
+						task_info:this.pull_task_info,
+						deadline:this.pull_ddl,
+						repo_id:this.repo_id,
+						username:this.pull_user_name
+					},
+					header: {
+						"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+					},
+					success: (res) => {
+						console.log(res.message)
+						uni.showToast({
+							title: '添加成功',
+							icon:'success'
+						});
+						this.$options.methods.back.bind(this)()
+					},
+					fail(err) {
+						console.log(err)
+						uni.showToast({
+							title: '添加失败',
+							icon:'error'
+						});
+					}
+				})
+			}
 			
 		},
 		mounted() {
@@ -100,11 +147,15 @@
 
 <style lang="scss">
 	.back {
+		height: 100vh;
 		position: relative;
-		background-color: #FFFFFF;
-		width: 664rpx;
-		height: 1112rpx;
-
+		width: 660rpx;
+		height: 1050rpx;
+		top: 30rpx;
+		margin: 0 auto;
+		background-color: white;
+		border-radius: 30rpx;
+		box-shadow: 0 4rpx 12rpx #888888;
 		.top {
 			position: absolute;
 			top: 0rpx;
@@ -136,6 +187,7 @@
 
 				.inputText {
 					position: absolute;
+					top: 9rpx;
 					left: 40rpx;
 					font-size: 48rpx;
 					color: #000;
@@ -144,6 +196,7 @@
 
 				.input {
 					position: absolute;
+					top: 7rpx;
 					height: 74rpx;
 					left: 280rpx;
 					border: 0.5rpx solid #5c5c5c;
@@ -192,10 +245,9 @@
 				color: #5c5c5c;
 				text-align: center;
 			}
-
 			.release {
 				position: absolute;
-				top: 632rpx;
+				top: 620rpx;
 				left: 40rpx;
 				font-size: 48rpx;
 				color: #000;
@@ -207,7 +259,7 @@
 
 		.bottom {
 			position: absolute;
-			bottom: 148rpx;
+			bottom: 108rpx;
 			left: 40rpx;
 			height: 246rpx;
 			width: 572rpx;
@@ -266,7 +318,7 @@
 			.iconfont {
 				position: absolute;
 				font-size: 86rpx;
-				top: 100rpx;
+				top: 64rpx;
 				left: 292rpx;
 			}
 
