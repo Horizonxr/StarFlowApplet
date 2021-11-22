@@ -35,7 +35,7 @@
 		<view class="top-wrapper">
 			<!-- 顶部 -->
 			<view class="top">
-				<view class="title">项目选择</view>
+				<view class="title" @click="refreshList()">项目选择</view>
 				<view class="account">GitHub账号：{{GitHubAccount}}</view>
 				<navigator class="top-button" url="/pages/accountSettings/accountSettings" hover-class="navigator-hover">
 				  <view class="iconfont icon-shezhi "></view>
@@ -123,6 +123,34 @@
 					animationDuration:300
 				})
 			},
+			refreshList() {
+				uni.showLoading({
+					title: '加载中'
+				})
+				uni.request({
+				    url: baseUrl + '/repo/showRepo', //仅为示例，并非真实接口地址。
+					method:'POST',
+					timeout:8000,
+				    data: {
+				        u_id: this.u_id
+				    },
+				    header: {
+				        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+				    },
+				    success: (res) => {
+						console.log(res.data.data)
+						this.project_list = res.data.data
+						uni.hideLoading()
+				    },
+					fail() {
+						uni.hideLoading()
+						uni.showToast({
+							title: '请求失败',
+							icon:'error'
+						});
+					}
+				})
+			}
 
 		},
 		onLoad() {

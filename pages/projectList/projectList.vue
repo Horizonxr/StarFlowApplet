@@ -170,7 +170,6 @@
 				uni.showLoading({
 					title: '加载中'
 				})
-				console.log("调用页面刷新")
 				uni.request({
 					url: baseUrl + '/repo/showTask', //仅为示例，并非真实接口地址。
 					method: 'POST',
