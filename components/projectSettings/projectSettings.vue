@@ -91,13 +91,12 @@
 			closememberAudit() {
 				this.$refs.memberAudit.close()
 			},
+			//权限修改函数
 			pemissionSetting_request() {
-				console.log(this.pull_member_id)
-				console.log(this.pull_identity)
+				let _this = this
 				this.identity_change[0].member_id=this.pull_member_id
 				this.identity_change[0].identity=this.pull_identity
 				let i = JSON.stringify(this.identity_change)
-				console.log(i)
 				uni.request({
 					url: baseUrl + '/repo/changeIdentity', //仅为示例，并非真实接口地址。
 					method: 'POST',
@@ -107,7 +106,7 @@
 						"content-type": "application/j" //自定义请求头信息
 					},
 					success: (res) => {
-						console.log(res.message)
+						_this.$options.methods.refreshMemberList.bind(this)()
 						uni.showToast({
 							title: '修改成功',
 							icon: 'success'
@@ -121,14 +120,12 @@
 						});
 					}
 				})
-				this.$options.methods.refreshMemberList.bind(this)()
 				this.$options.methods.cancle.bind(this)()
 			},
 			refreshMemberList() {
 				uni.showLoading({
 					title: '加载中'
 				})
-				console.log('222222')
 				uni.request({
 					url: baseUrl + '/repo/getAllMember', //仅为示例，并非真实接口地址。
 					method: 'POST',
@@ -140,9 +137,11 @@
 						"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 					},
 					success: (res) => {
-						console.log("这是刷新后项目成员列表")
+						console.log("获得人员数据")
 						console.log(res.data.data)
 						this.member_list = res.data.data
+						console.log("更新后人员数据")
+						console.log(this.member_list)
 						uni.hideLoading()
 					},
 					fail() {
@@ -153,7 +152,7 @@
 						});
 					}
 				})
-			
+				this.$forceUpdate()
 			},
 		},
 			
