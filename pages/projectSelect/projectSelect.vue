@@ -54,7 +54,7 @@
 					<view class="list-item-more">
 						<view class="member-number">
 							<view class="iconfont icon-ren111"></view>
-							<view class="number">15</view>
+							<view class="number">{{item.repo[0].fields.repo_member}}</view>
 						</view>
 						<view class="list-item-description">{{item.repo[0].fields.url}}</view>
 						<progress class="list-item-bar" duration=7 stroke-width="20rpx" border-radius="300" active="true" color= "#5091f2" :percent="item.repo[0].fields.finished * 100 / (item.repo[0].fields.checking+item.repo[0].fields.finished+item.repo[0].fields.incomplete)"></progress>

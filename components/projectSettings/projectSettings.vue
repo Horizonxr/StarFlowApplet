@@ -392,9 +392,9 @@
 
 			.icon-duigou {
 				position: absolute;
-				font-size: 82rpx;
+				font-size: 92rpx;
 				left: 492rpx;
-				top: 918rpx;
+				top: 904rpx;
 			}
 		}
 
