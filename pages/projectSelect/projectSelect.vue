@@ -26,14 +26,14 @@
 		</uni-popup>
 		<!-- 第二层弹窗 -->
 		<uni-popup class="createPopup" ref="createPopup" type="center" :mask-click="false">
-			<createProject @closeCreatepopup="closeCreatepopup"></createProject>
+			<createProject :receivelist="project_list"@closeCreatepopup="closeCreatepopup"></createProject>
 		</uni-popup>
 		<uni-popup class="joininPopup"  ref="joininPopup" type="center" :mask-click="false">
 			<joininProject  @closeJoininpopup="closeJoininpopup"></joininProject>
 		</uni-popup>
 		<!-- 删除项目提示信息 -->
-		<uni-popup ref="deletepopup" type="dialog">
-			<uni-popup-dialog type='info' title="提示"mode="base" content="确认删除该项目？"message="成功消息" :duration="2000" :before-close="true" @close="close" @confirm="request_delete"></uni-popup-dialog>
+		<uni-popup ref="exitpopup" type="dialog">
+			<uni-popup-dialog type='info' title="提示"mode="base" content="确认删除该项目？"message="成功消息" :duration="2000" :before-close="true" @close="closeExitpopup" @confirm="request_exit"></uni-popup-dialog>
 		</uni-popup>
 		<view class="top-wrapper">
 			<!-- 顶部 -->
@@ -50,14 +50,14 @@
 			<view class="iconfont icon-zengjia"></view>
 		</view>
 		<!-- 仓库列表 -->
-		<view class="list-wrapper">
+		<view class="list-wrapper" ref='projectSelect'>
 			<view class="list-item-wrapper" v-for="(item, key) in project_list" :key=item.key>
-				<view class="list-item" @click="toProject(key)">
+				<view class="list-item" @click="toProject(key)" @longpress='exitproject(key)'>
 					<view class="list-item-repositories">{{item.repo[0].fields.repo_name}}</view>
 					<view class="list-item-more">
 						<view class="member-number">
 							<view class="iconfont icon-ren111"></view>
-							<view class="number">15</view>
+							<view class="number">{{item.repo[0].fields.repo_member}}</view>
 						</view>
 						<view class="list-item-description">{{item.repo[0].fields.url}}</view>
 						<progress class="list-item-bar" duration=7 stroke-width="20rpx" border-radius="300" active="true" color= "#5091f2" :percent="item.repo[0].fields.finished * 100 / (item.repo[0].fields.checking+item.repo[0].fields.finished+item.repo[0].fields.incomplete)"></progress>
@@ -82,7 +82,9 @@
 			return {
 				userInfo:[],
 				project_list:[],
-				u_id:-1
+				u_id:9,
+				middle:-1,
+				message:''
 			};
 		},
 		components:{createProject,joininProject},
@@ -101,6 +103,7 @@
 			closeCreatepopup(){
 				this.$refs.createPopup.close()
 				// 刷新
+				this.$refs.projectSelect.refresh()
 			},
 			joininPopup(){
 				this.$refs.joininPopup.open('center')
@@ -108,11 +111,13 @@
 			closeJoininpopup(){
 				this.$refs.joininPopup.close()
 			},
-			deleteproject(){
-				this.$refs.deletepopup.open()
+			exitproject(key){
+				this.middle=key;
+				this.$refs.exitpopup.open()
+				
 			},
-			close(){
-				this.$refs.deletepopup.close()
+			closeExitpopup(){
+				this.$refs.exitpopup.close()
 			}, 
 			toProject(key){
 				console.log(this.project_list[key])
@@ -131,6 +136,55 @@
 					animationDuration:300
 				})
 			},
+			request_exit(){
+				uni.showLoading({
+					title:"加载中",
+					mask:true
+				})
+				console.log(this.project_list[this.middle].repo[0].pk)
+				console.log(this.u_id)
+				uni.request({
+					
+				    url: baseUrl + '/repo/exitRepo', //仅为示例，并非真实接口地址。
+					method:'POST',
+					timeout:8000,
+				    data: {
+						repo_id:this.project_list[this.middle].repo[0].pk,
+				        u_id: this.u_id,
+				    },
+				    header: {
+				        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+				    },
+				    success: (res) => {
+						// console.log(res.data.data)
+						this.message = res.data
+						if(this.message=='success')
+						uni.showToast({
+							title: '请求退出成功',
+							icon:'success',
+							duration:2000
+						});
+						else{
+							uni.showToast({
+								title: this.message,
+								icon:'success',
+								duration:2000
+							});
+						}
+						uni.hideLoading()
+						this.$refs.exitpopup.close()
+				
+				    },
+					fail() {
+						uni.hideLoading()
+						uni.showToast({
+							title: this.message,
+							icon:'error'
+						});
+					}
+				})
+				
+			}
 
 		},
 		onLoad() {
@@ -143,7 +197,7 @@
 				title:"加载中",
 				mask:true
 			})
-			this.u_id = uni.getStorageSync("u_id")
+			// this.u_id = uni.getStorageSync("u_id")
 			this.userInfo = uni.getStorageSync("userInfo")
 			uni.request({
 			    url: baseUrl + '/repo/showRepo', //仅为示例，并非真实接口地址。
@@ -156,7 +210,7 @@
 			        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 			    },
 			    success: (res) => {
-					console.log(res.data.data)
+					// console.log(res.data.data)
 					this.project_list = res.data.data
 					uni.hideLoading()
 			    },
@@ -169,7 +223,8 @@
 				}
 			})
 
-		}
+		},
+		
 	}
 </script>
 

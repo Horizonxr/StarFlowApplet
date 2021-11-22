@@ -7,7 +7,7 @@
 		<!-- 返回按钮 -->
 		<view class="top-button1"><view class="iconfont icon-fanhui" @click="back"></view></view>
 		<view class="title1">创建项目</view>
-		<view class="account1">当前帐号{{ Horizon}}</view>
+		<view class="account1">当前帐号{{userInfo.nickName}}</view>
 		<!-- 搜索 -->
 		<view class="search1">
 			<view class="repositories-list1">仓库列表</view>
@@ -32,6 +32,7 @@ export default {
 	},
 	data() {
 		return {
+			userInfo:[],
             u_id:1,
             repositories_list:[],
             keyword:'' ,
@@ -110,7 +111,7 @@ export default {
 				title:"加载中",
 				mask:true
 			})	
-			this.u_id = uni.getStorageSync("u_id")
+			// this.u_id = uni.getStorageSync("u_id")
 			uni.request({
 			    url: baseUrl + '/repo/getReposByKeyword', //仅为示例，并非真实接口地址。
 				method:'POST',
@@ -144,6 +145,7 @@ export default {
 				mask:true
 			})
 			// this.u_id = uni.getStorageSync("u_id")
+			this.userInfo=uni.getStorageSync("userInfo")
 			console.log(this.u_id)
 			uni.request({
 				url: baseUrl + '/repo/getRepos', //仅为示例，并非真实接口地址。
