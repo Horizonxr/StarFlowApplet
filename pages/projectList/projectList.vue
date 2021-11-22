@@ -15,7 +15,7 @@
 				<view class="more-text">添加新任务</view>
 				<view class="help-text">帮助说明</view>
 				<view class="quxiao-text">取消</view>
-				<view class="button-more" @click="addPopup">
+				<view class="button-more" @click="addTask">
 					<view class="iconfont icon-zengjia">
 					</view>
 				</view>
@@ -30,7 +30,7 @@
 			</view>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="addaddPopup" type="center" :mask-click="false">
-			<addPopup @closeaddPopup="closeaddPopup" :repo_id="repo_id"></addPopup>
+			<addTask @closeaddPopup="closeaddPopup" :repo_id="repo_id"></addTask>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="myproject" type="center" :mask-click="false">
 			<myPopup @openmemberAudit="openmemberAudit" @closemyPopup="closemyPopup" :repo_name="repo_name" :repo_address="repo_address"
@@ -141,7 +141,7 @@
 			morePopup() {
 				this.$refs.moremorePopup.open("center")
 			},
-			addPopup() {
+			addTask() {
 				this.$refs.addaddPopup.open("center")
 			},
 			closeaddPopup() {
