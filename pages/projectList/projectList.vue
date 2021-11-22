@@ -33,8 +33,8 @@
 			<addTask @closeaddPopup="closeaddPopup" :repo_id="repo_id"></addTask>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="myproject" type="center" :mask-click="false">
-			<myPopup @openmemberAudit="openmemberAudit" @closemyPopup="closemyPopup" :repo_name="repo_name" :repo_address="repo_address"
-				:repo_id="repo_id"></myPopup>
+			<projectSettings @openmemberAudit="openmemberAudit" @closemyPopup="closemyPopup" :repo_name="repo_name" :repo_address="repo_address"
+				:repo_id="repo_id"></projectSettings>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="memberAudit" type="center" :mask-click="false">
 			<memberAudit @closememberAudit="closememberAudit"></memberAudit>
@@ -44,7 +44,7 @@
 				<view class="title">项目名称</view>
 				<view class="account">仓库：{{repo_name}}</view>
 				<view class="top-button">
-					<view class="iconfont icon-shezhi" @click="myPopup"></view>
+					<view class="iconfont icon-shezhi" @click="projectSettings"></view>
 				</view>
 			</view>
 		</view>
@@ -150,7 +150,7 @@
 			canclePopup() {
 				this.$refs.moremorePopup.close("center")
 			},
-			myPopup() {
+			projectSettings() {
 				this.$refs.myproject.open("center")
 			},
 			closemyPopup() {
