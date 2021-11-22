@@ -12,13 +12,20 @@
 				</view>
 			</view>
 		</view>
-		<view class="login" @click="weixinLogin()">
-			<view class="login-content">{{userInfo.length == 0 ? "点击获取用户信息" : "微信名称: " + userInfo.nickName}}</view>
+		<view class="login-wrapper">
+			<view class="login" @click="weixinLogin()">
+				<view class="login-content">{{userInfo.length == 0 ? "第一步：绑定微信" : "微信名称: " + userInfo.nickName}}</view>
+			</view>
+			<view class="login" @click="GitHubPopup()">
+				<view class="login-content">{{GitHubAccount == '' ? "第二步：绑定GitHub" : "GitHub: " + GitHubAccount}}</view>
+			</view>
+			<view class="login" @click="updateGitHubToken()">
+				<view class="login-content">{{GitHubToken == false ? "第三步：绑定GitHub Token" : "GitHub Token: " + tokenStatus()}}</view>
+			</view>
+			<view class="login" @click="toProjectSelect()">
+				<view class="login-content">转到项目</view>
+			</view>
 		</view>
-		<view class="github-login" @click="GitHubPopup()">
-			<view class="login-content">{{GitHubAccount == '' || GitHubAccount == '' ? "点击绑定GitHub账号" : "GitHub: " + GitHubAccount}}</view>
-		</view>
-		<button type="default" @click="toProjectSelect">转到项目</button>
 	</view>
 </template>
 
@@ -29,6 +36,7 @@
 			return {
 				u_id: -1,
 				GitHubAccount: '',
+				GitHubToken: false,
 				userInfo:[]
 			};
 		},
@@ -123,6 +131,9 @@
 				uni.redirectTo({
 					url:'../projectSelect/projectSelect'
 				})
+			},
+			tokenStatus(){
+				return '已失效'
 			}
 		},
 		onLoad() {
@@ -199,36 +210,25 @@
 			}
 		}
 	}
-	.login{
-		position: relative;
+	.login-wrapper{
 		top: 30rpx;
-		width: 615rpx;
-		height: 120rpx;
-		margin: 0 auto;
-		background-color: white;
-		border-radius: 10rpx;
-		box-shadow: 0 4rpx 12rpx #888888;
-		.login-content{
-			position: absolute;
-			margin-left: 20rpx;
-			line-height: 120rpx;
-			font-size: 40rpx;
+		.login{
+			position: relative;
+			width: 615rpx;
 			height: 120rpx;
+			margin: 20rpx auto;
+			background-color: white;
+			border-radius: 10rpx;
+			box-shadow: 0 4rpx 12rpx #888888;
+			.login-content{
+				position: absolute;
+				width: 615rpx;
+				text-align: center;
+				line-height: 120rpx;
+				font-size: 40rpx;
+				height: 120rpx;
+			}
 		}
 	}
-	.github-login{
-		width: 615rpx;
-		height: 120rpx;
-		margin: 50rpx auto;
-		background-color: white;
-		border-radius: 10rpx;
-		box-shadow: 0 4rpx 12rpx #888888;
-		.login-content{
-			position: absolute;
-			margin-left: 20rpx;
-			line-height: 120rpx;
-			font-size: 40rpx;
-			height: 120rpx;
-		}
-	}
+
 </style>
