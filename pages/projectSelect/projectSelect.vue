@@ -36,7 +36,7 @@
 			<!-- 顶部 -->
 			<view class="top">
 				<view class="title">项目选择</view>
-				<view class="account">当前账号：{{userInfo.nickName}}</view>
+				<view class="account">GitHub账号：{{GitHubAccount}}</view>
 				<navigator class="top-button" url="/pages/accountSettings/accountSettings" hover-class="navigator-hover">
 				  <view class="iconfont icon-shezhi "></view>
 				</navigator>
@@ -80,7 +80,8 @@
 			return {
 				userInfo:[],
 				project_list:[],
-				u_id:-1
+				u_id:-1,
+				GitHubAccount:''
 			};
 		},
 		components:{createProject,joininProject},
@@ -136,6 +137,7 @@
 			})
 			this.u_id = uni.getStorageSync("u_id")
 			this.userInfo = uni.getStorageSync("userInfo")
+			this.GitHubAccount = uni.getStorageSync("GitHubAccount")
 			uni.request({
 			    url: baseUrl + '/repo/showRepo', //仅为示例，并非真实接口地址。
 				method:'POST',
