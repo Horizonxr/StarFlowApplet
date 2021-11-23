@@ -15,7 +15,7 @@
 				<view class="more-text">添加新任务</view>
 				<view class="help-text">帮助说明</view>
 				<view class="quxiao-text">取消</view>
-				<view class="button-more" @click="addPopup">
+				<view class="button-more" @click="addTask">
 					<view class="iconfont icon-zengjia">
 					</view>
 				</view>
@@ -30,21 +30,19 @@
 			</view>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="addaddPopup" type="center" :mask-click="false">
-			<addPopup @closeaddPopup="closeaddPopup" :repo_id="repo_id"></addPopup>
+			<addTask @closeaddPopup="closeaddPopup" :repo_id="repo_id"></addTask>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="myproject" type="center" :mask-click="false">
-			<myPopup @openmemberAudit="openmemberAudit" @closemyPopup="closemyPopup" :repo_name="repo_name" :repo_address="repo_address"
-				:repo_id="repo_id"></myPopup>
+			<projectSettings @openmemberAudit="openmemberAudit" @closemyPopup="closemyPopup" :repo_name="repo_name" :repo_address="repo_address"
+				:repo_id="repo_id"></projectSettings>
 		</uni-popup>
-		<uni-popup class="addaddPopup" ref="memberAudit" type="center" :mask-click="false">
-			<memberAudit @closememberAudit="closememberAudit"></memberAudit>
-		</uni-popup>
+		
 		<view class="top-wrapper">
 			<view class="top">
 				<view class="title">项目名称</view>
 				<view class="account">仓库：{{repo_name}}</view>
 				<view class="top-button">
-					<view class="iconfont icon-shezhi" @click="myPopup"></view>
+					<view class="iconfont icon-shezhi" @click="projectSettings"></view>
 				</view>
 			</view>
 		</view>
@@ -141,26 +139,22 @@
 			morePopup() {
 				this.$refs.moremorePopup.open("center")
 			},
-			addPopup() {
+			addTask() {
 				this.$refs.addaddPopup.open("center")
 			},
 			closeaddPopup() {
 				this.$refs.addaddPopup.close("center")
+				this.$refs.moremorePopup.close("center")
+				this.$options.methods.refreshList.bind(this)()
 			},
 			canclePopup() {
 				this.$refs.moremorePopup.close("center")
 			},
-			myPopup() {
+			projectSettings() {
 				this.$refs.myproject.open("center")
 			},
 			closemyPopup() {
 				this.$refs.myproject.close("center")
-			},
-			openmemberAudit() {
-				this.$refs.memberAudit.open("center")
-			},
-			closememberAudit(){
-				this.$refs.memberAudit.close()
 			},
 			// DDL计算连接字符串函数
 			DDLcompute(DDL) {
@@ -176,7 +170,6 @@
 				uni.showLoading({
 					title: '加载中'
 				})
-				console.log("调用页面刷新")
 				uni.request({
 					url: baseUrl + '/repo/showTask', //仅为示例，并非真实接口地址。
 					method: 'POST',

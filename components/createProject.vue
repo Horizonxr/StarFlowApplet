@@ -1,6 +1,6 @@
 <template name="createProject">
 	<view class="body1">
-		<!-- 加入项目提示信息 -->
+		<!-- 创建项目提示信息 -->
 		<uni-popup ref="popup" type="dialog">
 			<uni-popup-dialog type='info' title="提示"mode="base" content="确认创建该项目？"message="成功消息" :duration="2000" :before-close="true" @close="close" @confirm="request_joinin"></uni-popup-dialog>
 		</uni-popup>
@@ -33,7 +33,7 @@ export default {
 	data() {
 		return {
 			userInfo:[],
-            u_id:1,
+            u_id:4,
             repositories_list:[],
             keyword:'' ,
 			middle:-1,
@@ -89,7 +89,7 @@ export default {
 					});
 				}
 			})
-			
+			this.$emit("refresh");
          	
         },
         openPopup(key){
@@ -101,6 +101,7 @@ export default {
         back(){
         	this.keyword=''
            	this.$emit("closeCreatepopup");
+           
         }, 
         input(e){
         	this.keyword=e.target.value

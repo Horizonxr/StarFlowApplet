@@ -38,8 +38,8 @@
 		<view class="top-wrapper">
 			<!-- 顶部 -->
 			<view class="top">
-				<view class="title">项目选择</view>
-				<view class="account">当前账号：{{userInfo.nickName}}</view>
+				<view class="title" @click="refreshList()">项目选择</view>
+				<view class="account">GitHub账号：{{GitHubAccount}}</view>
 				<navigator class="top-button" url="/pages/accountSettings/accountSettings" hover-class="navigator-hover">
 				  <view class="iconfont icon-shezhi "></view>
 				</navigator>
@@ -51,7 +51,7 @@
 		</view>
 		<!-- 仓库列表 -->
 		<view class="list-wrapper" ref='projectSelect'>
-			<view class="list-item-wrapper" v-for="(item, key) in project_list" :key=item.key>
+			<view class="list-item-wrapper"@refresh='refreshList' v-for="(item, key) in project_list" :key=item.key >
 				<view class="list-item" @click="toProject(key)" @longpress='exitproject(key)'>
 					<view class="list-item-repositories">{{item.repo[0].fields.repo_name}}</view>
 					<view class="list-item-more">
@@ -82,9 +82,10 @@
 			return {
 				userInfo:[],
 				project_list:[],
-				u_id:9,
+				u_id:4,
 				middle:-1,
-				message:''
+				message:'',
+				GitHubAccount:''
 			};
 		},
 		components:{createProject,joininProject},
@@ -102,8 +103,6 @@
 			 },
 			closeCreatepopup(){
 				this.$refs.createPopup.close()
-				// 刷新
-				this.$refs.projectSelect.refresh()
 			},
 			joininPopup(){
 				this.$refs.joininPopup.open('center')
@@ -144,48 +143,59 @@
 				console.log(this.project_list[this.middle].repo[0].pk)
 				console.log(this.u_id)
 				uni.request({
-					
 				    url: baseUrl + '/repo/exitRepo', //仅为示例，并非真实接口地址。
 					method:'POST',
 					timeout:8000,
 				    data: {
 						repo_id:this.project_list[this.middle].repo[0].pk,
 				        u_id: this.u_id,
-				    },
-				    header: {
-				        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
-				    },
-				    success: (res) => {
-						// console.log(res.data.data)
-						this.message = res.data
-						if(this.message=='success')
+					},	
+					success: (res) => {
 						uni.showToast({
 							title: '请求退出成功',
 							icon:'success',
 							duration:2000
 						});
-						else{
-							uni.showToast({
-								title: this.message,
-								icon:'success',
-								duration:2000
-							});
-						}
-						uni.hideLoading()
 						this.$refs.exitpopup.close()
-				
-				    },
+						uni.hideLoading()
+					},
 					fail() {
 						uni.hideLoading()
 						uni.showToast({
-							title: this.message,
-							icon:'error'
+						title: this.message,
+						icon:'error'
 						});
 					}
 				})
-				
-			}
-
+			},
+			refreshList() {
+				uni.showLoading({
+					title: '加载中'
+				})
+				uni.request({
+				    url: baseUrl + '/repo/showRepo', //仅为示例，并非真实接口地址。
+					method:'POST',
+					timeout:8000,
+				    data: {
+				        u_id: this.u_id
+				    },
+				    header: {
+				        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+				    },
+				    success: (res) => {
+						console.log(res.data.data)
+						this.project_list = res.data.data
+						uni.hideLoading()
+					},
+					fail() {
+						uni.hideLoading()
+						uni.showToast({
+							title: '请求失败',
+							icon:'error'
+						});
+					}
+				})	
+			}	
 		},
 		onLoad() {
 			if (!uni.getStorageSync("userInfo") || !uni.getStorageSync("GitHubAccount") || !uni.getStorageSync("GitHubAccount")){
@@ -199,6 +209,7 @@
 			})
 			// this.u_id = uni.getStorageSync("u_id")
 			this.userInfo = uni.getStorageSync("userInfo")
+			this.GitHubAccount = uni.getStorageSync("GitHubAccount")
 			uni.request({
 			    url: baseUrl + '/repo/showRepo', //仅为示例，并非真实接口地址。
 				method:'POST',
