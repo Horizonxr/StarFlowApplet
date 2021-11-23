@@ -82,7 +82,7 @@
 			return {
 				userInfo:[],
 				project_list:[],
-				u_id:2,
+				u_id:-1,
 				middle:-1,
 				message:'',
 				GitHubAccount:''
@@ -141,7 +141,7 @@
 					mask:true
 				})
 				console.log(this.project_list[this.middle].repo[0].pk)
-				console.log(this.u_id)
+				console.log('用户当前的u—id'+this.u_id)
 				uni.request({
 				    url: baseUrl + '/repo/exitRepo', //仅为示例，并非真实接口地址。
 					method:'POST',
@@ -212,7 +212,7 @@
 				title:"加载中",
 				mask:true
 			})
-			// this.u_id = uni.getStorageSync("u_id")
+			this.u_id = uni.getStorageSync("u_id")
 			this.userInfo = uni.getStorageSync("userInfo")
 			this.GitHubAccount = uni.getStorageSync("GitHubAccount")
 			uni.request({

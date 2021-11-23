@@ -25,8 +25,14 @@
 	export default {
 		name: 'myinput',
 		props: {
-			taskInfo: {
-				required: true,
+			taskInfo:{
+				required: true
+			},
+			role:{
+				required:true
+			},
+			member_id:{
+				required:true
 			}
 		},
 		data() {
