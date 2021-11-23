@@ -39,7 +39,7 @@
 		
 		<view class="top-wrapper">
 			<view class="top">
-				<view class="title">项目名称</view>
+				<view class="title">任务列表</view>
 				<view class="account">仓库：{{repo_name}}</view>
 				<view class="top-button">
 					<view class="iconfont icon-shezhi" @click="projectSettings"></view>

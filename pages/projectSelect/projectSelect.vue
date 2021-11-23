@@ -175,7 +175,7 @@
 							icon: 'success',
 							duration: 2000
 						});
-						this.refreshList()
+						this.$options.methods.refreshList.bind(this)()
 						this.$refs.exitpopup.close()
 						uni.hideLoading()
 					},
