@@ -25,12 +25,15 @@
 			</view>
 		</uni-popup>
 		<!-- 第二层弹窗 -->
-		</uni-popup>
 		<uni-popup class="createPopup" ref="createPopup" type="center" :mask-click="false">
-			<createProject @closeCreatepopup="closeCreatepopup"></createProject>
+			<createProject :receivelist="project_list"@closeCreatepopup="closeCreatepopup" @refresh='refreshList()'></createProject>
 		</uni-popup>
 		<uni-popup class="joininPopup"  ref="joininPopup" type="center" :mask-click="false">
 			<joininProject  @closeJoininpopup="closeJoininpopup"></joininProject>
+		</uni-popup>
+		<!-- 删除项目提示信息 -->
+		<uni-popup ref="exitpopup" type="dialog">
+			<uni-popup-dialog type='info' title="提示"mode="base" content="确认删除该项目？"message="成功消息" :duration="2000" :before-close="true" @close="closeExitpopup" @confirm="request_exit"></uni-popup-dialog>
 		</uni-popup>
 		<view class="top-wrapper">
 			<!-- 顶部 -->
@@ -47,14 +50,14 @@
 			<view class="iconfont icon-zengjia"></view>
 		</view>
 		<!-- 仓库列表 -->
-		<view class="list-wrapper">
-			<view class="list-item-wrapper" v-for="(item, key) in project_list" :key=item.key>
-				<view class="list-item" @click="toProject(key)">
+		<view class="list-wrapper" ref='projectSelect'>
+			<view class="list-item-wrapper" v-for="(item, key) in project_list" :key=item.key >
+				<view class="list-item" @click="toProject(key)" @longpress='exitproject(key)'>
 					<view class="list-item-repositories">{{item.repo[0].fields.repo_name}}</view>
 					<view class="list-item-more">
 						<view class="member-number">
 							<view class="iconfont icon-ren111"></view>
-							<view class="number">15</view>
+							<view class="number">{{item.repo[0].fields.repo_member}}</view>
 						</view>
 						<view class="list-item-description">{{item.repo[0].fields.url}}</view>
 						<progress class="list-item-bar" duration=7 stroke-width="20rpx" border-radius="300" active="true" color= "#5091f2" :percent="item.repo[0].fields.finished * 100 / (item.repo[0].fields.checking+item.repo[0].fields.finished+item.repo[0].fields.incomplete)"></progress>
@@ -68,7 +71,6 @@
 			<view class='blue'></view>
 			<view class='green'></view>
 		</view>
-		
 	</view>
 </template>
 <script>
@@ -80,7 +82,9 @@
 			return {
 				userInfo:[],
 				project_list:[],
-				u_id:-1,
+				u_id:2,
+				middle:-1,
+				message:'',
 				GitHubAccount:''
 			};
 		},
@@ -106,6 +110,14 @@
 			closeJoininpopup(){
 				this.$refs.joininPopup.close()
 			},
+			exitproject(key){
+				this.middle=key;
+				this.$refs.exitpopup.open()
+				
+			},
+			closeExitpopup(){
+				this.$refs.exitpopup.close()
+			}, 
 			toProject(key){
 				console.log(this.project_list[key])
 				let repo = this.project_list[key].repo[0].pk
@@ -123,7 +135,45 @@
 					animationDuration:300
 				})
 			},
+			request_exit(){
+				uni.showLoading({
+					title:"加载中",
+					mask:true
+				})
+				console.log(this.project_list[this.middle].repo[0].pk)
+				console.log(this.u_id)
+				uni.request({
+				    url: baseUrl + '/repo/exitRepo', //仅为示例，并非真实接口地址。
+					method:'POST',
+					timeout:8000,
+				    data: {
+						repo_id:this.project_list[this.middle].repo[0].pk,
+				        u_id: this.u_id,
+					},	
+					header: {
+					    "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+					},
+					success: (res) => {
+						uni.showToast({
+							title: '请求退出成功',
+							icon:'success',
+							duration:2000
+						});
+						this.refreshList()
+						this.$refs.exitpopup.close()
+						uni.hideLoading()
+					},
+					fail() {
+						uni.hideLoading()
+						uni.showToast({
+						title: this.message,
+						icon:'error'
+						});
+					}
+				})
+			},
 			refreshList() {
+				console.log('refresh')
 				uni.showLoading({
 					title: '加载中'
 				})
@@ -141,7 +191,7 @@
 						console.log(res.data.data)
 						this.project_list = res.data.data
 						uni.hideLoading()
-				    },
+					},
 					fail() {
 						uni.hideLoading()
 						uni.showToast({
@@ -149,9 +199,8 @@
 							icon:'error'
 						});
 					}
-				})
-			}
-
+				})	
+			}	
 		},
 		onLoad() {
 			if (!uni.getStorageSync("userInfo") || !uni.getStorageSync("GitHubAccount") || !uni.getStorageSync("GitHubAccount")){
@@ -163,7 +212,7 @@
 				title:"加载中",
 				mask:true
 			})
-			this.u_id = uni.getStorageSync("u_id")
+			// this.u_id = uni.getStorageSync("u_id")
 			this.userInfo = uni.getStorageSync("userInfo")
 			this.GitHubAccount = uni.getStorageSync("GitHubAccount")
 			uni.request({
@@ -177,7 +226,7 @@
 			        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 			    },
 			    success: (res) => {
-					console.log(res.data.data)
+					// console.log(res.data.data)
 					this.project_list = res.data.data
 					uni.hideLoading()
 			    },
@@ -190,7 +239,8 @@
 				}
 			})
 
-		}
+		},
+		
 	}
 </script>
 
