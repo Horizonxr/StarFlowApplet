@@ -26,7 +26,7 @@
 		</uni-popup>
 		<!-- 第二层弹窗 -->
 		<uni-popup class="createPopup" ref="createPopup" type="center" :mask-click="false">
-			<createProject :receivelist="project_list"@closeCreatepopup="closeCreatepopup"></createProject>
+			<createProject :receivelist="project_list"@closeCreatepopup="closeCreatepopup" @refresh='refreshList()'></createProject>
 		</uni-popup>
 		<uni-popup class="joininPopup"  ref="joininPopup" type="center" :mask-click="false">
 			<joininProject  @closeJoininpopup="closeJoininpopup"></joininProject>
@@ -51,7 +51,7 @@
 		</view>
 		<!-- 仓库列表 -->
 		<view class="list-wrapper" ref='projectSelect'>
-			<view class="list-item-wrapper"@refresh='refreshList' v-for="(item, key) in project_list" :key=item.key >
+			<view class="list-item-wrapper" v-for="(item, key) in project_list" :key=item.key >
 				<view class="list-item" @click="toProject(key)" @longpress='exitproject(key)'>
 					<view class="list-item-repositories">{{item.repo[0].fields.repo_name}}</view>
 					<view class="list-item-more">
@@ -82,7 +82,7 @@
 			return {
 				userInfo:[],
 				project_list:[],
-				u_id:4,
+				u_id:2,
 				middle:-1,
 				message:'',
 				GitHubAccount:''
@@ -150,12 +150,16 @@
 						repo_id:this.project_list[this.middle].repo[0].pk,
 				        u_id: this.u_id,
 					},	
+					header: {
+					    "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+					},
 					success: (res) => {
 						uni.showToast({
 							title: '请求退出成功',
 							icon:'success',
 							duration:2000
 						});
+						this.refreshList()
 						this.$refs.exitpopup.close()
 						uni.hideLoading()
 					},
@@ -169,6 +173,7 @@
 				})
 			},
 			refreshList() {
+				console.log('refresh')
 				uni.showLoading({
 					title: '加载中'
 				})
