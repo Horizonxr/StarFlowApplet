@@ -187,24 +187,25 @@ export default {
 			height: 100rpx;
 			border:none;
 		}
-		.list-item2{
-			margin: 25rpx 20rpx auto;
-			position: relative;
-			top:130rpx;
-			left:-10rpx;
-			height: 60rpx;
-			width: 500rpx;
-			border-radius: 10rpx;
-			box-shadow: 0 4rpx 12rpx #888888;
-			background-color:rgba($color: #ffff, $alpha: 0.5);
-			.list-item-repositories2{
-				text-align: center;
-			}
-		}	
+		
 		.joinin-scroll-area{
 			position: relative;
-			top:5rpx;
+			top:90rpx;
 			height: 660rpx;
+			.list-item2{
+				margin: 25rpx 20rpx auto;
+				position: relative;
+				top:-20rpx;
+				left:-10rpx;
+				height: 60rpx;
+				width: 500rpx;
+				border-radius: 10rpx;
+				box-shadow: 0 4rpx 12rpx #888888;
+				background-color:rgba($color: #ffff, $alpha: 0.5);
+				.list-item-repositories2{
+					text-align: center;
+				}
+			}	
 		}
 	}
 }
