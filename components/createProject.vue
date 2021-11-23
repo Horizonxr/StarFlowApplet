@@ -7,19 +7,19 @@
 		<!-- 返回按钮 -->
 		<view class="top-button1"><view class="iconfont icon-fanhui" @click="back"></view></view>
 		<view class="title1">创建项目</view>
-		<view class="account1">当前帐号{{userInfo.nickName}}</view>
+		<view class="account1">GitHub帐号：{{GitHubAccount}}</view>
 		<!-- 搜索 -->
 		<view class="search1">
-			<view class="repositories-list1">仓库列表</view>
-			<input class="input-name1" type="text"@input="input":value=keyword placeholder=" 输入仓库名称进行检索" />
-			<view class="rectangle1"></view>
-			<view class="iconfont icon-sousuo" @click="search"></view>
-			<scroll-view class="scroll-area" scroll-y="true">
-				<view class="list-item1" v-for="(item, key) in repositories_list" :key=item.key>
-					<view class="list-item-repositories1" @click="openPopup(key)">{{item.repo_name}}</view>
-				</view>
-			</scroll-view>
+			<input class="input-name1" type="text" v-model="keyword" placeholder=" 输入仓库名称检索" />
+			<view class="rectangle1">
+				<view class="iconfont icon-sousuo" @click="search"></view>
+			</view>
 		</view>
+		<scroll-view class="scroll-area" scroll-y="true">
+			<view class="list-item1" v-for="(item, key) in repositories_list" :key=item.key>
+				<view class="list-item-repositories1" @click="openPopup(key)">{{item.repo_name}}</view>
+			</view>
+		</scroll-view>
 	</view>
 </template>
 
@@ -33,7 +33,7 @@ export default {
 	data() {
 		return {
 			userInfo:[],
-            u_id:2,
+            u_id:-1,
             repositories_list:[],
             keyword:'' ,
 			middle:-1,
@@ -79,6 +79,7 @@ export default {
 					// uni.reLaunch({
 					// 	url: '/pages/projectList/projectList'
 					// })
+					this.$emit("refresh");
 					this.close()
 			    },
 				fail() {
@@ -89,7 +90,6 @@ export default {
 					});
 				}
 			})
-			this.$emit("refresh");
         },
         openPopup(key){
            // 通过组件定义的ref调用uni-popup方法 ,如果传入参数 ，type 属性将失效 ，仅支持 ['top','left','bottom','right','center']
@@ -102,10 +102,8 @@ export default {
            	this.$emit("closeCreatepopup");
            
         }, 
-        input(e){
-        	this.keyword=e.target.value
-        },
 		search(){
+			console.log("u_id "+this.u_id)
 			console.log(this.keyword)
 			uni.showLoading({
 				title:"加载中",
@@ -137,7 +135,9 @@ export default {
 			})	
 		},
 	},
-	mounted:function() {
+	mounted() {
+		this.u_id = uni.getStorageSync("u_id")
+		this.GitHubAccount = uni.getStorageSync("GitHubAccount")
 		this.$nextTick(function () {
 		// 仅在整个视图都被渲染之后才会运行的代码
 			uni.showLoading({
@@ -212,30 +212,11 @@ export default {
 	}	
 	.search1{
 		position: relative;
+		width: 660rpx;
+		height: 50rpx;
 		top: 210rpx;
-		left: 50rpx;
+		left: 45rpx;
 		font-size: 34rpx;
-		.scroll-area{
-			position: relative;
-			top:25rpx;
-			height: 600rpx;
-			// background-color: #007AFF;
-			.list-item1{
-				margin: 25rpx 20rpx auto;
-				position: relative;
-				top:-20rpx;
-				border-radius: 10rpx;
-				left:-10rpx;
-				height: 60rpx;
-				width: 500rpx;
-				box-shadow: 0 4rpx 12rpx #888888;
-				background-color:rgba($color: #ffff, $alpha: 0.5);
-				.list-item-repositories1{
-					text-align: center;
-					overflow:hidden
-				}
-			}
-		}	
 		.repositories-list1{
 			position: relative;
 			font-size: 40rpx;
@@ -243,29 +224,50 @@ export default {
 		.rectangle1{
 			position: absolute;
 			top: 0rpx;
-			left: 170rpx;
+			margin: 0 auto;
 			font-size: 35rpx;
-			width: 410rpx;
+			width: 511rpx;
 			height: 60rpx;
 			border-radius: 15rpx;
 			border:1px solid #d2d2d2;
+			.iconfont{
+				position: absolute;
+				top: 1rpx;
+				left: 525rpx;
+				font-size: 64rpx;
+			}
 		}
 		.input-name1{
 			position: absolute;
-			top: 0rpx;
-			left: 185rpx;
+			top: 3rpx;
+			left:20rpx;
+			margin: 0 auto;
 			font-size: 35rpx;
 			width: 340rpx;
 			height: 60rpx;
 			border:none;
 		}
-		
-		.iconfont{
-			position: absolute;
-			top: 1rpx;
-			left: 525rpx;
-			font-size: 64rpx;
-		}
 	}
+	.scroll-area{
+		position: relative;
+		top:240rpx;
+		height: 600rpx;
+		width: 660rpx;
+		// background-color: #007AFF;
+		.list-item1{
+			margin: 25rpx auto;
+			position: relative;
+			border-radius: 10rpx;
+			height: 60rpx;
+			width: 560rpx;
+			padding-top: 12rpx;
+			box-shadow: 0 4rpx 12rpx #888888;
+			background-color:rgba($color: #ffff, $alpha: 0.5);
+			.list-item-repositories1{
+				text-align: center;
+				overflow:hidden
+			}
+		}
+	}	
 }
 </style>
