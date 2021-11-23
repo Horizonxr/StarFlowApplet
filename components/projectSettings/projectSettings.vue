@@ -34,7 +34,7 @@
 				<view class="iconfont icon-chengong"></view>
 			</view>
 			<view class="personalManagement">
-				<view class="title">人员管理：<view class="iconfont icon-bi" @click="personAni()"></view>
+				<view class="title">人员管理：<view v-if="role==0" class="iconfont icon-bi" @click="personAni()"></view>
 				</view>
 				<view :animation="person_ani">
 					<scroll-view scroll-y="true" class="huadon">
@@ -66,6 +66,7 @@
 		props: ["repo_name", "repo_address", "repo_id"],
 		data() {
 			return {
+				role:-1,
 				member_list: [],
 				member_root: ['待审核', '超级管理员', '管理员', '开发者', '游客'],
 				pull_member_id: -1,
@@ -211,7 +212,7 @@
 			uni.showLoading({
 				title: '加载中'
 			})
-
+			this.role = uni.getStorageSync('temp_role')
 			uni.request({
 				url: baseUrl + '/repo/getAllMember', //仅为示例，并非真实接口地址。
 				method: 'POST',
