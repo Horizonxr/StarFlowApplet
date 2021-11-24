@@ -18,7 +18,7 @@
 		</uni-popup>
 		<view class="back">
 			<uni-popup ref="memberAudit" type="center" :mask-click="false">
-				<memberAudit @closememberAudit="closememberAudit" @refreshMemberList="refreshMemberList"
+				<memberAudit v-if="show_member_audit" @closememberAudit="closememberAudit" @refreshMemberList="refreshMemberList"
 					:repo_id="repo_id"></memberAudit>
 			</uni-popup>
 			<view class="iconfont icon-fanhui" @click="close"></view>
@@ -77,7 +77,8 @@
 				}],
 				person_ani: {},
 				person_change_delete:false,
-				delete_key:-1
+				delete_key:-1,
+				show_member_audit:false
 			};
 		},
 		methods: {
@@ -96,10 +97,14 @@
 				this.$refs.pemissionSetting.close("center")
 			},
 			openmemberAudit() {
+				this.show_member_audit = true
 				this.$refs.memberAudit.open("center")
 			},
 			closememberAudit() {
 				this.$refs.memberAudit.close()
+				this.show_member_audit = false
+				// this.$forceUpdate()
+				this.$options.methods.refreshMemberList.bind(this)()
 			},
 			memberDeleteConfirm(key){
 				this.$refs.memberDelete.open("cener")
@@ -307,6 +312,7 @@
 			position: absolute;
 			top: 130rpx;
 			left: 40rpx;
+			letter-spacing: 20rpx;
 		}
 
 		.slogan {

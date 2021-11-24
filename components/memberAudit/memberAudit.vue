@@ -17,7 +17,7 @@
 			<view class="iconfont icon-fanhui" @click="close"></view>
 			<view class="title">人员审核</view>
 			<view class="personalManagement">
-				<view class="list">申请加入列表</view>
+				<view class="list"></view>
 				<scroll-view scroll-y="true" class="scroll">
 					<view class="list-item" v-for="(item, key) in apply_list" :key=item.key @click="Audit(apply_list[key].pk)">
 						<view class="name">{{item.user_name}}</view>
@@ -234,6 +234,7 @@
 		position: absolute;
 		top: 130rpx;
 		left: 40rpx;
+		letter-spacing: 20rpx;
 	}
 
 	.personalManagement {
