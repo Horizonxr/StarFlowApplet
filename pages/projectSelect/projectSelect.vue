@@ -1,108 +1,383 @@
 <template>
 	<view class="body">
-		
+		<uni-popup class="morePopup" ref="morePopup" type="center" :mask-click="false">
+			<view class="wrapper">
+				<view class="botton-wrapper">
+					<view class="top-popup" @click="createPopup">
+						<view class="top-popup-text">创建项目</view>
+						<view>
+							<view class="iconfont icon-zengjia"></view>
+						</view>
+					</view>
+					<view class="middle-popup" @click="joininPopup">
+						<view class="middle-popup-text">加入项目</view>
+						<view>
+							<view class="iconfont icon-jiarubanji"></view>
+						</view>
+					</view>
+					<view class="close-popup" @click="closePopup">
+						<view class="close-popup-text">取消</view>
+						<view>
+							<view class="iconfont icon-quxiao" @click=""></view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</uni-popup>
+		<!-- 第二层弹窗 -->
+		<uni-popup class="createPopup" ref="createPopup" type="center" :mask-click="false">
+			<createProject :receivelist="project_list" @closeCreatepopup="closeCreatepopup" @refresh='refreshList()'>
+			</createProject>
+		</uni-popup>
+		<uni-popup class="joininPopup" ref="joininPopup" type="center" :mask-click="false">
+			<joininProject @closeJoininpopup="closeJoininpopup"></joininProject>
+		</uni-popup>
+		<!-- 删除项目提示信息 -->
+		<uni-popup ref="exitpopup" type="dialog">
+			<uni-popup-dialog type='info' title="提示" mode="base" content="确认删除该项目？" message="成功消息" :duration="2000"
+				:before-close="true" @close="closeExitpopup" @confirm="request_exit"></uni-popup-dialog>
+		</uni-popup>
 		<view class="top-wrapper">
+			<!-- 顶部 -->
 			<view class="top">
-				<view class="title">项目选择</view>
-				<view class="account">当前账号：Horizon</view>
-				<navigator class="top-button" url="" hover-class="navigator-hover">
-				  <view class="iconfont icon-shezhi "></view>
+				<view class="title" @click="refreshList()">项目选择</view>
+				<view class="account" @click="circleAnimation()">GitHub账号：{{GitHubAccount}}</view>
+				<navigator class="top-button" url="/pages/accountSettings/accountSettings"
+					hover-class="navigator-hover">
+					<view class="iconfont icon-shezhi "></view>
 				</navigator>
 			</view>
 		</view>
-		
-		<view class="list-wrapper">
-			<view class="list-item-wrapper">
-				<view class="list-item" v-for="(item, key) in mission_list" :key=item.key>
-					<view class="list-item-repositories">Horizon/TeamCase</view>
+		<!-- 按钮 -->
+		<view class="more" @click="openPopup">
+			<view class="iconfont icon-zengjia"></view>
+		</view>
+		<!-- 仓库列表 -->
+		<view class="list-wrapper" ref='projectSelect'>
+			<view class="list-item-wrapper" v-for="(item, key) in project_list" :key=item.key>
+				<view class="list-item" @click="toProject(key)" @longpress='exitproject(key)'>
+					<view class="list-item-repositories">{{item.repo[0].fields.repo_name}}</view>
 					<view class="list-item-more">
-						<view class ="member-number">{{}}</view>
-						<view class="iconfont icon-ren111"></view>
-						<view class="list-item-description">This is a test case for TodoList</view>
-						<progress class="list-item-bar" stroke-width="20rpx" border-radius="300" active="true" color= "#5091f2" percent="60"></progress>
+						<view class="member-number">
+							<view class="iconfont icon-ren111"></view>
+							<view class="number">{{item.repo[0].fields.repo_member}}</view>
 						</view>
+						<view class="list-item-description">{{item.repo[0].fields.url}}</view>
+						<progress class="list-item-bar" duration=7 stroke-width="20rpx" border-radius="300"
+							active="true" color="#5091f2"
+							:percent="item.repo[0].fields.finished * 100 / (item.repo[0].fields.checking+item.repo[0].fields.finished+item.repo[0].fields.incomplete)"></progress>
 					</view>
+				</view>
 			</view>
 		</view>
+		<!-- 背景 -->
 		<view class="bg-circle">
-			<view class='orange'></view>
-			<view class='blue'></view>
-			<view class='green'></view>
-		</view>
-		
-		<view class="more-add">
-			<view class="iconfont icon-zengjia"></view>
+			<view class='orange' :animation='orange_ani'></view>
+			<view class='blue' :animation='blue_ani'></view>
+			<view class='green' :animation='green_ani'></view>
 		</view>
 	</view>
 </template>
-
 <script>
+	import {
+		baseUrl
+	} from '../../utils/config.js';
+	import createProject from '../../components/createProject';
+	import joininProject from '../../components/joininProject';
 	export default {
 		data() {
 			return {
-				mission_list:[1,2,3,4,5,6,7,9,10,11,22]
+				userInfo: [],
+				project_list: [],
+				u_id: -1,
+				middle: -1,
+				message: '',
+				GitHubAccount: '',
+				orange_ani: {},
+				blue_ani:{},
+				green_ani:{},
+				or:{},
+				bl:{},
+				gr:{}
 			};
+		},
+		components: {
+			createProject,
+			joininProject
+		},
+		methods: {
+			//弹窗相关方法
+			openPopup() {
+				// 通过组件定义的ref调用uni-popup方法 ,如果传入参数 ，type 属性将失效 ，仅支持 ['top','left','bottom','right','center']
+				this.$refs.morePopup.open('center')
+			},
+			closePopup() {
+				this.$refs.morePopup.close()
+			},
+			createPopup() {
+				this.$refs.createPopup.open('center')
+			},
+			closeCreatepopup() {
+				this.$refs.createPopup.close()
+			},
+			joininPopup() {
+				this.$refs.joininPopup.open('center')
+			},
+			closeJoininpopup() {
+				this.$refs.joininPopup.close()
+			},
+			exitproject(key) {
+				this.middle = key;
+				this.$refs.exitpopup.open()
+
+			},
+			closeExitpopup() {
+				this.$refs.exitpopup.close()
+			},
+			toProject(key) {
+				console.log(this.project_list[key])
+				let repo = this.project_list[key].repo[0].pk
+				let repo_name = this.project_list[key].repo[0].fields.repo_name
+				let url = this.project_list[key].repo[0].fields.url
+				let role = this.project_list[key].role
+				let member_id = this.project_list[key].member_id
+				// item.repo[0].fields.finished * 100 / (item.repo[0].fields.checking+item.repo[0].fields.finished+item.repo[0].fields.incomplete)
+				let f = this.project_list[key].repo[0].fields
+				let progress = f.incomplete * 100 / (f.incomplete + f.checking + f.finished)
+				progress = parseInt(progress)
+				uni.navigateTo({
+					url: '../projectList/projectList?repo_id=' + repo + '&repo_name=' + repo_name + '&url=' + url +
+						'&role=' + role + '&member_id=' + member_id + '&progress=' + progress,
+					animationDuration: 300
+				})
+			},
+			request_exit() {
+				uni.showLoading({
+					title: "加载中",
+					mask: true
+				})
+				console.log(this.project_list[this.middle].repo[0].pk)
+				console.log('用户当前的u—id' + this.u_id)
+				uni.request({
+					url: baseUrl + '/repo/exitRepo', //仅为示例，并非真实接口地址。
+					method: 'POST',
+					timeout: 8000,
+					data: {
+						repo_id: this.project_list[this.middle].repo[0].pk,
+						u_id: this.u_id,
+					},
+					header: {
+						"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+					},
+					success: (res) => {
+						uni.showToast({
+							title: '请求退出成功',
+							icon: 'success',
+							duration: 2000
+						});
+						this.$options.methods.refreshList.bind(this)()
+						this.$refs.exitpopup.close()
+						uni.hideLoading()
+					},
+					fail() {
+						uni.hideLoading()
+						uni.showToast({
+							title: this.message,
+							icon: 'error'
+						});
+					}
+				})
+			},
+			refreshList() {
+				console.log('refresh')
+				uni.showLoading({
+					title: '加载中'
+				})
+				uni.request({
+					url: baseUrl + '/repo/showRepo', //仅为示例，并非真实接口地址。
+					method: 'POST',
+					timeout: 8000,
+					data: {
+						u_id: this.u_id
+					},
+					header: {
+						"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+					},
+					success: (res) => {
+						console.log(res.data.data)
+						this.project_list = res.data.data
+						uni.hideLoading()
+					},
+					fail() {
+						uni.hideLoading()
+						uni.showToast({
+							title: '请求失败',
+							icon: 'error'
+						});
+					}
+				})
+			},
+			circleAnimation() {
+				{
+					var pi = Math.PI
+					let angle = 0
+					let r1 = 100
+					let x_zuo = r1 * Math.cos(angle)
+					let y_zuo = r1 * Math.sin(angle)
+					this.or = setInterval(()=>{
+						this.or_ani = uni.createAnimation({duration: 30});
+						this.or_ani.translate(x_zuo,y_zuo).scale(0.3*Math.sin(0.5*angle+pi)+1.2).step({duration:30})
+						this.orange_ani = this.or_ani.export();
+						angle = (angle+0.04)%(2*pi)
+						x_zuo = r1*Math.cos(angle)
+						y_zuo = r1*Math.sin(angle)
+					},30)
+				}
+				{
+					var pi = Math.PI
+					let angle = 5
+					let r1 = 60
+					let x_zuo = r1 * Math.cos(angle)
+					let y_zuo = r1 * Math.sin(angle)
+					this.bl = setInterval(()=>{
+						this.bl_ani = uni.createAnimation({duration: 30});
+						this.bl_ani.translate(x_zuo,y_zuo).step({duration:30})
+						this.blue_ani = this.bl_ani.export();
+						angle = (angle-0.02+2*pi)%(2*pi)
+						x_zuo = r1*Math.cos(angle)
+						y_zuo = r1*Math.sin(angle)
+					},30)
+				}
+				{
+					var pi = Math.PI
+					let angle = pi
+					let r1 = 120
+					let x_zuo = r1 * Math.cos(angle)
+					let y_zuo = r1 * Math.sin(angle)
+					this.gr = setInterval(()=>{
+						this.gr_ani = uni.createAnimation({duration: 30});
+						this.gr_ani.translate(x_zuo,y_zuo).step({duration:30})
+						this.green_ani = this.gr_ani.export();
+						angle = (angle+0.03)%(2*pi)
+						x_zuo = r1*Math.cos(angle)
+						y_zuo = r1*Math.sin(angle)
+					},30)
+				}
+			}
+		},
+		onLoad() {
+			if (!uni.getStorageSync("userInfo") || !uni.getStorageSync("GitHubAccount") || !uni.getStorageSync(
+					"GitHubAccount")) {
+				uni.redirectTo({
+					url: '../accountSettings/accountSettings'
+				})
+			}
+			uni.showLoading({
+				title: "加载中",
+				mask: true
+			})
+			this.u_id = uni.getStorageSync("u_id")
+			this.userInfo = uni.getStorageSync("userInfo")
+			this.GitHubAccount = uni.getStorageSync("GitHubAccount")
+			uni.request({
+				url: baseUrl + '/repo/showRepo', //仅为示例，并非真实接口地址。
+				method: 'POST',
+				timeout: 8000,
+				data: {
+					u_id: this.u_id
+				},
+				header: {
+					"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+				},
+				success: (res) => {
+					// console.log(res.data.data)
+					this.project_list = res.data.data
+					uni.hideLoading()
+				},
+				fail() {
+					uni.hideLoading()
+					uni.showToast({
+						title: '请求失败',
+						icon: 'error'
+					});
+				}
+			})
+
+		},
+		onShow() {
+			this.$options.methods.circleAnimation.bind(this)()
+		},
+		onHide(){
+			clearInterval(this.or)
+			clearInterval(this.bl)
+			clearInterval(this.gr)
 		}
 	}
 </script>
 
 <style lang="scss">
-	.body{
-		height: 100vh;
-		// background-color: $bg-color;
-		z-index: -999;
-	}
-	.bg-circle{
-		.orange{
-			width: 90px;
-			height: 90px;
-			border-radius: 50%;
-			position: fixed;
-			z-index: 0;
-			left: 80rpx;
-			top: 450rpx;
-			background: rgba($color: $uni-color-warning, $alpha: 0.9);			
+	.body {}
+
+	.morePopup {
+		z-index: 15;
+		margin: 0 auto;
+
+		.wrapper {
+			width: 100%;
+			height: 100vh;
+
+			.botton-wrapper {
+				position: absolute;
+				height: 600rpx;
+				width: 364rpx;
+				bottom: 59rpx;
+				left: -23rpx;
+				display: flex;
+				flex-direction: column;
+
+				view {
+					width: 364rpx;
+					height: 200rpx;
+					display: flex;
+					justify-content: center;
+
+					view:nth-child(1) {
+						width: 210rpx;
+						height: 200rpx;
+						font-size: 40rpx;
+						line-height: 200rpx;
+						color: white;
+					}
+
+					view:nth-child(2) {
+						width: 130rpx;
+						height: 130rpx;
+						margin-top: 41rpx;
+						background-color: white;
+						border-radius: 50%;
+						display: flex;
+						box-shadow: 0 4rpx 12rpx #888888;
+
+						.iconfont {
+							line-height: 130rpx;
+							text-align: center;
+							font-size: 100rpx;
+							color: black;
+						}
+					}
+				}
+			}
 		}
-		.blue{
-			width: 180px;
-			height: 180px;
-			left: 230rpx;
-			top: 400rpx;
-			position: fixed;
-			border-radius: 50%;
-			background: rgba($color: $pending-mission, $alpha: 0.9);
-		}
-		.green{
-			width: 120px;
-			height: 120px;
-			left: 190rpx;
-			top: 700rpx;
-			position: fixed;
-			border-radius: 50%;
-			background: rgba($color: $uni-color-success, $alpha: 0.9);
-		}
 	}
-	.more-add{
-		position: fixed;		
-	 	.iconfont{z-index: 100;
-	 	position: fixed;
-	 	font-size: 120rpx;
-	 	left: 560rpx;
-	 	top: 1000rpx;
-	 	border-radius: 50%;
-	 	background: rgba($color:#fff, $alpha: 1);	
-	 	box-shadow: 15rpx 17rpx 15rpx 2rpx #888888;	
-	}
-}
-	
-	.top-wrapper{
-		top:0rpx;
+
+	.top-wrapper {
+		top: 4rpx;
 		position: sticky;
 		width: 100%;
 		height: 200rpx;
 		z-index: 10;
-		
-		.top{
+
+		.top {
 			position: relative;
 			width: 666rpx;
 			height: 200rpx;
@@ -110,8 +385,8 @@
 			background-color: white;
 			border-radius: 30rpx;
 			box-shadow: 0 4rpx 12rpx #888888;
-			
-			.title{
+
+			.title {
 				position: absolute;
 				top: 34rpx;
 				left: 23rpx;
@@ -120,85 +395,151 @@
 				text-align: center;
 				line-height: 75rpx;
 			}
-			.account{
+
+			.account {
 				position: absolute;
 				bottom: 30rpx;
 				left: 23rpx;
 				font-size: 34rpx;
 			}
-			.top-button{
+
+			.top-button {
 				position: relative;
-				left:555rpx;
-				top:58rpx;
+				left: 555rpx;
+				top: 58rpx;
 				width: 86rpx;
 				height: 86rpx;
-				.iconfont{
+
+				.iconfont {
 
 					font-size: 86rpx;
 				}
 			}
 		}
 	}
-	
-	.list-wrapper{
+
+	.list-wrapper {
 		position: relative;
 		width: 100%;
 		height: 100%;
 		z-index: 1;
-		// background-color: $bg-color;
-		.list-item-wrapper{
+
+		.list-item-wrapper {
 			margin-top: 30rpx;
 			width: 100%;
-			// background-color: $bg-color;
-			.list-item{
+
+			.list-item {
 				margin: 22rpx auto;
 				height: 120rpx;
 				width: 615rpx;
 				border-radius: 10rpx;
 				box-shadow: 0 4rpx 12rpx #888888;
-				background-color:rgba($color: #ffff, $alpha: 0.5);
-				.list-item-repositories{
+				background-color: rgba($color: #ffff, $alpha: 0.5);
+
+				.list-item-repositories {
 					position: relative;
 					left: 21rpx;
-					top:20rpx;
+					top: 20rpx;
 					height: 28rpx;
 					line-height: 28rpx;
 					font-size: 28rpx;
-					
+
 				}
-				.list-item-more{
-					width: 560rpx;
-					height: 64rpx;	
-					.list-item-bar{
-						position: relative;
-						left: 21rpx;
-						top:-10rpx;
-					}
-					.member-number{
-						position: relative;
-						left:50rpx;
-						top:-10rpx;
-					}
-					.iconfont{
-						position: relative;
-						left:500rpx;
-						top:-20rpx;
+
+				.list-item-more {
+					width: 750rpx;
+					height: 64rpx;
+				}
+
+				.member-number {
+					position: relative;
+					left: 500rpx;
+					top: -20rpx;
+					width: 200rpx;
+					height: 50rpx;
+
+					.iconfont {
 						font-size: 50rpx;
 					}
-					
-					.list-item-description{
+
+					.number {
 						position: relative;
-						left: 21rpx;
-						top:-30rpx;
-						height: 25rpx;
-						font-size: 25rpx;
-						line-height: 25rpx;
-						color: $less-important-font;
+						font-size: 30rpx;
+						top: -45rpx;
+						right: -57rpx;
 					}
 				}
-				
+
+
+				.list-item-description {
+					position: relative;
+					left: 21rpx;
+					top: -24rpx;
+					height: 25rpx;
+					font-size: 25rpx;
+					line-height: 25rpx;
+					color: $less-important-font;
+				}
+
+				.list-item-bar {
+					position: relative;
+					top: -10rpx;
+					width: 570rpx;
+					left: 22rpx;
+				}
 			}
 		}
 	}
-	
+
+	.bg-circle {
+		z-index: 0;
+
+		.orange {
+			width: 90px;
+			height: 90px;
+			border-radius: 50%;
+			position: fixed;
+			left: 80rpx;
+			top: 450rpx;
+			background: rgba($color: $uni-color-warning, $alpha: 0.9);
+		}
+
+		.blue {
+			width: 180px;
+			height: 180px;
+			left: 230rpx;
+			top: 400rpx;
+			position: fixed;
+			border-radius: 50%;
+			background: rgba($color: $pending-mission, $alpha: 0.9);
+		}
+
+		.green {
+			width: 120px;
+			height: 120px;
+			left: 250rpx;
+			top: 700rpx;
+			position: fixed;
+			border-radius: 50%;
+			background: rgba($color: $uni-color-success, $alpha: 0.9);
+		}
+	}
+
+	.more {
+		position: fixed;
+		width: 130rpx;
+		height: 130rpx;
+		right: 46rpx;
+		bottom: 90rpx;
+		border-radius: 50%;
+		background-color: white;
+		z-index: 10;
+		text-align: center;
+		line-height: 130rpx;
+		box-shadow: 0 4rpx 12rpx #888888;
+
+		.iconfont {
+			font-size: 130rpx;
+		}
+	}
 </style>
