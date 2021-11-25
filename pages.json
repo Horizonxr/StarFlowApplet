@@ -29,6 +29,15 @@
 		}
 	    
 
+        ,{
+            "path" : "pages/welcom/welcom",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
