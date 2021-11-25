@@ -9,6 +9,7 @@
 				color="#5091f2" :percent="DDLProgress(taskInfo.deadline)"></progress>
 			<view class="unfinished-deadline-time">Deadline:{{DDLcompute(taskInfo.deadline)}}</view>
 			<view class="unfinished-mission">任务：{{taskInfo.task_name}}</view>
+			<view class="unfinished-mission">开发者：{{taskInfo.member_name}}</view>
 			<view class="mission-content">任务详情:{{taskInfo.task_info}}</view>
 			<view class="unfinished-pull-repositories" @click="getPullRequest">点击拉取</view>
 			<scroll-view class="scroll-area" scroll-y="true">
@@ -61,6 +62,8 @@
 		methods: {
 			//拉取PullRequest列表
 			getPullRequest(){
+				console.log("这是taskInfo")
+				console.log(this.taskInfo)
 				uni.showLoading({
 					title:'正在拉取请求'
 				})
@@ -134,7 +137,7 @@
 			},
 			//任务历史
 			taskHistory(){
-				console.log(this.taskInfo)
+
 				
 			},
 			//任务删除

@@ -5,7 +5,8 @@
 			<view v-if="tips_show" :animation='tips_ani_data'>{{tips_text}}</view>
 			
 		</view>
-		<view @click="toAccountSettings()">转到设置</view>
+		<view class="to_setting" @click="toAccountSettings()">转到设置</view>
+
 	</view>
 </template>
 
@@ -17,7 +18,7 @@
 				tips_text:'',
 				tips_ani_data:{},
 				tips_timer:{},
-				tips_show:0
+				tips_show:0,
 			};
 		},
 		methods:{
@@ -34,29 +35,19 @@
 					"初次见面",
 					"请跟随步骤完成三个简单的设置"
 				]
-				console.log("调用动画")
 				let i = 0
-				this.tips_show = 1
-				this.tips_timer = setInterval(()=>{
+				let timer = setInterval(()=>{
 					this.tips_show = 1
-					this.tips_ani = uni.createAnimation({
-						duration:1400,
-						timingFunction:'ease'
-					})
 					this.tips_text = tips_arr[i]
-					console.log(this.tips_text)
-					this.tips_ani.opacity(1).step({duration:100})
-					this.tips_ani.opacity(0.5).step({delay:1000,duration:100})
-					this.tips_ani_data = this.tips_ani.export()
-					i = i + 1
 					setTimeout(()=>{
 						this.tips_show = 0
-					},1000)
-					console.log(i)
+					},1500)
+					i = i+1
 					if (i==tips_arr.length){
-						clearInterval(this.tips_timer)
+						clearInterval(timer)
 					}
-				},3000)
+				},2000)
+				console.log("调用动画")
 			}
 		},
 		onLoad() {
@@ -84,18 +75,31 @@
 		view{
 		}
 		view:nth-child(1){
+			margin-top: 100rpx;
 			width: 100%;
 			height: 70rpx;
 			font-size: 70rpx;
 			text-align: center;
 		}
 		view:nth-child(2){
+			margin-top: 100rpx;
 			width: 100%;
 			text-align: center;
 			font-size:50rpx;
 			height: 100rpx;
 			line-height: 100rpx;
-			opacity: 0;
 		}
 	}
+	.to_setting{
+		width: 100%;
+		width: 500rpx;
+		height: 100rpx;
+		text-align: center;
+		margin: 0 auto;
+		font-size: 50rpx;
+		line-height: 100rpx;
+		border-radius: 20rpx;
+		box-shadow: 0 4rpx 12rpx #888888;
+	}
+	
 </style>

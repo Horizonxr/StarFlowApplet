@@ -19,7 +19,7 @@
 			<view class="login" @click="GitHubPopup()">
 				<view class="login-content">{{GitHubAccount == '' ? "第二步：绑定GitHub" : "GitHub: " + GitHubAccount}}</view>
 			</view>
-			<view class="login" @click="updateGitHubToken()">
+			<view class="login" v-if="0" @click="updateGitHubToken()">
 				<view class="login-content">{{GitHubToken == false ? "第三步：绑定GitHub Token" : "GitHub Token: " + tokenStatus()}}</view>
 			</view>
 			<view class="login" @click="toProjectSelect()">

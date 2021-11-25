@@ -9,6 +9,7 @@
 				color="#5091f2" :percent="DDLProgress(taskInfo.deadline)"></progress>
 			<view class="non-checked-deadline-time">Deadline:{{DDLcompute(taskInfo.deadline)}}</view>
 			<view class="non-checked-mission">任务：{{taskInfo.task_name}}</view>
+			<view class="non-checked-mission">开发者：{{taskInfo.member_name}}</view>
 			<view class="mission-content">任务详情:{{taskInfo.task_info}}</view>
 			<view class="non-checked-push">
 				<view>{{taskInfo.title ==''? "空" : taskInfo.title}}</view>

@@ -225,13 +225,13 @@
 					let x_zuo = r1 * Math.cos(angle)
 					let y_zuo = r1 * Math.sin(angle)
 					this.or = setInterval(()=>{
-						this.or_ani = uni.createAnimation({duration: 30});
-						this.or_ani.translate(x_zuo,y_zuo).scale(0.3*Math.sin(0.5*angle+pi)+1.2).step({duration:30})
+						this.or_ani = uni.createAnimation({duration: 200});
+						this.or_ani.translate(x_zuo,y_zuo).scale(0.3*Math.sin(0.5*angle+pi)+1.2).step({duration:200})
 						this.orange_ani = this.or_ani.export();
-						angle = (angle+0.04)%(2*pi)
+						angle = (angle+0.1)%(2*pi)
 						x_zuo = r1*Math.cos(angle)
 						y_zuo = r1*Math.sin(angle)
-					},30)
+					},200)
 				}
 				{
 					var pi = Math.PI
@@ -240,13 +240,13 @@
 					let x_zuo = r1 * Math.cos(angle)
 					let y_zuo = r1 * Math.sin(angle)
 					this.bl = setInterval(()=>{
-						this.bl_ani = uni.createAnimation({duration: 30});
-						this.bl_ani.translate(x_zuo,y_zuo).step({duration:30})
+						this.bl_ani = uni.createAnimation({duration: 200});
+						this.bl_ani.translate(x_zuo,y_zuo).step({duration:200})
 						this.blue_ani = this.bl_ani.export();
 						angle = (angle-0.02+2*pi)%(2*pi)
 						x_zuo = r1*Math.cos(angle)
 						y_zuo = r1*Math.sin(angle)
-					},30)
+					},200)
 				}
 				{
 					var pi = Math.PI
@@ -255,13 +255,13 @@
 					let x_zuo = r1 * Math.cos(angle)
 					let y_zuo = r1 * Math.sin(angle)
 					this.gr = setInterval(()=>{
-						this.gr_ani = uni.createAnimation({duration: 30});
-						this.gr_ani.translate(x_zuo,y_zuo).step({duration:30})
+						this.gr_ani = uni.createAnimation({duration: 200});
+						this.gr_ani.translate(x_zuo,y_zuo).step({duration:200})
 						this.green_ani = this.gr_ani.export();
-						angle = (angle+0.03)%(2*pi)
+						angle = (angle+0.06)%(2*pi)
 						x_zuo = r1*Math.cos(angle)
 						y_zuo = r1*Math.sin(angle)
-					},30)
+					},200)
 				}
 			}
 		},
