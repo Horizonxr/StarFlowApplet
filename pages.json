@@ -1,0 +1,61 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+		    "path" : "pages/welcom/welcom",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		},
+		{
+		    "path" : "pages/projectSelect/projectSelect",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		},
+		{
+		    "path" : "pages/accountSettings/accountSettings",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		},
+		{
+		    "path" : "pages/projectList/projectList",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		}
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#F8F8F8"
+	},
+	"condition": { //模式配置，仅开发期间生效
+	    "current": 0, //当前激活的模式（list 的索引项）
+	    "list": [
+			{
+	            "name": "settings", //模式名称
+	            "path": "pages/accountSettings/accountSettings", //启动页面，必选
+	            "query": "" //启动参数，在页面的onLoad函数里面得到。
+	        },
+			{
+				"name":"List",
+				"path":"pages/projectList/projectList",
+				"query":"repo_id=1&repo_name=仓库名称&url=test&role=1"
+			}
+	    ]
+	}
+}

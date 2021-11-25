@@ -10,7 +10,8 @@
 			<view class="finished-deadline-time">Deadline:{{DDLcompute(taskInfo.deadline)}}</view>
 			<view class="finished-mission">任务：{{taskInfo.task_name}}</view>
 			<view class="mission-content">任务详情:{{taskInfo.task_info}}</view>
-			<view class="finished-push">Feature:完成xx特性
+			<view class="finished-push">
+				<view>{{taskInfo.title ==''? "空" : taskInfo.title}}</view>
 				<view class="iconfont icon-git-merge"></view>
 			</view>
 		</view>
