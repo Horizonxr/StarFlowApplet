@@ -32,10 +32,14 @@
 		<uni-popup class="joininPopup" ref="joininPopup" type="center" :mask-click="false">
 			<joininProject @closeJoininpopup="closeJoininpopup"></joininProject>
 		</uni-popup>
-		<!-- 删除项目提示信息 -->
+		<!-- 删除项目确认 -->
 		<uni-popup ref="exitpopup" type="dialog">
 			<uni-popup-dialog type='info' title="提示" mode="base" content="确认删除该项目？" message="成功消息" :duration="2000"
 				:before-close="true" @close="closeExitpopup" @confirm="request_exit"></uni-popup-dialog>
+		</uni-popup>
+		<!-- 删除项目提示 -->
+		<uni-popup ref="exit_message_popup" type="message">
+		    <uni-popup-message type="error" :message="err_msg" :duration="1000"></uni-popup-message>
 		</uni-popup>
 		<view class="top-wrapper">
 			<!-- 顶部 -->
@@ -98,7 +102,8 @@
 				green_ani:{},
 				or:{},
 				bl:{},
-				gr:{}
+				gr:{},
+				err_msg:''
 			};
 		},
 		components: {
@@ -170,6 +175,8 @@
 						"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 					},
 					success: (res) => {
+						this.err_msg = res.data.message
+						console.log(this.err_msg)
 						uni.showToast({
 							title: '请求退出成功',
 							icon: 'success',
@@ -187,6 +194,7 @@
 						});
 					}
 				})
+				this.$refs.exit_message_popup.open('center')
 			},
 			refreshList() {
 				console.log('refresh')
