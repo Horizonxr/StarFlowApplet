@@ -151,7 +151,7 @@
 				method: 'POST',
 				timeout: 8000,
 				data: {
-					user: 1,
+					user: this.u_id,
 					repo:this.repo_id,
 				},
 				header: {

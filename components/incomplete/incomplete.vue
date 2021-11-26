@@ -331,6 +331,7 @@
 				width: 33%;
 				top: 900rpx;
 				font-size: 80rpx;
+				color: #C0C0C0;
 			}
 
 			view:nth-child(2) {

@@ -207,6 +207,7 @@
 			view:nth-child(1) {
 				width: 50%;
 				font-size: 80rpx;
+				color: #C0C0C0;
 			}
 
 			view:nth-child(2) {

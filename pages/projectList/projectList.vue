@@ -24,7 +24,7 @@
 					<view class="iconfont icon-zengjia">
 					</view>
 				</view>
-				<view class="button-jiaru" @click="poupeQuestion">
+				<view class="button-jiaru" @click="$refs.helpPopup.open('center')">
 					<view class="iconfont icon-qm">
 					</view>
 				</view>
@@ -41,7 +41,9 @@
 			<projectSettings v-if="show_settings" @openmemberAudit="openmemberAudit" @closemyPopup="closemyPopup" :repo_name="repo_name" :repo_address="repo_address"
 				:repo_id="repo_id"></projectSettings>
 		</uni-popup>
-		
+		<uni-popup ref="helpPopup" type="center">
+			<helpText @closeHelpPopup="$refs.helpPopup.close()"></helpText>
+		</uni-popup>
 		<view class="top-wrapper">
 			<view class="top">
 				<view class="title" @click="refreshList()">任务列表</view>
