@@ -319,23 +319,32 @@
 			}
 		}
 		.unfinished-bottom-button {
+			position: absolute;
+			display: flex;
+			text-align: center;
+			width: 100%;
+			height: 90rpx;
+			bottom: 44rpx;
 			view:nth-child(1) {
-				position: absolute;
-				left: 70rpx;
+				// position: absolute;
+				// left: 70rpx;
+				width: 33%;
 				top: 900rpx;
 				font-size: 80rpx;
 			}
 
 			view:nth-child(2) {
-				position: absolute;
-				left: 310rpx;
-				top: 910rpx;
+				// position: absolute;
+				// left: 310rpx;
+				width: 33%;
+				top: 900rpx;
 				font-size: 65rpx;
 			}
 
 			view:nth-child(3) {
-				position: absolute;
-				left: 520rpx;
+				// position: absolute;
+				// left: 520rpx;
+				width: 33%;
 				top: 897rpx;
 				font-size: 90rpx;
 			}

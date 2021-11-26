@@ -37,6 +37,11 @@
 			<uni-popup-dialog type='info' title="提示" mode="base" content="确认删除该项目？" message="成功消息"
 				:before-close="true" @close="closeExitpopup" @confirm="request_exit"></uni-popup-dialog>
 		</uni-popup>
+		<!-- 管理员删除项目确认 -->
+		<uni-popup ref="sp_exitpopup" type="dialog">
+			<uni-popup-dialog type='info' title="提示" mode="base" content="您是项目超级管理员,退出项目将彻底删除项目,是否继续？" message="成功消息"
+				:before-close="true" @close="$refs.sp_exitpopup.close()" @confirm="sp_request_exit"></uni-popup-dialog>
+		</uni-popup>
 		<!-- 删除项目提示 -->
 		<uni-popup class="test" ref="exit_message_popup" type="message">
 		    <uni-popup-message type="error" message="失败消息" :duration="3000">{{err_msg}}</uni-popup-message>
@@ -157,44 +162,73 @@
 				})
 			},
 			request_exit() {
-				uni.showLoading({
-					title: "加载中",
-					mask: true
-				})
-				console.log(this.project_list[this.middle].repo[0].pk)
-				console.log('用户当前的u—id' + this.u_id)
+				let role = this.project_list[this.middle].role
+				if (role == 0){
+					this.$refs.exitpopup.close()
+					this.$refs.sp_exitpopup.open('center')
+				}
+				else{
+					uni.request({
+						url: baseUrl + '/repo/exitRepo', //仅为示例，并非真实接口地址。
+						method: 'POST',
+						timeout: 8000,
+						data: {
+							repo_id: this.project_list[this.middle].repo[0].pk,
+							u_id: this.u_id,
+						},
+						header: {
+							"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+						},
+						success: (res) => {
+							this.err_msg = res.data.message
+							console.log(this.err_msg)
+							uni.showToast({
+								title: '请求退出成功',
+								icon: 'success',
+								duration: 2000
+							});
+							this.$options.methods.refreshList.bind(this)()
+							this.$refs.exitpopup.close()
+							uni.hideLoading()
+						},
+						fail() {
+							uni.hideLoading()
+							uni.showToast({
+								title: this.message,
+								icon: 'error'
+							});
+						}
+					})
+					this.$refs.exit_message_popup.open('top')
+				}
+			},
+			sp_request_exit(){
+				console.log("超管退出")
 				uni.request({
-					url: baseUrl + '/repo/exitRepo', //仅为示例，并非真实接口地址。
+					url: baseUrl + '/repo/delRepo', //仅为示例，并非真实接口地址。
 					method: 'POST',
 					timeout: 8000,
 					data: {
-						repo_id: this.project_list[this.middle].repo[0].pk,
 						u_id: this.u_id,
+						repo_id: this.project_list[this.middle].repo[0].pk,
 					},
 					header: {
 						"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 					},
 					success: (res) => {
 						this.err_msg = res.data.message
-						console.log(this.err_msg)
-						uni.showToast({
-							title: '请求退出成功',
-							icon: 'success',
-							duration: 2000
-						});
+						this.err_msg = '删除项目成功'
+						this.$refs.exit_message_popup.open('top')
 						this.$options.methods.refreshList.bind(this)()
-						this.$refs.exitpopup.close()
-						uni.hideLoading()
 					},
 					fail() {
-						uni.hideLoading()
 						uni.showToast({
 							title: this.message,
 							icon: 'error'
 						});
 					}
 				})
-				this.$refs.exit_message_popup.open('top')
+				this.$refs.sp_exitpopup.close()
 			},
 			refreshList() {
 				console.log('refresh')
@@ -314,6 +348,7 @@
 		},
 		onShow() {
 			this.$options.methods.circleAnimation.bind(this)()
+			this.$options.methods.refreshList.bind(this)()
 		},
 		onHide(){
 			clearInterval(this.or)

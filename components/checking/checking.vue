@@ -280,30 +280,27 @@
 
 		.non-checked-bottom-button {
 			position: absolute;
-			top:920rpx;
-			left: 25rpx;
-			width: 610rpx;
-			height: 100rpx;
+			display: flex;
+			text-align: center;
+			width: 100%;
+			height: 90rpx;
+			bottom: 44rpx;
 			view:nth-child(1) {
-				position: absolute;
-				left: 10rpx;
+				width: 25%;
 				font-size: 80rpx;
 			}
 
 			view:nth-child(2) {
-				position: absolute;
-				left: 190rpx;
+				width: 25%;
 				font-size: 70rpx;
 			}
 
 			view:nth-child(3) {
-				position: absolute;
-				left: 365rpx;
+				width: 25%;
 				font-size: 80rpx;
 			}
 			view:nth-child(4) {
-				position: absolute;
-				left: 518rpx;
+				width: 25%;
 				font-size: 97rpx;
 			}
 		}

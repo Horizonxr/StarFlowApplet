@@ -198,17 +198,19 @@
 		}
 
 		.finished-bottom-button {
+			position: absolute;
+			display: flex;
+			text-align: center;
+			width: 100%;
+			height: 90rpx;
+			bottom: 44rpx;
 			view:nth-child(1) {
-				position: absolute;
-				left: 200rpx;
-				top: 900rpx;
+				width: 50%;
 				font-size: 80rpx;
 			}
 
 			view:nth-child(2) {
-				position: absolute;
-				left: 400rpx;
-				top: 900rpx;
+				width: 50%;
 				font-size: 85rpx;
 			}
 		}
