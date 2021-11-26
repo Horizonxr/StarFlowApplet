@@ -40,10 +40,10 @@
 					<scroll-view scroll-y="true" class="huadon">
 						<view class="list-item" v-for="(item, key) in member_list" :key=item.key>
 							<view class="name">{{item.fields.username}}</view>
-							<view class="root" @click="openpemissionSetting(member_list[key].pk)">
+							<view class="root" @click="openpemissionSetting(member_list[key].pk,key)">
 								{{member_root[item.fields.identity+1]}}
 							</view>
-							<view class="iconfont icon-chahao" v-show="person_change_delete" @click="memberDeleteConfirm(key)"></view>
+							<view class="iconfont icon-chahao" v-if="item.fields.identity!==0" v-show="person_change_delete" @click="memberDeleteConfirm(key)"></view>
 						</view>
 					</scroll-view>
 				</view>
@@ -78,7 +78,7 @@
 				person_ani: {},
 				person_change_delete:false,
 				delete_key:-1,
-				show_member_audit:false
+				show_member_audit:false,
 			};
 		},
 		methods: {
@@ -88,9 +88,10 @@
 			memberConfirmClose(){
 				this.$refs.memberDelete.close()
 			},
-			openpemissionSetting(member_id) {
+			openpemissionSetting(member_id,key) {
+				// 超管直接返回,不让修改
+				if (this.member_list[key].fields.identity == 0) return
 				this.pull_member_id = member_id
-				console.log(member_id)
 				this.$refs.pemissionSetting.open("center")
 			},
 			cancle() {
@@ -389,6 +390,7 @@
 				color: #000000;
 				font-size: 48rpx;
 				height: 60rpx;
+				letter-spacing: 0rpx;
 			}
 
 			.iconfont {
