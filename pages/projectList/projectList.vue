@@ -1,0 +1,580 @@
+<template>
+	<view class="body">
+		<view class="bg-circle">
+			<view class='orange' :animation='orange_ani'></view>
+			<view class='blue' :animation='blue_ani'></view>
+			<view class='green' :animation='green_ani'></view>
+		</view>
+		<!-- 任务详情弹窗 -->
+		<uni-popup class="taskPopup" ref="taskPopup" type="center" :mask-click="false">
+			<incomplete v-if="show_incomplete" v-show="popup_task === 1" @closePopup="closePopup" @refresh="refreshList" :taskInfo="taskInfo"
+				:role="role" :member_id="member_id" :repo_name="repo_name"></incomplete>
+			<checking v-show="popup_task === 2" @closePopup="closePopup" @refresh="refreshList" :taskInfo="taskInfo"
+				:role="role" :member_id="member_id"></checking>
+			<finish v-show="popup_task === 3" @closePopup="closePopup" @refresh="refreshList" :taskInfo="taskInfo"
+				:role="role" :member_id="member_id"></finish>
+		</uni-popup>
+		<!-- 按钮弹窗 -->
+		<uni-popup class="moremorePopup" ref="moremorePopup" type="center" :mask-click="false">
+			<view class="botton-wrapper">
+				<view class="more-text" v-if="role <= 1">添加新任务</view>
+				<view class="help-text">帮助说明</view>
+				<view class="quxiao-text">取消</view>
+				<view class="button-more" @click="addTask" v-if="role <= 1">
+					<view class="iconfont icon-zengjia">
+					</view>
+				</view>
+				<view class="button-jiaru" @click="poupeQuestion">
+					<view class="iconfont icon-qm">
+					</view>
+				</view>
+				<view class="button-quxiao" @click="canclePopup">
+					<view class="iconfont icon-chahao ">
+					</view>
+				</view>
+			</view>
+		</uni-popup>
+		<uni-popup class="addaddPopup" ref="addaddPopup" type="center" :mask-click="false">
+			<addTask v-if="show_addTask" @closeaddPopup="closeaddPopup" :repo_id="repo_id"></addTask>
+		</uni-popup>
+		<uni-popup class="addaddPopup" ref="myproject" type="center" :mask-click="false">
+			<projectSettings v-if="show_settings" @openmemberAudit="openmemberAudit" @closemyPopup="closemyPopup" :repo_name="repo_name" :repo_address="repo_address"
+				:repo_id="repo_id"></projectSettings>
+		</uni-popup>
+		
+		<view class="top-wrapper">
+			<view class="top">
+				<view class="title" @click="refreshList()">任务列表</view>
+				<view class="account">仓库：{{repo_name}}</view>
+				<view class="top-button">
+					<view class="iconfont icon-shezhi" @click="projectSettings"></view>
+				</view>
+			</view>
+		</view>
+		<view class="list-wrapper">
+			<view class="list-item-wrapper">
+				<view class="list-item" @click="taskPopup(1, key)" style="background-color: rgba(166,229,174,0.8);"
+					v-for="(item, key) in mission_list.incomplete" :key=item.key>
+					<view class="list-item-mission">任务：{{item.task_name}}</view>
+					<view class="list-item-DDL">DeadLine: {{DDLcompute(item.deadline)}}</view>
+					<view class="list-item-more">
+						<view class="iconfont icon-gengduo"></view>
+					</view>
+				</view>
+				<view class="list-item" @click="taskPopup(2, key)" style="background-color: rgba(127,169,242,0.8);"
+					v-for="(item, key) in mission_list.checking" :key=item.key>
+					<view class="list-item-mission">任务：{{item.task_name}}</view>
+					<view class="list-item-DDL">DeadLine: {{DDLcompute(item.deadline)}}</view>
+					<view class="list-item-more">
+						<view class="iconfont icon-gengduo"></view>
+					</view>
+				</view>
+				<view class="list-item" @click="taskPopup(3, key)" style="background-color: rgba(166,165,165,0.8);"
+					v-for="(item, key) in mission_list.finish" :key=item.key>
+					<view class="list-item-mission">任务：{{item.task_name}}</view>
+					<view class="list-item-DDL">DeadLine: {{DDLcompute(item.deadline)}}</view>
+					<view class="list-item-more">
+						<view class="iconfont icon-gengduo"></view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view class="botton-wrapper2">
+			<view class="progress-box">
+				<progress show-info :percent="progress" stroke-width="23rpx" backgroundColor="#999"
+					activeColor="#007AFF" font-size="20rpx" border-radius="20rpx" />
+			</view>
+			<view class="button-add" @click="morePopup">
+				<view class="iconfont icon-zengjia">
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import {
+		baseUrl
+	} from '../../utils/config.js';
+	import createProject from '../../components/createProject';
+	export default {
+		data() {
+			return {
+				member_id: -1, //成员在项目中的id
+				repo_name: '', //仓库名称
+				repo_address: '', //GitHub仓库URL
+				role: -1, //role中-1代表加入项目待审核、0表示超级管理员、1表示管理员、2表示开发者、3表示游客
+				popup_task: -1, //1代表未完成，2代表待审核，3代表已完成
+				repo_id: -1,
+				mission_list: {
+					incomplete: [],
+					checking: [],
+					finish: []
+				},
+				taskInfo: [],
+				progress: 0,
+				orange_ani: {},
+				blue_ani:{},
+				green_ani:{},
+				or:{},
+				bl:{},
+				gr:{},
+				show_settings:0,
+				show_addTask:0,
+				show_incomplete:0
+			};
+		},
+		components: {
+			createProject
+		},
+		methods: {
+			// 弹出层相关函数
+			closePopup() {
+				this.$refs.taskPopup.close()
+				this.$options.methods.refreshList.bind(this)()
+				this.show_incomplete = 0
+			},
+			taskPopup(kind, index) {
+				this.show_incomplete = 1
+				console.log("任务编号是" + index)
+				this.popup_task = kind
+				let taskInfo = []
+				if (kind == 1) taskInfo = this.mission_list.incomplete[index]
+				else if (kind == 2) taskInfo = this.mission_list.checking[index]
+				else if (kind == 3) taskInfo = this.mission_list.finish[index]
+				console.log(taskInfo)
+				this.taskInfo = taskInfo
+				this.$refs.taskPopup.open("center")
+
+			},
+			morePopup() {
+				this.$refs.moremorePopup.open("center")
+			},
+			addTask() {
+				this.show_addTask = 1
+				this.$refs.addaddPopup.open("center")
+			},
+			closeaddPopup() {
+				this.$refs.addaddPopup.close("center")
+				this.$refs.moremorePopup.close("center")
+				this.$options.methods.refreshList.bind(this)()
+				this.show_addTask = 0
+			},
+			canclePopup() {
+				this.$refs.moremorePopup.close("center")
+			},
+			projectSettings() {
+				this.show_settings = 1
+				this.$refs.myproject.open("center")
+			},
+			closemyPopup() {
+				this.show_settings = 0
+				this.$refs.myproject.close("center")
+			},
+			// DDL计算连接字符串函数
+			DDLcompute(DDL) {
+				let DDLjoin = DDL[0].toString()
+				for (let i = 1; i < 3; i++) {
+					DDLjoin = DDLjoin + '.' + DDL[i].toString()
+				}
+				return DDLjoin
+			},
+			// 重新获取任务列表
+			refreshList() {
+				// 调用方法:this.$options.methods.refreshList.bind(this)()
+				uni.showLoading({
+					title: '加载中'
+				})
+				uni.request({
+					url: baseUrl + '/repo/showTask', //仅为示例，并非真实接口地址。
+					method: 'POST',
+					timeout: 8000,
+					data: {
+						repo_id: this.repo_id
+					},
+					header: {
+						"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+					},
+					success: (res) => {
+						console.log(res)
+						this.mission_list.incomplete = res.data.incomplete
+						this.mission_list.checking = res.data.checking
+						this.mission_list.finish = res.data.finish
+						uni.hideLoading()
+					},
+					fail() {
+						uni.hideLoading()
+						uni.showToast({
+							title: '请求失败',
+							icon: 'error'
+						});
+					}
+				})
+			},
+			circleAnimation() {
+				{
+					var pi = Math.PI
+					let angle = 0
+					let r1 = 100
+					let x_zuo = r1 * Math.cos(angle)
+					let y_zuo = r1 * Math.sin(angle)
+					this.or = setInterval(()=>{
+						this.or_ani = uni.createAnimation({duration: 200});
+						this.or_ani.translate(x_zuo,y_zuo).scale(0.3*Math.sin(0.5*angle+pi)+1.2).step({duration:200})
+						this.orange_ani = this.or_ani.export();
+						angle = (angle+0.1)%(2*pi)
+						x_zuo = r1*Math.cos(angle)
+						y_zuo = r1*Math.sin(angle)
+					},200)
+				}
+				{
+					var pi = Math.PI
+					let angle = 5
+					let r1 = 60
+					let x_zuo = r1 * Math.cos(angle)
+					let y_zuo = r1 * Math.sin(angle)
+					this.bl = setInterval(()=>{
+						this.bl_ani = uni.createAnimation({duration: 200});
+						this.bl_ani.translate(x_zuo,y_zuo).step({duration:200})
+						this.blue_ani = this.bl_ani.export();
+						angle = (angle-0.02+2*pi)%(2*pi)
+						x_zuo = r1*Math.cos(angle)
+						y_zuo = r1*Math.sin(angle)
+					},200)
+				}
+				{
+					var pi = Math.PI
+					let angle = pi
+					let r1 = 120
+					let x_zuo = r1 * Math.cos(angle)
+					let y_zuo = r1 * Math.sin(angle)
+					this.gr = setInterval(()=>{
+						this.gr_ani = uni.createAnimation({duration: 200});
+						this.gr_ani.translate(x_zuo,y_zuo).step({duration:200})
+						this.green_ani = this.gr_ani.export();
+						angle = (angle+0.06)%(2*pi)
+						x_zuo = r1*Math.cos(angle)
+						y_zuo = r1*Math.sin(angle)
+					},200)
+				}
+			}
+		},
+		onLoad(option) { //option为object类型，会序列化上个页面传递的参数
+			this.$options.methods.circleAnimation.bind(this)()
+			uni.showLoading({
+				title: '加载中'
+			})
+			this.repo_name = option.repo_name
+			this.repo_id = option.repo_id
+			this.role = option.role
+			this.member_id = option.member_id
+			this.repo_address = option.url
+			this.progress = option.progress
+			uni.setStorage({
+				key: 'temp_role',
+				data: this.role
+			})
+			uni.request({
+				url: baseUrl + '/repo/showTask', //仅为示例，并非真实接口地址。
+				method: 'POST',
+				timeout: 8000,
+				data: {
+					repo_id: option.repo_id
+				},
+				header: {
+					"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+				},
+				success: (res) => {
+					console.log(res)
+					this.mission_list.incomplete = res.data.incomplete
+					this.mission_list.checking = res.data.checking
+					this.mission_list.finish = res.data.finish
+					uni.hideLoading()
+				},
+				fail() {
+					uni.hideLoading()
+					uni.showToast({
+						title: '请求失败',
+						icon: 'error'
+					});
+				}
+			})
+		},
+		onHide(){
+			clearInterval(this.or)
+			clearInterval(this.bl)
+			clearInterval(this.gr)
+		},
+		onShow() {
+			this.$options.methods.circleAnimation.bind(this)()
+		}
+
+	}
+</script>
+
+<style lang="scss">
+	.body {
+		width: 100%;
+		height: 100vh;
+		background-color: $bg-color;
+		z-index: -999;
+		.bg-circle {
+			position: absolute;
+			z-index: 0;
+			width: 100%;
+			height: 100vh;
+			.orange {
+				width: 90px;
+				height: 90px;
+				border-radius: 50%;
+				position: fixed;
+				left: 80rpx;
+				top: 450rpx;
+				background: rgba($color: $uni-color-warning, $alpha: 0.4);
+			}
+		
+			.blue {
+				width: 180px;
+				height: 180px;
+				left: 230rpx;
+				top: 400rpx;
+				position: fixed;
+				border-radius: 50%;
+				background: rgba($color: $pending-mission, $alpha: 0.4);
+			}
+		
+			.green {
+				width: 120px;
+				height: 120px;
+				left: 250rpx;
+				top: 700rpx;
+				position: fixed;
+				border-radius: 50%;
+				background: rgba($color: $uni-color-success, $alpha: 0.4);
+			}
+		}
+		.iconfont {
+			font-size: 86rpx;
+			line-height: 134rpx;
+			text-align: center;
+		}
+
+		.moremorePopup {
+			width: 100%;
+			height: 100vh;
+			z-index: 15;
+
+			.botton-wrapper {
+				width: 100%;
+				height: 100vh;
+
+				.more-text {
+					z-index: 15;
+					position: fixed;
+					left: 279rpx;
+					bottom: 469rpx;
+					font-size: 55rpx;
+					color: #fffefe;
+					font-family: Adobe 黑体 Std;
+				}
+
+				.button-more {
+					height: 134rpx;
+					width: 134rpx;
+					border-radius: 50%;
+					z-index: 15;
+					position: fixed;
+					bottom: 424rpx;
+					right: 46rpx;
+					background-color: #FFF;
+					box-shadow: 0 4rpx 12rpx #888888;
+				}
+
+				.help-text {
+					z-index: 101;
+					position: fixed;
+					bottom: 305rpx;
+					right: 200rpx;
+					font-size: 55rpx;
+					color: #fffefe;
+					font-family: Adobe 黑体 Std;
+
+				}
+
+				.button-jiaru {
+					height: 134rpx;
+					width: 134rpx;
+					border-radius: 50%;
+					z-index: 101;
+					position: fixed;
+					bottom: 255rpx;
+					right: 46rpx;
+					background-color: #FFF;
+					box-shadow: 0 4rpx 12rpx #888888;
+
+				}
+
+				.quxiao-text {
+					z-index: 101;
+					position: fixed;
+					bottom: 125rpx;
+					right: 200rpx;
+					font-size: 55rpx;
+					color: #fffefe;
+					font-family: Adobe 黑体 Std;
+				}
+
+				.button-quxiao {
+					height: 134rpx;
+					width: 134rpx;
+					border-radius: 50%;
+					z-index: 101;
+					position: fixed;
+					bottom: 90rpx;
+					right: 46rpx;
+					background-color: #FFF;
+					box-shadow: 0 4rpx 12rpx #888888;
+				}
+
+			}
+
+		}
+
+		.addaddPopup {
+			width: 100%;
+			height: 100vh;
+			z-index: 15;
+		}
+
+		.top-wrapper {
+			top: 4rpx;
+			position: sticky;
+			width: 100%;
+			height: 200rpx;
+			z-index: 10;
+
+			.top {
+				position: relative;
+				width: 666rpx;
+				height: 200rpx;
+				margin: 0 auto;
+				background-color: white;
+				border-radius: 30rpx;
+				box-shadow: 0 4rpx 12rpx #888888;
+
+				.title {
+					position: absolute;
+					top: 34rpx;
+					left: 23rpx;
+					height: 75rpx;
+					font-size: 75rpx;
+					text-align: center;
+					line-height: 75rpx;
+				}
+
+				.account {
+					position: absolute;
+					bottom: 30rpx;
+					left: 23rpx;
+					font-size: 34rpx;
+				}
+
+				.top-button {
+					position: relative;
+					left: 555rpx;
+					top: 38rpx;
+					width: 86rpx;
+					height: 86rpx;
+
+					.iconfont {
+
+						font-size: 86rpx;
+					}
+				}
+			}
+		}
+
+		.list-wrapper {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			z-index: 1;
+			background-color: rgba(255,255,255,0);
+			.list-item-wrapper {
+				margin-top: 30rpx;
+				width: 100%;
+				background-color: rgba(255,255,255,0);
+				.list-item {
+					margin: 22rpx auto;
+					height: 120rpx;
+					width: 615rpx;
+					background-color: $bg-color;
+					border-radius: 10rpx;
+					box-shadow: 0 4rpx 12rpx #888888;
+					background-color: $unfinished-mission;
+					.list-item-mission {
+						position: relative;
+						left: 21rpx;
+						top: 24rpx;
+						height: 28rpx;
+						line-height: 28rpx;
+						font-size: 28rpx;
+
+					}
+
+					.list-item-DDL {
+						position: relative;
+						left: 21rpx;
+						top: 57rpx;
+						height: 25rpx;
+						font-size: 25rpx;
+						line-height: 25rpx;
+						color: $less-important-font;
+					}
+
+					.list-item-more {
+						width: 64rpx;
+						height: 64rpx;
+
+						.iconfont {
+							position: relative;
+							left: 536rpx;
+							top: -25rpx;
+							font-size: 64rpx;
+						}
+
+					}
+				}
+			}
+		}
+
+		.botton-wrapper2 {
+			position: fixed;
+			height: 227rpx;
+			bottom: 0;
+			z-index: 9;
+
+			.button-add {
+				height: 133rpx;
+				width: 133rpx;
+				border-radius: 50%;
+				z-index: 10;
+				position: absolute;
+				left: 567rpx;
+				background-color: #FFF;
+				box-shadow: 0 4rpx 12rpx #888888;
+			}
+
+			.progress-box {
+				height: 23rpx;
+				width: 682rpx;
+				position: absolute;
+				bottom: 8rpx;
+				left: 40rpx;
+				z-index: 10;
+			}
+
+
+		}
+	}
+</style>
