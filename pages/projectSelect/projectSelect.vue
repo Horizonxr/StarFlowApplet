@@ -38,8 +38,8 @@
 				:before-close="true" @close="closeExitpopup" @confirm="request_exit"></uni-popup-dialog>
 		</uni-popup>
 		<!-- 删除项目提示 -->
-		<uni-popup ref="exit_message_popup" type="message">
-		    <uni-popup-message type="error" :message="err_msg" :duration="1000"></uni-popup-message>
+		<uni-popup class="test" ref="exit_message_popup" type="message">
+		    <uni-popup-message type="error" message="失败消息" :duration="1000">{{err_msg}}</uni-popup-message>
 		</uni-popup>
 		<view class="top-wrapper">
 			<!-- 顶部 -->
@@ -194,7 +194,7 @@
 						});
 					}
 				})
-				this.$refs.exit_message_popup.open('center')
+				this.$refs.exit_message_popup.open('top')
 			},
 			refreshList() {
 				console.log('refresh')
