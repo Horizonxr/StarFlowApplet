@@ -114,8 +114,13 @@
 						"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 					},
 					success: (res) => {
+						let msg = res.data.message
+						if (msg == 'success'){
+							msg = '请求加入成功'
+						}
+						
 						uni.showToast({
-							title: '请求加入成功',
+							title: msg,
 							icon: 'success',
 							duration: 2000
 						});
