@@ -424,7 +424,7 @@
 						position: relative;
 						color: #000000;
 						font-size: 28rpx;
-						left: 320rpx;
+						left: 370rpx;
 						top: -50rpx;
 						border: 0.5rpx solid #000000;
 						width: 209rpx;
