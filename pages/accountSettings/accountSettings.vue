@@ -1,5 +1,12 @@
 <template>
 	<view>
+		<uni-popup ref="err_msg_popup" type="message">
+			<uni-popup-message type="error" message="失败消息" :duration="1000">{{err_msg}}</uni-popup-message>
+		</uni-popup>
+		<uni-popup ref="token_popup" type="dialog">
+			<uni-popup-dialog mode="input" message="成功消息" placeholder="请在外部浏览器粘贴链接获取token" 
+			:duration="2000" :before-close="true" @close="$refs.token_popup.close()" @confirm="updateGitHubToken"></uni-popup-dialog>
+		</uni-popup>
 		<uni-popup ref="GitHubPopup" type="dialog">
 			<uni-popup-dialog mode="input" message="成功消息" placeholder="请输入GitHub账号名称" :duration="2000" :before-close="true" @close="this.$refs.GitHubPopup.close()" @confirm="GitHubLogin"></uni-popup-dialog>
 		</uni-popup>
@@ -19,7 +26,7 @@
 			<view class="login" @click="GitHubPopup()">
 				<view class="login-content">{{GitHubAccount == '' ? "第二步：绑定GitHub" : "GitHub: " + GitHubAccount}}</view>
 			</view>
-			<view class="login" v-if="0" @click="updateGitHubToken()">
+			<view class="login" v-if="1" @click="updateGitHubTokenPopup()">
 				<view class="login-content">{{GitHubToken == false ? "第三步：绑定GitHub Token" : "GitHub Token: " + tokenStatus()}}</view>
 			</view>
 			<view class="login" @click="toProjectSelect()">
@@ -37,7 +44,8 @@
 				u_id: -1,
 				GitHubAccount: '',
 				GitHubToken: false,
-				userInfo:[]
+				userInfo:[],
+				err_msg:''
 			};
 		},
 		methods:{
@@ -127,6 +135,23 @@
 			GitHubPopup(){
 				this.$refs.GitHubPopup.open("center")
 			},
+			updateGitHubTokenPopup(){
+				this.$refs.token_popup.open('center')
+				uni.setClipboardData({
+				    data: 'hello',
+				    success: function () {
+				        this.err_msg = '已将获取token网址复制到剪切板'
+						this.$refs.err_msg_popup.open('top')
+				    }
+				});
+				setTimeout(()=>{
+					this.err_msg = '已将获取token网址复制到剪切板'
+					this.$refs.err_msg_popup.open('top')
+				},1000)
+			},
+			updateGitHubToken(){
+				this.$refs.token_popup.open('center')
+			},
 			toProjectSelect(){
 				uni.redirectTo({
 					url:'../projectSelect/projectSelect'
@@ -168,7 +193,7 @@
 		z-index: -999;
 	}
 	.top-wrapper{
-		top:0rpx;
+		top:4rpx;
 		position: sticky;
 		width: 100%;
 		height: 200rpx;
