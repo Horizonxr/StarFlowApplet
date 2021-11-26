@@ -18,7 +18,7 @@
 					<view class="close-popup" @click="closePopup">
 						<view class="close-popup-text">取消</view>
 						<view>
-							<view class="iconfont icon-quxiao" @click=""></view>
+							<view class="iconfont icon-chahao" @click=""></view>
 						</view>
 					</view>
 				</view>

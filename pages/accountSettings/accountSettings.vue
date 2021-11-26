@@ -1,5 +1,10 @@
 <template>
 	<view>
+		<view class="bg-circle">
+			<view class='orange' :animation='orange_ani'></view>
+			<view class='blue' :animation='blue_ani'></view>
+			<view class='green' :animation='green_ani'></view>
+		</view>
 		<uni-popup ref="err_msg_popup" type="message">
 			<uni-popup-message type="error" message="失败消息" :duration="1000">{{err_msg}}</uni-popup-message>
 		</uni-popup>
@@ -26,7 +31,7 @@
 			<view class="login" @click="GitHubPopup()">
 				<view class="login-content">{{GitHubAccount == '' ? "第二步：绑定GitHub" : "GitHub: " + GitHubAccount}}</view>
 			</view>
-			<view class="login" v-if="1" @click="updateGitHubTokenPopup()">
+			<view class="login" v-if="0" @click="updateGitHubTokenPopup()">
 				<view class="login-content">{{GitHubToken == false ? "第三步：绑定GitHub Token" : "GitHub Token: " + tokenStatus()}}</view>
 			</view>
 			<view class="login" @click="toProjectSelect()">
@@ -45,7 +50,13 @@
 				GitHubAccount: '',
 				GitHubToken: false,
 				userInfo:[],
-				err_msg:''
+				err_msg:'',
+				orange_ani: {},
+				blue_ani:{},
+				green_ani:{},
+				or:{},
+				bl:{},
+				gr:{},
 			};
 		},
 		methods:{
@@ -159,12 +170,61 @@
 			},
 			tokenStatus(){
 				return '已失效'
+			},
+			circleAnimation() {
+					{
+						var pi = Math.PI
+						let angle = 0
+						let r1 = 100
+						let x_zuo = r1 * Math.cos(angle)
+						let y_zuo = r1 * Math.sin(angle)
+						this.or = setInterval(()=>{
+							this.or_ani = uni.createAnimation({duration: 200});
+							this.or_ani.translate(x_zuo,y_zuo).scale(0.3*Math.sin(0.5*angle+pi)+1.2).step({duration:200})
+							this.orange_ani = this.or_ani.export();
+							angle = (angle+0.1)%(2*pi)
+							x_zuo = r1*Math.cos(angle)
+							y_zuo = r1*Math.sin(angle)
+						},200)
+					}
+					{
+						var pi = Math.PI
+						let angle = 5
+						let r1 = 60
+						let x_zuo = r1 * Math.cos(angle)
+						let y_zuo = r1 * Math.sin(angle)
+						this.bl = setInterval(()=>{
+							this.bl_ani = uni.createAnimation({duration: 200});
+							this.bl_ani.translate(x_zuo,y_zuo).step({duration:200})
+							this.blue_ani = this.bl_ani.export();
+							angle = (angle-0.02+2*pi)%(2*pi)
+							x_zuo = r1*Math.cos(angle)
+							y_zuo = r1*Math.sin(angle)
+						},200)
+					}
+					{
+						var pi = Math.PI
+						let angle = pi
+						let r1 = 120
+						let x_zuo = r1 * Math.cos(angle)
+						let y_zuo = r1 * Math.sin(angle)
+						this.gr = setInterval(()=>{
+							this.gr_ani = uni.createAnimation({duration: 200});
+							this.gr_ani.translate(x_zuo,y_zuo).step({duration:200})
+							this.green_ani = this.gr_ani.export();
+							angle = (angle+0.06)%(2*pi)
+							x_zuo = r1*Math.cos(angle)
+							y_zuo = r1*Math.sin(angle)
+						},200)
+					}
 			}
+			
 		},
 		onLoad() {
 			// uni.showLoading({
 			//     title: '加载中'
 			// });
+			this.$options.methods.circleAnimation.bind(this)()
 			this.u_id = uni.getStorageSync("u_id")
 			if(!uni.getStorageSync("userInfo")){
 				uni.showToast({
@@ -192,6 +252,40 @@
 		background-color: $bg-color;
 		z-index: -999;
 	}
+	.bg-circle {
+		z-index: 0;
+	
+		.orange {
+			width: 90px;
+			height: 90px;
+			border-radius: 50%;
+			position: fixed;
+			left: 80rpx;
+			top: 450rpx;
+			background: rgba($color: $uni-color-warning, $alpha: 0.9);
+		}
+	
+		.blue {
+			width: 180px;
+			height: 180px;
+			left: 230rpx;
+			top: 400rpx;
+			position: fixed;
+			border-radius: 50%;
+			background: rgba($color: $pending-mission, $alpha: 0.9);
+		}
+	
+		.green {
+			width: 120px;
+			height: 120px;
+			left: 250rpx;
+			top: 700rpx;
+			position: fixed;
+			border-radius: 50%;
+			background: rgba($color: $uni-color-success, $alpha: 0.9);
+		}
+	}
+	
 	.top-wrapper{
 		top:4rpx;
 		position: sticky;
@@ -242,7 +336,7 @@
 			width: 615rpx;
 			height: 120rpx;
 			margin: 20rpx auto;
-			background-color: white;
+			background-color: rgba(255,255,255,0.7);
 			border-radius: 10rpx;
 			box-shadow: 0 4rpx 12rpx #888888;
 			.login-content{

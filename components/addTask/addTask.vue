@@ -14,7 +14,7 @@
 				<view class="deadlineText">Deadline</view>
 				<view>
 					<uni-datetime-picker class="example-body" type="datetime" v-model="datetimesingle" :start="start"
-						:end="end" @change="changeLog" />
+						:end="end" @change="changeLog"  />
 				</view>
 			</view>
 			<textarea placeholder="请输入任务内容" v-model:value="task_info" class="details" placeholder-style="placeholderClass" />
@@ -24,10 +24,11 @@
 		</view>
 		<view>
 			<scroll-view scroll-y="true" class="bottom">
-				<view class="list-item" v-for="(item, key) in user_list" :key=item.key>
+				<view class="list-item" @click="this.pull_user_name=user_list[key].username"
+				:style="{'background-color':pull_user_name!==item.username ? 'white' : '#5091f2'}"
+				 v-for="(item, key) in user_list" :key=item.key>
 					<view class="name">{{item.username}}</view>
 					<view class="jurisdiction">开发者</view>
-					<view class="circle" @click="this.pull_user_name=user_list[key].username" :style="{'background-color':pull_user_name!==item.username ? 'white' : '#5091f2'}"></view>
 				</view>
 			</scroll-view>
 		</view>
@@ -218,8 +219,6 @@
 					position: absolute;
 					left: 40rpx;
 					font-size: 47rpx;
-					color: #5c5c5c;
-					font-family: Adobe 黑体 Std;
 				}
 
 				.example-body {
@@ -240,7 +239,7 @@
 				left: 40rpx;
 				height: 162rpx;
 				border: 0.5rpx solid #5c5c5c;
-				border-radius: 37rpx;
+				border-radius: 20rpx;
 				font-size: 33rpx;
 				color: #5c5c5c;
 				text-align: center;
@@ -264,7 +263,6 @@
 			height: 246rpx;
 			width: 572rpx;
 			border-radius: 10rpx;
-			border: 0.5rpx solid #666;
 			font-size: 33rpx;
 			color: #5c5c5c;
 
@@ -281,28 +279,17 @@
 					width: 206rpx;
 					font-size: 30rpx;
 					font-family: Adobe 黑体 Std;
-					color: #6e6d6d;
 				}
 
 				.jurisdiction {
 					position: relative;
-					left: 200rpx;
+					left: 332rpx;
 					top: -55rpx;
 					height: 42rpx;
 					width: 206rpx;
-					border: 0.5rpx solid #666;
+					border: 0.5rpx solid #000;
 					line-height: 42rpx;
 					text-align: center;
-				}
-
-				.circle {
-					position: relative;
-					top: -90rpx;
-					left: 500rpx;
-					height: 30rpx;
-					width: 30rpx;
-					border-radius: 50%;
-					border: 0.5rpx solid #666;
 				}
 			}
 
@@ -310,15 +297,14 @@
 		}
 
 		.icon {
-			height: 180rpx;
+			height: 86rpx;
 			width: 100%;
 			position: absolute;
-			bottom: 0;
+			bottom: 40rpx;
 
 			.iconfont {
 				position: absolute;
 				font-size: 86rpx;
-				top: 64rpx;
 				left: 292rpx;
 			}
 

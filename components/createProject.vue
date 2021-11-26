@@ -70,15 +70,12 @@ export default {
 			        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 			    },
 			    success: (res) => {					
+					uni.hideLoading()
 					uni.showToast({
 						title: '请求成功',
 						icon:'success',
 						duration:2000
 					});
-					uni.hideLoading()
-					// uni.reLaunch({
-					// 	url: '/pages/projectList/projectList'
-					// })
 					this.$emit("refresh");
 					this.close()
 			    },
@@ -100,7 +97,7 @@ export default {
         back(){
         	this.keyword=''
            	this.$emit("closeCreatepopup");
-           
+			this.$emit('refresh')
         }, 
 		search(){
 			console.log("u_id "+this.u_id)
