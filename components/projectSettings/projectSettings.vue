@@ -49,7 +49,7 @@
 				</view>
 			</view>
 			<view class="bottom">
-				<view class="iconfont icon-fenxiang"></view>
+				<view class="iconfont icon-fenxiang" @click="share"></view>
 				<view class="iconfont icon-yishenpi" @click="openmemberAudit"></view>
 				<view class="iconfont icon-duigou" @click="close"></view>
 			</view>
@@ -82,6 +82,25 @@
 			};
 		},
 		methods: {
+			share(){
+				console.log("分享按钮")
+				uni.setClipboardData({
+				    data: this.repo_name,
+				    success() {
+						uni.hideToast()
+						uni.showToast({
+							icon:'success',
+							title:'已复制项目名称'
+						})
+				    },
+					fail() {
+						uni.showToast({
+							icon:'error',
+							title:'复制失败'
+						})
+					}
+				});
+			},
 			close() {
 				this.$emit("closemyPopup")
 			},

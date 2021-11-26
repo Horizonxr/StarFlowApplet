@@ -18,9 +18,9 @@
 $bg-color: white;
 $less-important-font: black;
 //任务条目颜色
-$unfinished-mission: #a6e5ae;
-$pending-mission:#7fa9f2;
-$finished-mission:#f9f9f9;
+$unfinished-mission: rgba(166,229,174,0.7);
+$pending-mission:rgba(127,169,242,0.7);
+$finished-mission:rgba(166,165,165,0.7);
 
 /* 行为相关颜色 */
 $uni-color-primary: #007aff;

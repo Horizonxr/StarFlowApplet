@@ -58,6 +58,13 @@
 				this.$emit("closeJoininpopup")
 			},
 			search() {
+				if (this.keyword == ''){
+					uni.showToast({
+						icon:'error',
+						title: '输入为空'
+					});
+					return
+				}
 				uni.showLoading({
 					title: "加载中",
 					mask: true
@@ -74,6 +81,7 @@
 						"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 					},
 					success: (res) => {
+						console.log(res)
 						this.repositories_list = res.data.data
 						uni.hideLoading()
 					},

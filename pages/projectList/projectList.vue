@@ -1,5 +1,10 @@
 <template>
 	<view class="body">
+		<view class="bg-circle">
+			<view class='orange' :animation='orange_ani'></view>
+			<view class='blue' :animation='blue_ani'></view>
+			<view class='green' :animation='green_ani'></view>
+		</view>
 		<!-- 任务详情弹窗 -->
 		<uni-popup class="taskPopup" ref="taskPopup" type="center" :mask-click="false">
 			<incomplete v-show="popup_task === 1" @closePopup="closePopup" @refresh="refreshList" :taskInfo="taskInfo"
@@ -48,7 +53,7 @@
 		</view>
 		<view class="list-wrapper">
 			<view class="list-item-wrapper">
-				<view class="list-item" @click="taskPopup(1, key)" style="background-color: #8feb9b;"
+				<view class="list-item" @click="taskPopup(1, key)" style="background-color: rgba(166,229,174,0.8);"
 					v-for="(item, key) in mission_list.incomplete" :key=item.key>
 					<view class="list-item-mission">任务：{{item.task_name}}</view>
 					<view class="list-item-DDL">DeadLine: {{DDLcompute(item.deadline)}}</view>
@@ -56,7 +61,7 @@
 						<view class="iconfont icon-gengduo"></view>
 					</view>
 				</view>
-				<view class="list-item" @click="taskPopup(2, key)" style="background-color: #7fa9f2;"
+				<view class="list-item" @click="taskPopup(2, key)" style="background-color: rgba(127,169,242,0.8);"
 					v-for="(item, key) in mission_list.checking" :key=item.key>
 					<view class="list-item-mission">任务：{{item.task_name}}</view>
 					<view class="list-item-DDL">DeadLine: {{DDLcompute(item.deadline)}}</view>
@@ -64,7 +69,7 @@
 						<view class="iconfont icon-gengduo"></view>
 					</view>
 				</view>
-				<view class="list-item" @click="taskPopup(3, key)" style="background-color: #a6a5a5;"
+				<view class="list-item" @click="taskPopup(3, key)" style="background-color: rgba(166,165,165,0.8);"
 					v-for="(item, key) in mission_list.finish" :key=item.key>
 					<view class="list-item-mission">任务：{{item.task_name}}</view>
 					<view class="list-item-DDL">DeadLine: {{DDLcompute(item.deadline)}}</view>
@@ -84,11 +89,6 @@
 				</view>
 			</view>
 		</view>
-
-		<!-- 消息提示 -->
-
-
-
 	</view>
 </template>
 
@@ -112,7 +112,13 @@
 					finish: []
 				},
 				taskInfo: [],
-				progress: 0
+				progress: 0,
+				orange_ani: {},
+				blue_ani:{},
+				green_ani:{},
+				or:{},
+				bl:{},
+				gr:{},
 			};
 		},
 		components: {
@@ -195,9 +201,57 @@
 						});
 					}
 				})
+			},
+			circleAnimation() {
+				{
+					var pi = Math.PI
+					let angle = 0
+					let r1 = 100
+					let x_zuo = r1 * Math.cos(angle)
+					let y_zuo = r1 * Math.sin(angle)
+					this.or = setInterval(()=>{
+						this.or_ani = uni.createAnimation({duration: 200});
+						this.or_ani.translate(x_zuo,y_zuo).scale(0.3*Math.sin(0.5*angle+pi)+1.2).step({duration:200})
+						this.orange_ani = this.or_ani.export();
+						angle = (angle+0.1)%(2*pi)
+						x_zuo = r1*Math.cos(angle)
+						y_zuo = r1*Math.sin(angle)
+					},200)
+				}
+				{
+					var pi = Math.PI
+					let angle = 5
+					let r1 = 60
+					let x_zuo = r1 * Math.cos(angle)
+					let y_zuo = r1 * Math.sin(angle)
+					this.bl = setInterval(()=>{
+						this.bl_ani = uni.createAnimation({duration: 200});
+						this.bl_ani.translate(x_zuo,y_zuo).step({duration:200})
+						this.blue_ani = this.bl_ani.export();
+						angle = (angle-0.02+2*pi)%(2*pi)
+						x_zuo = r1*Math.cos(angle)
+						y_zuo = r1*Math.sin(angle)
+					},200)
+				}
+				{
+					var pi = Math.PI
+					let angle = pi
+					let r1 = 120
+					let x_zuo = r1 * Math.cos(angle)
+					let y_zuo = r1 * Math.sin(angle)
+					this.gr = setInterval(()=>{
+						this.gr_ani = uni.createAnimation({duration: 200});
+						this.gr_ani.translate(x_zuo,y_zuo).step({duration:200})
+						this.green_ani = this.gr_ani.export();
+						angle = (angle+0.06)%(2*pi)
+						x_zuo = r1*Math.cos(angle)
+						y_zuo = r1*Math.sin(angle)
+					},200)
+				}
 			}
 		},
 		onLoad(option) { //option为object类型，会序列化上个页面传递的参数
+			this.$options.methods.circleAnimation.bind(this)()
 			uni.showLoading({
 				title: '加载中'
 			})
@@ -248,7 +302,41 @@
 		height: 100vh;
 		background-color: $bg-color;
 		z-index: -999;
-
+		.bg-circle {
+			position: absolute;
+			z-index: 0;
+			width: 100%;
+			height: 100vh;
+			.orange {
+				width: 90px;
+				height: 90px;
+				border-radius: 50%;
+				position: fixed;
+				left: 80rpx;
+				top: 450rpx;
+				background: rgba($color: $uni-color-warning, $alpha: 0.4);
+			}
+		
+			.blue {
+				width: 180px;
+				height: 180px;
+				left: 230rpx;
+				top: 400rpx;
+				position: fixed;
+				border-radius: 50%;
+				background: rgba($color: $pending-mission, $alpha: 0.4);
+			}
+		
+			.green {
+				width: 120px;
+				height: 120px;
+				left: 250rpx;
+				top: 700rpx;
+				position: fixed;
+				border-radius: 50%;
+				background: rgba($color: $uni-color-success, $alpha: 0.4);
+			}
+		}
 		.iconfont {
 			font-size: 86rpx;
 			line-height: 134rpx;
@@ -395,13 +483,11 @@
 			width: 100%;
 			height: 100%;
 			z-index: 1;
-			background-color: $bg-color;
-
+			background-color: rgba(255,255,255,0);
 			.list-item-wrapper {
 				margin-top: 30rpx;
 				width: 100%;
-				background-color: $bg-color;
-
+				background-color: rgba(255,255,255,0);
 				.list-item {
 					margin: 22rpx auto;
 					height: 120rpx;
@@ -410,7 +496,6 @@
 					border-radius: 10rpx;
 					box-shadow: 0 4rpx 12rpx #888888;
 					background-color: $unfinished-mission;
-
 					.list-item-mission {
 						position: relative;
 						left: 21rpx;

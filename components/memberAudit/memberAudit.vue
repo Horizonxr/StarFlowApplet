@@ -3,6 +3,7 @@
 		<view class="back">
 			<uni-popup ref="popup" type="dialog">
 				<view class="prompt">
+					<view class="iconfont icon-fanhui" style="font-size: 73rpx; top: 10rpx; z-index: 10;" @click="$refs.popup.close()"></view>
 					<view class="title">是否同意加入</view>
 					<view class="root-name" @click="this.pull_identity = 1;"
 						:style="{'background-color':pull_identity !== 1 ? 'white' : '#5091f2'}">管理员</view>
@@ -14,7 +15,7 @@
 					<view class="iconfont icon-chahao" @click="disagree"></view>
 				</view>
 			</uni-popup>
-			<view class="iconfont icon-fanhui" @click="close"></view>
+			<view id="dafanhui" class="iconfont icon-fanhui" @click="close"></view>
 			<view class="title">人员审核</view>
 			<view class="personalManagement">
 				<view class="list"></view>
@@ -177,21 +178,32 @@
 
 <style lang="scss">
 	.back {
+		height: 100vh;
 		position: relative;
-		height: 1110rpx;
-		width: 670rpx;
-		background-color: #FFFFFF;
+		width: 660rpx;
+		height: 1050rpx;
+		top: 30rpx;
+		margin: 0 auto;
+		background-color: white;
+		border-radius: 30rpx;
+		box-shadow: 0 4rpx 12rpx #888888;
 		.prompt {
 			position: relative;
 			height: 400rpx;
 			width: 590rpx;
 			background-color: #fff;
-		
+			border-radius: 30rpx;
+			box-shadow: 0 4rpx 12rpx #888888;
 			.title {
 				position: relative;
+				width: 590rpx;
+				height: 60rpx;
+				text-align: center;
+				line-height: 60rpx;
 				font-size: 60rpx;
 				top: 40rpx;
-				left: 110rpx;
+				left:0rpx;
+				letter-spacing: 0;
 			}
 		
 			.root-name {
