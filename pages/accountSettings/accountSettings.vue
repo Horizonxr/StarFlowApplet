@@ -168,7 +168,7 @@
 		z-index: -999;
 	}
 	.top-wrapper{
-		top:0rpx;
+		top:4rpx;
 		position: sticky;
 		width: 100%;
 		height: 200rpx;
