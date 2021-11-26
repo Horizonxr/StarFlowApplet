@@ -18,7 +18,7 @@
 		<view class="top-wrapper">
 			<view class="top">
 				<view class="title">个人设置</view>
-				<view class="account">账户名称：{{userInfo.nickName ? userInfo.nickName : "尚未获取"}}</view>
+				<view class="account">账户名称：{{userInfo.nickName ? userInfo.nickName : "尚未获取"}} ID：{{u_id ? u_id : "尚未获取"}}</view>
 				<view class="top-button">
 					<image :src="userInfo.avatarUrl" mode=""></image>
 				</view>
@@ -26,7 +26,7 @@
 		</view>
 		<view class="login-wrapper">
 			<view class="login" @click="weixinLogin()">
-				<view class="login-content">{{userInfo.length == 0 ? "第一步：绑定微信" : "微信名称: " + userInfo.nickName}}</view>
+				<view class="login-content">{{userInfo.length == 0 ? "第一步：绑定微信" : "微信名称: "+userInfo.nickName}}</view>
 			</view>
 			<view class="login" @click="GitHubPopup()">
 				<view class="login-content">{{GitHubAccount == '' ? "第二步：绑定GitHub" : "GitHub: " + GitHubAccount}}</view>
@@ -242,6 +242,11 @@
 			if(uni.getStorageSync("GitHubAccount")){
 				this.GitHubAccount = uni.getStorageSync("GitHubAccount")
 			}
+		},
+		onHide(){
+			clearInterval(this.or)
+			clearInterval(this.bl)
+			clearInterval(this.gr)
 		}
 	}
 </script>

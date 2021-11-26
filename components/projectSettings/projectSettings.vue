@@ -1,5 +1,8 @@
 <template>
 	<view>
+		<uni-popup class="test" ref="err_msg_popup" type="message">
+		    <uni-popup-message type="success" message="失败消息" :duration="3000">{{err_msg}}</uni-popup-message>
+		</uni-popup>
 		<uni-popup ref="pemissionSetting" type="center"  :mask-click="false">
 			<view class="prompt">
 				<view class="title">权限修改为</view>
@@ -50,7 +53,7 @@
 			</view>
 			<view class="bottom">
 				<view class="iconfont icon-fenxiang" @click="share"></view>
-				<view class="iconfont icon-yishenpi" @click="openmemberAudit"></view>
+				<view class="iconfont icon-yishenpi" v-if="role==0" @click="openmemberAudit"></view>
 				<view class="iconfont icon-duigou" @click="close"></view>
 			</view>
 		</view>
@@ -79,6 +82,7 @@
 				person_change_delete:false,
 				delete_key:-1,
 				show_member_audit:false,
+				err_msg:''
 			};
 		},
 		methods: {
@@ -109,7 +113,10 @@
 			},
 			openpemissionSetting(member_id,key) {
 				// 超管直接返回,不让修改
-				if (this.member_list[key].fields.identity == 0) return
+				if (this.member_list[key].fields.identity == 0 || this.role != 0) return
+				//权限不足不让修改
+				// if (this.role !== 0) return;
+				console.log("role" + this.role)
 				this.pull_member_id = member_id
 				this.$refs.pemissionSetting.open("center")
 			},
@@ -145,11 +152,17 @@
 						"content-type": "application/j" //自定义请求头信息
 					},
 					success: (res) => {
+						if (res.data.message == 'success'){
+							uni.showToast({
+								title: '修改成功',
+								icon: 'success'
+							});
+						}
+						else{
+							this.err_msg = res.data.message
+							this.$refs.err_msg_popup.open('top')
+						}
 						_this.$options.methods.refreshMemberList.bind(this)()
-						uni.showToast({
-							title: '修改成功',
-							icon: 'success'
-						});
 					},
 					fail(err) {
 						console.log(err)

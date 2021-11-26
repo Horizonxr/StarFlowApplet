@@ -22,7 +22,7 @@
 				<scroll-view scroll-y="true" class="scroll">
 					<view class="list-item" v-for="(item, key) in apply_list" :key=item.key @click="Audit(apply_list[key].pk)">
 						<view class="name">{{item.user_name}}</view>
-						<view class="time">2001.11.17</view>
+						<view class="time">近期</view>
 					</view>
 				</scroll-view>
 			</view>
@@ -71,7 +71,7 @@
 					method: 'POST',
 					timeout: 8000,
 					data: {
-						user: 1,
+						user: this.u_id,
 						repo:this.repo_id,
 					},
 					header: {

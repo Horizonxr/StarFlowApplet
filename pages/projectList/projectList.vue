@@ -7,7 +7,7 @@
 		</view>
 		<!-- 任务详情弹窗 -->
 		<uni-popup class="taskPopup" ref="taskPopup" type="center" :mask-click="false">
-			<incomplete v-show="popup_task === 1" @closePopup="closePopup" @refresh="refreshList" :taskInfo="taskInfo"
+			<incomplete v-if="show_incomplete" v-show="popup_task === 1" @closePopup="closePopup" @refresh="refreshList" :taskInfo="taskInfo"
 				:role="role" :member_id="member_id" :repo_name="repo_name"></incomplete>
 			<checking v-show="popup_task === 2" @closePopup="closePopup" @refresh="refreshList" :taskInfo="taskInfo"
 				:role="role" :member_id="member_id"></checking>
@@ -17,10 +17,10 @@
 		<!-- 按钮弹窗 -->
 		<uni-popup class="moremorePopup" ref="moremorePopup" type="center" :mask-click="false">
 			<view class="botton-wrapper">
-				<view class="more-text">添加新任务</view>
+				<view class="more-text" v-if="role <= 1">添加新任务</view>
 				<view class="help-text">帮助说明</view>
 				<view class="quxiao-text">取消</view>
-				<view class="button-more" @click="addTask">
+				<view class="button-more" @click="addTask" v-if="role <= 1">
 					<view class="iconfont icon-zengjia">
 					</view>
 				</view>
@@ -35,10 +35,10 @@
 			</view>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="addaddPopup" type="center" :mask-click="false">
-			<addTask @closeaddPopup="closeaddPopup" :repo_id="repo_id"></addTask>
+			<addTask v-if="show_addTask" @closeaddPopup="closeaddPopup" :repo_id="repo_id"></addTask>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="myproject" type="center" :mask-click="false">
-			<projectSettings @openmemberAudit="openmemberAudit" @closemyPopup="closemyPopup" :repo_name="repo_name" :repo_address="repo_address"
+			<projectSettings v-if="show_settings" @openmemberAudit="openmemberAudit" @closemyPopup="closemyPopup" :repo_name="repo_name" :repo_address="repo_address"
 				:repo_id="repo_id"></projectSettings>
 		</uni-popup>
 		
@@ -119,6 +119,9 @@
 				or:{},
 				bl:{},
 				gr:{},
+				show_settings:0,
+				show_addTask:0,
+				show_incomplete:0
 			};
 		},
 		components: {
@@ -129,8 +132,10 @@
 			closePopup() {
 				this.$refs.taskPopup.close()
 				this.$options.methods.refreshList.bind(this)()
+				this.show_incomplete = 0
 			},
 			taskPopup(kind, index) {
+				this.show_incomplete = 1
 				console.log("任务编号是" + index)
 				this.popup_task = kind
 				let taskInfo = []
@@ -146,20 +151,24 @@
 				this.$refs.moremorePopup.open("center")
 			},
 			addTask() {
+				this.show_addTask = 1
 				this.$refs.addaddPopup.open("center")
 			},
 			closeaddPopup() {
 				this.$refs.addaddPopup.close("center")
 				this.$refs.moremorePopup.close("center")
 				this.$options.methods.refreshList.bind(this)()
+				this.show_addTask = 0
 			},
 			canclePopup() {
 				this.$refs.moremorePopup.close("center")
 			},
 			projectSettings() {
+				this.show_settings = 1
 				this.$refs.myproject.open("center")
 			},
 			closemyPopup() {
+				this.show_settings = 0
 				this.$refs.myproject.close("center")
 			},
 			// DDL计算连接字符串函数
@@ -290,6 +299,11 @@
 					});
 				}
 			})
+		},
+		onHide(){
+			clearInterval(this.or)
+			clearInterval(this.bl)
+			clearInterval(this.gr)
 		}
 
 

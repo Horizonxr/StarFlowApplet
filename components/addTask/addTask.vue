@@ -5,19 +5,21 @@
 				<view class="iconfont icon-fanhui" @click="back">
 				</view>
 			</view>
-			<view class="title"> 添加任务:</view>
+			<view class="title">添加任务</view>
 			<view class="popupName">
-				<view class="inputText">任务名称</view>
+				<view class="inputText">名称</view>
 				<input placeholder-style="color: black" placeholder="请输入任务名称" class="input" type="text" v-model:value="name">
 			</view>
 			<view class="deadline">
-				<view class="deadlineText">Deadline</view>
+				<view class="deadlineText">DDL</view>
 				<view>
 					<uni-datetime-picker class="example-body" type="datetime" v-model="datetimesingle" :start="start"
 						:end="end" @change="changeLog"  />
 				</view>
 			</view>
-			<textarea placeholder="请输入任务内容" v-model:value="task_info" class="details" placeholder-style="placeholderClass" />
+			<view class="details-wrapper">
+				<textarea placeholder="请输入任务内容" v-model:value="task_info" class="details" placeholder-style="placeholderClass" />
+			</view>
 			<view class="release">
 				任务发放：
 			</view>
@@ -184,12 +186,13 @@
 				position: absolute;
 				top: 258rpx;
 				height: 78rpx;
-				width: 750rpx;
+				width: 660rpx;
 
 				.inputText {
 					position: absolute;
 					top: 9rpx;
 					left: 40rpx;
+					width: 150rpx;
 					font-size: 48rpx;
 					color: #000;
 					font-family: Adobe 黑体 Std;
@@ -199,7 +202,8 @@
 					position: absolute;
 					top: 7rpx;
 					height: 74rpx;
-					left: 280rpx;
+					left: 180rpx;
+					width: 445rpx;
 					border: 0.5rpx solid #5c5c5c;
 					border-radius: 10rpx;
 					font-size: 33rpx;
@@ -213,37 +217,45 @@
 				position: absolute;
 				top: 352rpx;
 				height: 74rpx;
-				width: 750rpx;
+				width: 660rpx;
 
 				.deadlineText {
 					position: absolute;
 					left: 40rpx;
+					top:10rpx;
+					width: 150rpx;
 					font-size: 47rpx;
 				}
-
+				
 				.example-body {
 					position: absolute;
 					height: 74rpx;
-					width: 352rpx;
-					left: 280rpx;
+					width: 445rpx;
+					left: 180rpx;
 					border-radius: 37rpx;
 					font-size: 33rpx;
 					color: #5c5c5c;
 					text-align: center;
 				}
 			}
-
-			.details {
+			.details-wrapper{
 				position: absolute;
 				top: 442rpx;
-				left: 40rpx;
+				width: 660rpx;
 				height: 162rpx;
-				border: 0.5rpx solid #5c5c5c;
-				border-radius: 20rpx;
-				font-size: 33rpx;
-				color: #5c5c5c;
-				text-align: center;
+				width: 100%;
+				.details {
+					width: 580rpx;
+					margin: 10rpx auto;
+					height: 162rpx;
+					border: 0.5rpx solid #5c5c5c;
+					border-radius: 20rpx;
+					font-size: 33rpx;
+					color: #5c5c5c;
+					text-align: center;
+				}
 			}
+
 			.release {
 				position: absolute;
 				top: 620rpx;
