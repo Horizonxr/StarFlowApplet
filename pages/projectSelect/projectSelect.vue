@@ -34,12 +34,12 @@
 		</uni-popup>
 		<!-- 删除项目确认 -->
 		<uni-popup ref="exitpopup" type="dialog">
-			<uni-popup-dialog type='info' title="提示" mode="base" content="确认删除该项目？" message="成功消息" :duration="2000"
+			<uni-popup-dialog type='info' title="提示" mode="base" content="确认删除该项目？" message="成功消息"
 				:before-close="true" @close="closeExitpopup" @confirm="request_exit"></uni-popup-dialog>
 		</uni-popup>
 		<!-- 删除项目提示 -->
 		<uni-popup class="test" ref="exit_message_popup" type="message">
-		    <uni-popup-message type="error" message="失败消息" :duration="1000">{{err_msg}}</uni-popup-message>
+		    <uni-popup-message type="error" message="失败消息" :duration="3000">{{err_msg}}</uni-popup-message>
 		</uni-popup>
 		<view class="top-wrapper">
 			<!-- 顶部 -->

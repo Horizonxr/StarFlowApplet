@@ -1,5 +1,9 @@
 <template name="incomplete">
 	<view class="unfinished-body">
+		<!-- 删除项目提示 -->
+		<uni-popup class="test" ref="err_msg_popup" type="message">
+		    <uni-popup-message type="success" message="失败消息" :duration="3000">{{err_msg}}</uni-popup-message>
+		</uni-popup>
 		<view class="unfinished-top-button" @click="back">
 			<view class="iconfont icon-fanhui"></view>
 		</view>
@@ -13,7 +17,8 @@
 			<view class="mission-content">任务详情:{{taskInfo.task_info}}</view>
 			<view class="unfinished-pull-repositories" @click="getPullRequest">点击拉取</view>
 			<scroll-view class="scroll-area" scroll-y="true">
-				<view class="finished-push" @click="this.pull_request_selected = key; this.pull_request_id = this.pullRequestList[key].request_id; this.pull_request_selected_title=this.pullRequestList[key].title" 
+				<view class="finished-push" 
+				@click="this.pull_request_selected = key; this.pull_request_id = this.pullRequestList[key].request_id; this.pull_request_selected_title=this.pullRequestList[key].title" 
 				:style="{'background-color':pull_request_selected !== key ? 'white' : '#5091f2'}" 
 				v-for="(item, key) in pullRequestList" :key=item.key>
 					<view class="content">
@@ -56,7 +61,8 @@
 				pullRequestList:[],
 				pull_request_selected:-1,
 				pull_request_id:-1,
-				pull_request_selected_title:''
+				pull_request_selected_title:'',
+				err_msg:'',
 			}
 		},
 		methods: {
@@ -79,9 +85,12 @@
 				        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 				    },
 				    success: (res) => {
-						console.log(res)
+						console.log(112111212111)
+						console.log(res.data.message)
 						this.pullRequestList = res.data.data
 						console.log(this.pullRequestList)
+						this.err_msg = res.data.message
+						this.$refs.err_msg_popup.open('top')
 						uni.hideLoading()
 				    },
 					fail() {
@@ -96,6 +105,8 @@
 			//任务提交
 			taskSubmit(){
 				console.log("任务提交")
+				console.log(this.pull_request_selected_title)
+				console.log(this.pull_request_id)
 				if (this.pull_request_id===-1){
 					uni.showToast({
 						icon:'error',
@@ -108,7 +119,7 @@
 					method:'POST',
 					timeout:8000,
 				    data: {
-						title:pull_request_selected_title,
+						title:this.pull_request_selected_title,
 				        submit_info:this.taskInfo.task_info,
 						submit_id:this.taskInfo.member_id,
 						request_id:this.pull_request_id,
