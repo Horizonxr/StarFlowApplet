@@ -117,6 +117,8 @@
 							title: '修改成功',
 							icon:'success'
 						});
+						this.$options.methods.refreshApplyList.bind(this)()
+						this.$options.methods.rfreshMemberList.bind(this)()
 						uni.hideLoading()
 					},
 					fail(err) {
@@ -128,8 +130,6 @@
 						});
 					}
 				})
-				this.$options.methods.refreshApplyList.bind(this)()
-				this.$options.methods.rfreshMemberList.bind(this)()
 				this.$refs.popup.close()
 				
 			},

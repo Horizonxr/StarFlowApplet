@@ -304,8 +304,10 @@
 			clearInterval(this.or)
 			clearInterval(this.bl)
 			clearInterval(this.gr)
+		},
+		onShow() {
+			this.$options.methods.circleAnimation.bind(this)()
 		}
-
 
 	}
 </script>

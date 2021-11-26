@@ -1,5 +1,8 @@
 <template name="createProject">
 	<view class="body1">
+		<uni-popup class="test" ref="err_msg_popup" type="message">
+		    <uni-popup-message type="success" message="失败消息" :duration="3000">{{err_msg}}</uni-popup-message>
+		</uni-popup>
 		<!-- 创建项目提示信息 -->
 		<uni-popup ref="popup" type="dialog">
 			<uni-popup-dialog type='info' title="提示"mode="base" content="确认创建该项目？"message="成功消息" :duration="2000" :before-close="true" @close="close" @confirm="request_joinin"></uni-popup-dialog>
@@ -37,7 +40,8 @@ export default {
             repositories_list:[],
             keyword:'' ,
 			middle:-1,
-			GitHubAccount:''
+			GitHubAccount:'',
+			err_msg:''
 		}
 	},
     methods: {
@@ -69,13 +73,19 @@ export default {
 			    header: {
 			        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 			    },
-			    success: (res) => {					
+			    success: (res) => {	
 					uni.hideLoading()
-					uni.showToast({
-						title: '请求成功',
-						icon:'success',
-						duration:2000
-					});
+					if (res.data.message == 'success'){
+						uni.showToast({
+							title: '请求成功',
+							icon:'success',
+							duration:2000
+						});
+					}
+					else{
+						this.err_msg = res.data.message
+						this.$refs.err_msg_popup.open('top')
+					}
 					this.$emit("refresh");
 					this.close()
 			    },

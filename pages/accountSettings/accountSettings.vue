@@ -13,7 +13,7 @@
 			:duration="2000" :before-close="true" @close="$refs.token_popup.close()" @confirm="updateGitHubToken"></uni-popup-dialog>
 		</uni-popup>
 		<uni-popup ref="GitHubPopup" type="dialog">
-			<uni-popup-dialog mode="input" message="成功消息" placeholder="请输入GitHub账号名称" :duration="2000" :before-close="true" @close="this.$refs.GitHubPopup.close()" @confirm="GitHubLogin"></uni-popup-dialog>
+			<uni-popup-dialog mode="input" message="成功消息" :value="GitHubAccount" :placeholder="account_placeholder" :duration="2000" :before-close="true" @close="this.$refs.GitHubPopup.close()" @confirm="GitHubLogin"></uni-popup-dialog>
 		</uni-popup>
 		<view class="top-wrapper">
 			<view class="top">
@@ -50,6 +50,7 @@
 				GitHubAccount: '',
 				GitHubToken: false,
 				userInfo:[],
+				account_placeholder:'请输入GitHub账号名称',
 				err_msg:'',
 				orange_ani: {},
 				blue_ani:{},
@@ -247,6 +248,9 @@
 			clearInterval(this.or)
 			clearInterval(this.bl)
 			clearInterval(this.gr)
+		},
+		onShow() {
+			this.$options.methods.circleAnimation.bind(this)()
 		}
 	}
 </script>
