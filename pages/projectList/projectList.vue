@@ -1,10 +1,6 @@
 <template>
 	<view class="body">
-		<view class="bg-circle">
-			<view class='orange' :animation='orange_ani'></view>
-			<view class='blue' :animation='blue_ani'></view>
-			<view class='green' :animation='green_ani'></view>
-		</view>
+		<bgAni>	背景动画</bgAni>
 		<!-- 任务详情弹窗 -->
 		<uni-popup class="taskPopup" ref="taskPopup" type="center" :mask-click="false">
 			<incomplete v-if="show_incomplete" v-show="popup_task === 1" @closePopup="closePopup" @refresh="refreshList" :taskInfo="taskInfo"
@@ -115,12 +111,6 @@
 				},
 				taskInfo: [],
 				progress: 0,
-				orange_ani: {},
-				blue_ani:{},
-				green_ani:{},
-				or:{},
-				bl:{},
-				gr:{},
 				show_settings:0,
 				show_addTask:0,
 				show_incomplete:0
@@ -192,7 +182,9 @@
 					method: 'POST',
 					timeout: 8000,
 					data: {
-						repo_id: this.repo_id
+						repo_id: this.repo_id,
+						u_id:uni.getStorageSync('u_id'),
+						action:0
 					},
 					header: {
 						"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
@@ -213,56 +205,8 @@
 					}
 				})
 			},
-			circleAnimation() {
-				{
-					var pi = Math.PI
-					let angle = 0
-					let r1 = 100
-					let x_zuo = r1 * Math.cos(angle)
-					let y_zuo = r1 * Math.sin(angle)
-					this.or = setInterval(()=>{
-						this.or_ani = uni.createAnimation({duration: 200});
-						this.or_ani.translate(x_zuo,y_zuo).scale(0.3*Math.sin(0.5*angle+pi)+1.2).step({duration:200})
-						this.orange_ani = this.or_ani.export();
-						angle = (angle+0.1)%(2*pi)
-						x_zuo = r1*Math.cos(angle)
-						y_zuo = r1*Math.sin(angle)
-					},200)
-				}
-				{
-					var pi = Math.PI
-					let angle = 5
-					let r1 = 60
-					let x_zuo = r1 * Math.cos(angle)
-					let y_zuo = r1 * Math.sin(angle)
-					this.bl = setInterval(()=>{
-						this.bl_ani = uni.createAnimation({duration: 200});
-						this.bl_ani.translate(x_zuo,y_zuo).step({duration:200})
-						this.blue_ani = this.bl_ani.export();
-						angle = (angle-0.02+2*pi)%(2*pi)
-						x_zuo = r1*Math.cos(angle)
-						y_zuo = r1*Math.sin(angle)
-					},200)
-				}
-				{
-					var pi = Math.PI
-					let angle = pi
-					let r1 = 120
-					let x_zuo = r1 * Math.cos(angle)
-					let y_zuo = r1 * Math.sin(angle)
-					this.gr = setInterval(()=>{
-						this.gr_ani = uni.createAnimation({duration: 200});
-						this.gr_ani.translate(x_zuo,y_zuo).step({duration:200})
-						this.green_ani = this.gr_ani.export();
-						angle = (angle+0.06)%(2*pi)
-						x_zuo = r1*Math.cos(angle)
-						y_zuo = r1*Math.sin(angle)
-					},200)
-				}
-			}
 		},
 		onLoad(option) { //option为object类型，会序列化上个页面传递的参数
-			this.$options.methods.circleAnimation.bind(this)()
 			uni.showLoading({
 				title: '加载中'
 			})
@@ -281,7 +225,9 @@
 				method: 'POST',
 				timeout: 8000,
 				data: {
-					repo_id: option.repo_id
+					repo_id: option.repo_id,
+					u_id:uni.getStorageSync('u_id'),
+					action:0
 				},
 				header: {
 					"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
@@ -303,12 +249,9 @@
 			})
 		},
 		onHide(){
-			clearInterval(this.or)
-			clearInterval(this.bl)
-			clearInterval(this.gr)
+
 		},
 		onShow() {
-			this.$options.methods.circleAnimation.bind(this)()
 		}
 
 	}
@@ -320,41 +263,6 @@
 		height: 100vh;
 		background-color: $bg-color;
 		z-index: -999;
-		.bg-circle {
-			position: absolute;
-			z-index: 0;
-			width: 100%;
-			height: 100vh;
-			.orange {
-				width: 90px;
-				height: 90px;
-				border-radius: 50%;
-				position: fixed;
-				left: 80rpx;
-				top: 450rpx;
-				background: rgba($color: $uni-color-warning, $alpha: 0.4);
-			}
-		
-			.blue {
-				width: 180px;
-				height: 180px;
-				left: 230rpx;
-				top: 400rpx;
-				position: fixed;
-				border-radius: 50%;
-				background: rgba($color: $pending-mission, $alpha: 0.4);
-			}
-		
-			.green {
-				width: 120px;
-				height: 120px;
-				left: 250rpx;
-				top: 700rpx;
-				position: fixed;
-				border-radius: 50%;
-				background: rgba($color: $uni-color-success, $alpha: 0.4);
-			}
-		}
 		.iconfont {
 			font-size: 86rpx;
 			line-height: 134rpx;

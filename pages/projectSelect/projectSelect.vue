@@ -1,5 +1,6 @@
 <template>
 	<view class="body">
+		<bgAni></bgAni>
 		<uni-popup class="morePopup" ref="morePopup" type="center" :mask-click="false">
 			<view class="wrapper">
 				<view class="botton-wrapper">
@@ -79,12 +80,6 @@
 				</view>
 			</view>
 		</view>
-		<!-- 背景 -->
-		<view class="bg-circle">
-			<view class='orange' :animation='orange_ani'></view>
-			<view class='blue' :animation='blue_ani'></view>
-			<view class='green' :animation='green_ani'></view>
-		</view>
 	</view>
 </template>
 <script>
@@ -102,12 +97,6 @@
 				middle: -1,
 				message: '',
 				GitHubAccount: '',
-				orange_ani: {},
-				blue_ani:{},
-				green_ani:{},
-				or:{},
-				bl:{},
-				gr:{},
 				err_msg:''
 			};
 		},
@@ -259,53 +248,6 @@
 					}
 				})
 			},
-			circleAnimation() {
-				{
-					var pi = Math.PI
-					let angle = 0
-					let r1 = 100
-					let x_zuo = r1 * Math.cos(angle)
-					let y_zuo = r1 * Math.sin(angle)
-					this.or = setInterval(()=>{
-						this.or_ani = uni.createAnimation({duration: 200});
-						this.or_ani.translate(x_zuo,y_zuo).scale(0.3*Math.sin(0.5*angle+pi)+1.2).step({duration:200})
-						this.orange_ani = this.or_ani.export();
-						angle = (angle+0.1)%(2*pi)
-						x_zuo = r1*Math.cos(angle)
-						y_zuo = r1*Math.sin(angle)
-					},200)
-				}
-				{
-					var pi = Math.PI
-					let angle = 5
-					let r1 = 60
-					let x_zuo = r1 * Math.cos(angle)
-					let y_zuo = r1 * Math.sin(angle)
-					this.bl = setInterval(()=>{
-						this.bl_ani = uni.createAnimation({duration: 200});
-						this.bl_ani.translate(x_zuo,y_zuo).step({duration:200})
-						this.blue_ani = this.bl_ani.export();
-						angle = (angle-0.02+2*pi)%(2*pi)
-						x_zuo = r1*Math.cos(angle)
-						y_zuo = r1*Math.sin(angle)
-					},200)
-				}
-				{
-					var pi = Math.PI
-					let angle = pi
-					let r1 = 120
-					let x_zuo = r1 * Math.cos(angle)
-					let y_zuo = r1 * Math.sin(angle)
-					this.gr = setInterval(()=>{
-						this.gr_ani = uni.createAnimation({duration: 200});
-						this.gr_ani.translate(x_zuo,y_zuo).step({duration:200})
-						this.green_ani = this.gr_ani.export();
-						angle = (angle+0.06)%(2*pi)
-						x_zuo = r1*Math.cos(angle)
-						y_zuo = r1*Math.sin(angle)
-					},200)
-				}
-			}
 		},
 		onLoad() {
 			if (!uni.getStorageSync("userInfo") || !uni.getStorageSync("GitHubAccount") || !uni.getStorageSync(
@@ -347,13 +289,10 @@
 
 		},
 		onShow() {
-			this.$options.methods.circleAnimation.bind(this)()
 			this.$options.methods.refreshList.bind(this)()
 		},
 		onHide(){
-			clearInterval(this.or)
-			clearInterval(this.bl)
-			clearInterval(this.gr)
+
 		}
 	}
 </script>
