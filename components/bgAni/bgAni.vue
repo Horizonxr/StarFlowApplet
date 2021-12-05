@@ -55,14 +55,14 @@
 							x_zuo = r1 * Math.cos(angle)
 							y_zuo = r1 * Math.sin(angle)
 							if (op>0){
-								op =op-0.1
+								op =op-0.2
 							}
 						}
 						this.or_ani.translate(r1,0).step({
 							duration: 200
 						})
 						this.orange_ani = this.or_ani.export();
-					}, 12000)
+					}, 12200)
 					this.or_ani = uni.createAnimation({
 						duration: 12000
 					});

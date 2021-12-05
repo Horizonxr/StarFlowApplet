@@ -1,10 +1,10 @@
 <template>
 	<view class="body">
-		<bgAni>	背景动画</bgAni>
+		<bgAni> 背景动画</bgAni>
 		<!-- 任务详情弹窗 -->
 		<uni-popup class="taskPopup" ref="taskPopup" type="center" :mask-click="false">
-			<incomplete v-if="show_incomplete" v-show="popup_task === 1" @closePopup="closePopup" @refresh="refreshList" :taskInfo="taskInfo"
-				:role="role" :member_id="member_id" :repo_name="repo_name"></incomplete>
+			<incomplete v-if="show_incomplete" v-show="popup_task === 1" @closePopup="closePopup" @refresh="refreshList"
+				:taskInfo="taskInfo" :role="role" :member_id="member_id" :repo_name="repo_name"></incomplete>
 			<checking v-show="popup_task === 2" @closePopup="closePopup" @refresh="refreshList" :taskInfo="taskInfo"
 				:role="role" :member_id="member_id"></checking>
 			<finish v-show="popup_task === 3" @closePopup="closePopup" @refresh="refreshList" :taskInfo="taskInfo"
@@ -34,18 +34,29 @@
 			<addTask v-if="show_addTask" @closeaddPopup="closeaddPopup" :repo_id="repo_id"></addTask>
 		</uni-popup>
 		<uni-popup class="addaddPopup" ref="myproject" type="center" :mask-click="false">
-			<projectSettings v-if="show_settings" @openmemberAudit="openmemberAudit" @closemyPopup="closemyPopup" :repo_name="repo_name" :repo_address="repo_address"
-				:repo_id="repo_id"></projectSettings>
+			<projectSettings v-if="show_settings" @openmemberAudit="openmemberAudit" @closemyPopup="closemyPopup"
+				:repo_name="repo_name" :repo_address="repo_address" :repo_id="repo_id"></projectSettings>
 		</uni-popup>
 		<uni-popup ref="helpPopup" type="center">
 			<helpText @closeHelpPopup="$refs.helpPopup.close()"></helpText>
 		</uni-popup>
+		<!-- 页面顶部功能 -->
 		<view class="top-wrapper">
 			<view class="top">
 				<view class="title" @click="refreshList()">任务列表</view>
 				<view class="account">仓库：{{repo_name}}</view>
 				<view class="top-button">
 					<view class="iconfont icon-shezhi" @click="projectSettings"></view>
+				</view>
+				<view class="seg-all">
+					<view class="seg-back">
+					</view>
+					<view class="seg-shader" :animation="seg_ani">
+					</view>
+					<view class="seg-wrapper">
+						<view @click="allTask()">所有任务</view>
+						<view @click="myTask()">我的任务</view>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -111,15 +122,45 @@
 				},
 				taskInfo: [],
 				progress: 0,
-				show_settings:0,
-				show_addTask:0,
-				show_incomplete:0
+				show_settings: 0,
+				show_addTask: 0,
+				show_incomplete: 0,
+				seg_ani:[],
+				refresh_action:0
 			};
 		},
 		components: {
 			createProject
 		},
 		methods: {
+			//顶部分隔栏相关函数
+			allTask(){
+				this.refresh_action = 0
+				this.segment_ani = uni.createAnimation({
+					duration:200
+				})
+				this.segment_ani.translateX(0).step({
+					duration:200,
+					timingFunction:'ease'
+				})
+				this.seg_ani = this.segment_ani.export()
+				this.$options.methods.refreshList.bind(this)()
+			},
+			myTask(){
+				const { windowWidth, windowHeight } = uni.getSystemInfoSync();
+				let tx = windowWidth / 750 * 310
+				this.refresh_action = 1
+				this.segment_ani = uni.createAnimation({
+					duration:200
+				})
+				console.log(tx)
+				this.segment_ani.translateX(tx).step({
+					duration:200,
+					timingFunction:'ease'
+				})
+				this.seg_ani = this.segment_ani.export()
+				this.$options.methods.refreshList.bind(this)()
+			},
 			// 弹出层相关函数
 			closePopup() {
 				this.$refs.taskPopup.close()
@@ -183,8 +224,8 @@
 					timeout: 8000,
 					data: {
 						repo_id: this.repo_id,
-						u_id:uni.getStorageSync('u_id'),
-						action:0
+						u_id: uni.getStorageSync('u_id'),
+						action: this.refresh_action
 					},
 					header: {
 						"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
@@ -226,8 +267,8 @@
 				timeout: 8000,
 				data: {
 					repo_id: option.repo_id,
-					u_id:uni.getStorageSync('u_id'),
-					action:0
+					u_id: uni.getStorageSync('u_id'),
+					action: 0
 				},
 				header: {
 					"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
@@ -248,21 +289,21 @@
 				}
 			})
 		},
-		onHide(){
+		onHide() {
 
 		},
-		onShow() {
-		}
+		onShow() {}
 
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.body {
 		width: 100%;
 		height: 100vh;
 		background-color: $bg-color;
 		z-index: -999;
+
 		.iconfont {
 			font-size: 86rpx;
 			line-height: 134rpx;
@@ -360,13 +401,13 @@
 			top: 4rpx;
 			position: sticky;
 			width: 100%;
-			height: 200rpx;
+			height: 250rpx;
 			z-index: 10;
 
 			.top {
 				position: relative;
 				width: 666rpx;
-				height: 200rpx;
+				height: 250rpx;
 				margin: 0 auto;
 				background-color: white;
 				border-radius: 30rpx;
@@ -385,10 +426,57 @@
 				.account {
 					position: absolute;
 					bottom: 30rpx;
+					top:125rpx;
 					left: 23rpx;
 					font-size: 34rpx;
 				}
-
+				.seg-all{
+					position: absolute;
+					top:180rpx;
+					height: 50rpx;
+					width: 666rpx;
+					.seg-back{
+						z-index: 1;
+						position: absolute;
+						height: 50rpx;
+						width: 620rpx;
+						left: 20rpx;
+						background-color: #DDDDDD;
+						border-radius: 10rpx;
+						border: 4rpx solid #DDDDDD;
+					}
+					.seg-shader{
+						z-index: 2;
+						position: absolute;
+						top: 4rpx;
+						left:24rpx;
+						width: 310rpx;
+						height: 50rpx;
+						line-height: 50rpx;
+						text-align: center;
+						border-radius: 10rpx;
+						background-color: white;
+						opacity: 100%;
+					}
+					.seg-wrapper{
+						z-index: 3;
+						position: absolute;
+						height: 50rpx;
+						width: 620rpx;
+						left: 20rpx;
+						top: 5rpx;
+						border-radius: 10rpx;
+						display: flex;
+						justify-content: space-around;
+						view{
+							width: 50%;
+							height: 50rpx;
+							line-height: 50rpx;
+							text-align: center;
+							border-radius: 10rpx;
+						}
+					}
+				}
 				.top-button {
 					position: relative;
 					left: 555rpx;
@@ -409,11 +497,13 @@
 			width: 100%;
 			height: 100%;
 			z-index: 1;
-			background-color: rgba(255,255,255,0);
+			background-color: rgba(255, 255, 255, 0);
+
 			.list-item-wrapper {
 				margin-top: 30rpx;
 				width: 100%;
-				background-color: rgba(255,255,255,0);
+				background-color: rgba(255, 255, 255, 0);
+
 				.list-item {
 					margin: 22rpx auto;
 					height: 120rpx;
@@ -422,6 +512,7 @@
 					border-radius: 10rpx;
 					box-shadow: 0 4rpx 12rpx #888888;
 					background-color: $unfinished-mission;
+
 					.list-item-mission {
 						position: relative;
 						left: 21rpx;
