@@ -1,7 +1,7 @@
 <template name="checking">
 	<view class="non-checked-body">
 		<uni-popup class="pop" ref="popup" type="message">
-			<uni-popup-message type="success" message="失败消息" :duration="3000">{{msg}}</uni-popup-message>
+			<uni-popup-message type="success" message="成功消息" :duration="3000">{{msg}}</uni-popup-message>
 		</uni-popup>
 		<view class="non-checked-top-button">
 			<view class="iconfont icon-fanhui" @click="back"></view>

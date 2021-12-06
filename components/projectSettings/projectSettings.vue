@@ -3,6 +3,9 @@
 		<uni-popup class="test" ref="err_msg_popup" type="message">
 		    <uni-popup-message type="success" message="失败消息" :duration="3000">{{err_msg}}</uni-popup-message>
 		</uni-popup>
+		<uni-popup class="pop" ref="popup" type="message">
+			<uni-popup-message type="success" message="成功消息" :duration="3000">{{msg}}</uni-popup-message>
+		</uni-popup>
 		<uni-popup ref="pemissionSetting" type="center"  :mask-click="true">
 			<view class="prompt">
 				<view class="title">权限修改为</view>
@@ -35,7 +38,7 @@
 			</view>
 			<view class="warehouseName">
 				<view class="warehouse">仓库链接：</view>
-				<view class="address"> github.com/{{repo_name}}</view>
+				<view class="address" @click="toRepoUrl()"> github.com/{{repo_name}}</view>
 				<view class="iconfont icon-chengong"></view>
 			</view>
 			<view class="personalManagement">
@@ -85,10 +88,18 @@
 				person_change_delete:false,
 				delete_key:-1,
 				show_member_audit:false,
-				err_msg:''
+				err_msg:'',
+				msg:''
 			};
 		},
 		methods: {
+			toRepoUrl(){
+				uni.setClipboardData({
+					data:this.repo_address
+				})
+				this.msg = '已将GitHub仓库链接复制到剪切板，请粘贴至外部浏览器访问'
+				this.$refs.popup.open('top')
+			},
 			share(){
 				uni.setClipboardData({
 				    data: this.repo_name,
@@ -384,8 +395,9 @@
 				left: 270rpx;
 				font-size: 33rpx;
 				color: #000000;
-
-				text-align: center;
+				overflow: hidden;
+				line-height: 75rpx;
+				text-align: left;
 			}
 
 		}

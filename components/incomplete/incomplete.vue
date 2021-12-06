@@ -2,7 +2,7 @@
 	<view class="unfinished-body">
 		<!-- 删除项目提示 -->
 		<uni-popup class="test" ref="err_msg_popup" type="message">
-		    <uni-popup-message type="success" message="失败消息" :duration="3000">{{err_msg}}</uni-popup-message>
+		    <uni-popup-message type="success" message="成功消息" :duration="3000">{{err_msg}}</uni-popup-message>
 		</uni-popup>
 		<view class="unfinished-top-button" @click="back">
 			<view class="iconfont icon-fanhui"></view>
