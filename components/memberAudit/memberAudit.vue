@@ -12,7 +12,7 @@
 						:style="{'background-color':pull_identity !== 3 ? 'white' : '#5091f2'}">游客</view>
 					<view class="prompt-button">
 						<view class="iconfont icon-duigou" @click="pemissionSetting_request"></view>
-						<view class="iconfont icon-chahao" @click="cancle"></view>
+						<view class="iconfont icon-chahao" @click="disagree()"></view>
 					</view>
 				</view>
 			</uni-popup>
