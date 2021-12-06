@@ -25,7 +25,7 @@
 				<view class="login-content">{{userInfo.length == 0 ? "第一步：绑定微信" : "微信名称: "+userInfo.nickName}}</view>
 			</view>
 			<view class="login" @click="GitHubPopup()">
-				<view class="login-content">{{GitHubAccount == '' ? "第二步：绑定GitHub" : "GitHub: " + GitHubAccount}}</view>
+				<view class="login-content">{{GitHubAccount == '' ? "第二步：获取GitHub Token" : "GitHub: " + GitHubAccount}}</view>
 			</view>
 			<view class="login" @click="toProjectSelect()">
 				<view class="login-content">转到项目</view>

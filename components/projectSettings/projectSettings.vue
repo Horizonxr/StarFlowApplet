@@ -3,7 +3,7 @@
 		<uni-popup class="test" ref="err_msg_popup" type="message">
 		    <uni-popup-message type="success" message="失败消息" :duration="3000">{{err_msg}}</uni-popup-message>
 		</uni-popup>
-		<uni-popup ref="pemissionSetting" type="center"  :mask-click="false">
+		<uni-popup ref="pemissionSetting" type="center"  :mask-click="true">
 			<view class="prompt">
 				<view class="title">权限修改为</view>
 				<view class="root-name" @click="this.pull_identity = 1;"
@@ -12,8 +12,10 @@
 					:style="{'background-color':pull_identity !== 2 ? 'white' : '#5091f2'}">开发者</view>
 				<view class="root-name" @click="this.pull_identity = 3;"
 					:style="{'background-color':pull_identity !== 3 ? 'white' : '#5091f2'}">游客</view>
-				<view class="iconfont icon-duigou" @click="pemissionSetting_request"></view>
-				<view class="iconfont icon-chahao" @click="cancle"></view>
+				<view class="prompt-button">
+					<view class="iconfont icon-duigou" @click="pemissionSetting_request"></view>
+					<view class="iconfont icon-chahao" @click="cancle"></view>
+				</view>
 			</view>
 		</uni-popup>
 		<uni-popup ref="memberDelete" type="dialog">
@@ -24,7 +26,7 @@
 				<memberAudit v-if="show_member_audit" @closememberAudit="closememberAudit" @refreshMemberList="refreshMemberList"
 					:repo_id="repo_id"></memberAudit>
 			</uni-popup>
-			<view class="iconfont icon-fanhui" @click="close"></view>
+			<view class="back-close iconfont icon-fanhui" @click="close"></view>
 			<view class="title">项目设置</view>
 			<view class="slogan"></view>
 			<view class="projectName">
@@ -87,7 +89,6 @@
 		},
 		methods: {
 			share(){
-				console.log("分享按钮")
 				uni.setClipboardData({
 				    data: this.repo_name,
 				    success() {
@@ -116,7 +117,6 @@
 				if (this.member_list[key].fields.identity == 0 || this.role != 0) return
 				//权限不足不让修改
 				// if (this.role !== 0) return;
-				console.log("role" + this.role)
 				this.pull_member_id = member_id
 				this.$refs.pemissionSetting.open("center")
 			},
@@ -165,7 +165,6 @@
 						_this.$options.methods.refreshMemberList.bind(this)()
 					},
 					fail(err) {
-						console.log(err)
 						uni.showToast({
 							title: '修改失败',
 							icon: 'error'
@@ -198,11 +197,7 @@
 						"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 					},
 					success: (res) => {
-						console.log("获得人员数据")
-						console.log(res.data.data)
 						this.member_list = res.data.data
-						console.log("更新后人员数据")
-						console.log(this.member_list)
 						uni.hideLoading()
 					},
 					fail() {
@@ -216,7 +211,6 @@
 				this.$forceUpdate()
 			},
 			memberDelete(key){
-				console.log(this.member_list[this.delete_key].fields.user_id)
 				uni.request({
 					url: baseUrl + '/repo/exitRepo', //仅为示例，并非真实接口地址。
 					method: 'POST',
@@ -229,7 +223,6 @@
 						"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 					},
 					success: (res) => {
-						console.log(res.data.message)
 						this.member_list = res.data.data
 						uni.hideLoading()
 						this.$options.methods.refreshMemberList.bind(this)()
@@ -262,8 +255,6 @@
 					"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 				},
 				success: (res) => {
-					console.log("这是项目成员列表")
-					console.log(res.data.data)
 					this.member_list = res.data.data
 					uni.hideLoading()
 				},
@@ -280,7 +271,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.prompt {
 		position: relative;
 		height: 400rpx;
@@ -304,20 +295,21 @@
 			left: 230rpx;
 			font-size: 40rpx;
 		}
-	
-		.icon-duigou {
+		.prompt-button{
 			position: relative;
-			width: 100rpx;
-			top: 60rpx;
-			left: 140rpx;
-		}
-	
-		.icon-chahao {
-			position: relative;
-			width: 100rpx;
-			top: -70rpx;
-			left: 320rpx;
-	
+			top: 85rpx;
+			width: 100%;
+			height: 70rpx;
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+			view{
+				width: 50%;
+				height: 70rpx;
+				font-size: 65rpx;
+				text-align: center;
+				line-height: 70rpx;
+			}
 		}
 	}
 	
@@ -332,7 +324,7 @@
 		border-radius: 30rpx;
 		box-shadow: 0 4rpx 12rpx #888888;
 		
-		.iconfont {
+		.back-close {
 			font-size: 86rpx;
 			position: absolute;
 			top: 25rpx;
@@ -477,25 +469,32 @@
 		}
 
 		.bottom {
-			.icon-fenxiang {
-				position: absolute;
-				font-size: 81rpx;
-				left: 78rpx;
-				top: 910rpx;
+			position: absolute;
+			bottom: 22rpx;
+			width: 100%;
+			height: 100rpx;
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+			view:nth-child(1) {
+				width: 33%;
+				font-size: 75rpx;
+				text-align: center;
+				line-height: 80rpx;
 			}
 
-			.icon-yishenpi {
-				position: absolute;
-				font-size: 82rpx;
-				left: 294rpx;
-				top: 910rpx;
+			view:nth-child(2) {
+				width: 33%;
+				font-size: 75rpx;
+				text-align: center;
+				line-height: 80rpx;
 			}
 
-			.icon-duigou {
-				position: absolute;
-				font-size: 92rpx;
-				left: 492rpx;
-				top: 904rpx;
+			view:nth-child(3) {
+				width: 33%;
+				font-size: 75rpx;
+				text-align: center;
+				line-height: 80rpx;
 			}
 		}
 
