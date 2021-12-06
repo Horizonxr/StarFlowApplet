@@ -49,9 +49,9 @@
 					<view class="iconfont icon-shezhi" @click="projectSettings"></view>
 				</view>
 				<view class="seg-all">
-					<view class="seg-back">
-					</view>
 					<view class="seg-shader" :animation="seg_ani">
+					</view>
+					<view class="seg-back">
 					</view>
 					<view class="seg-wrapper">
 						<view @click="allTask()">所有任务</view>
@@ -456,7 +456,6 @@
 						text-align: center;
 						border-radius: 10rpx;
 						background-color: white;
-						opacity: 100%;
 					}
 					.seg-wrapper{
 						z-index: 3;
@@ -553,7 +552,7 @@
 			position: fixed;
 			height: 227rpx;
 			bottom: 0;
-			z-index: 9;
+			z-index: 1;
 
 			.button-add {
 				height: 133rpx;

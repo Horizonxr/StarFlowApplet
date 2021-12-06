@@ -117,7 +117,6 @@
 			GitHubLogin(token) {
 				var _this = this
 				console.log(token)
-				this.GitHubAccount = token
 				uni.request({
 					url: baseUrl + '/user/githublogin', //仅为示例，并非真实接口地址。
 					method: 'POST',

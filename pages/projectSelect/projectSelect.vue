@@ -75,7 +75,7 @@
 						<view class="list-item-description">{{item.repo[0].fields.url}}</view>
 						<progress class="list-item-bar" duration=7 stroke-width="20rpx" border-radius="300"
 							active="true" color="#5091f2"
-							:percent="item.repo[0].fields.finished * 100 / (item.repo[0].fields.checking+item.repo[0].fields.finished+item.repo[0].fields.incomplete)"></progress>
+							:percent="progressCompute(key)"></progress>
 					</view>
 				</view>
 			</view>
@@ -93,6 +93,7 @@
 			return {
 				userInfo: [],
 				project_list: [],
+				project_progress:[],
 				u_id: -1,
 				middle: -1,
 				message: '',
@@ -105,6 +106,14 @@
 			joininProject
 		},
 		methods: {
+			//进度计算
+			progressCompute(key){
+				let project_list = this.project_list
+				let num = project_list[key].repo[0].fields.finished * 100 
+				/ (project_list[key].repo[0].fields.checking+project_list[key].repo[0].fields.finished+project_list[key].repo[0].fields.incomplete)
+				console.log("计算出的进度为"+num)
+				return num
+			},
 			//弹窗相关方法
 			openPopup() {
 				// 通过组件定义的ref调用uni-popup方法 ,如果传入参数 ，type 属性将失效 ，仅支持 ['top','left','bottom','right','center']
@@ -142,7 +151,8 @@
 				let member_id = this.project_list[key].member_id
 				// item.repo[0].fields.finished * 100 / (item.repo[0].fields.checking+item.repo[0].fields.finished+item.repo[0].fields.incomplete)
 				let f = this.project_list[key].repo[0].fields
-				let progress = f.incomplete * 100 / (f.incomplete + f.checking + f.finished)
+				let progress = this.$options.methods.progressCompute.bind(this)(key)
+				console.log("任务进度为："+progress)
 				progress = parseInt(progress)
 				uni.navigateTo({
 					url: '../projectList/projectList?repo_id=' + repo + '&repo_name=' + repo_name + '&url=' + url +

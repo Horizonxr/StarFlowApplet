@@ -12,8 +12,8 @@
 			<view class="non-checked-mission">开发者：{{taskInfo.member_name}}</view>
 			<view class="mission-content">任务详情:{{taskInfo.task_info}}</view>
 			<view class="non-checked-push">
-				<view>{{taskInfo.title ==''? "空" : taskInfo.title}}</view>
 				<view class="iconfont icon-git-merge"></view>
+				<view>{{taskInfo.title ==''? "空" : taskInfo.title}}</view>
 			</view>
 		</view>
 		<view class="non-checked-bottom-button">
@@ -261,48 +261,59 @@
 				width: 550rpx;
 				height: 70rpx;
 				left: 26rpx;
-				font-size: 35rpx;
 				border-radius: 5rpx;
 				background-color: $pending-mission;
-				text-align: center;
-				line-height: 70rpx;
 				border: 1px solid #d2d2d2;
-				.iconfont {
-					position: relative;
-					height: 55rpx;
-					width: 55rpx;
-					left: 40rpx;
-					top: -97rpx;
+				display: flex;
+				justify-content: space-around;
+				view:nth-child(1) {
+					height: 70rpx;
+					width: 20%;
 					font-size: 55rpx;
+					text-align: center;
+					line-height: 76rpx;
+				}
+				view:nth-child(2) {
+					height: 70rpx;
+					width: 80%;
+					left: 40rpx;
+					font-size: 40rpx;
+					text-align: left;
+					line-height: 70rpx;
 				}
 			}
 		}
 
 		.non-checked-bottom-button {
 			position: absolute;
-			display: flex;
 			text-align: center;
 			width: 100%;
 			height: 90rpx;
 			bottom: 44rpx;
+			display: flex;
+			justify-content: space-around;
 			view:nth-child(1) {
 				width: 25%;
-				font-size: 80rpx;
+				font-size: 75rpx;
+				line-height: 80rpx;
 				color: #C0C0C0;
 			}
 
 			view:nth-child(2) {
 				width: 25%;
-				font-size: 70rpx;
+				font-size: 65rpx;
+				line-height: 80rpx;
 			}
 
 			view:nth-child(3) {
 				width: 25%;
-				font-size: 80rpx;
+				font-size: 75rpx;
+				line-height: 80rpx;
 			}
 			view:nth-child(4) {
 				width: 25%;
-				font-size: 97rpx;
+				font-size: 92rpx;
+				line-height: 80rpx;
 			}
 		}
 
