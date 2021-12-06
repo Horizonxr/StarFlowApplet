@@ -31,7 +31,7 @@
 		</view>
 		
 		<view class="unfinished-bottom-button">
-			<view class="iconfont icon-shizhong" @click="taskHistory"></view>
+			<!-- <view class="iconfont icon-shizhong" @click="taskHistory"></view> -->
 			<view class="iconfont icon-tijiao" @click="taskSubmit"></view>
 			<view class="iconfont icon-lajitong" @click="taskDelete" v-if="role<=1"></view>
 		</view>
@@ -324,6 +324,7 @@
 						font-size: 40rpx;
 						text-align: left;
 						line-height: 70rpx;
+						overflow: hidden;
 					}
 				}
 			}
@@ -336,16 +337,16 @@
 			bottom: 44rpx;
 			display: flex;
 			justify-content: space-around;
-			view:nth-child(1) {
-				// position: absolute;
-				// left: 70rpx;
-				width: 33%;
-				font-size: 80rpx;
-				color: #C0C0C0;
-				line-height: 80rpx;
-			}
+			// view:nth-child(1) {
+			// 	// position: absolute;
+			// 	// left: 70rpx;
+			// 	width: 33%;
+			// 	font-size: 80rpx;
+			// 	color: #C0C0C0;
+			// 	line-height: 80rpx;
+			// }
 
-			view:nth-child(2) {
+			view:nth-child(1) {
 				// position: absolute;
 				// left: 310rpx;
 				width: 33%;
@@ -353,7 +354,7 @@
 				line-height: 80rpx;
 			}
 
-			view:nth-child(3) {
+			view:nth-child(2) {
 				// position: absolute;
 				// left: 520rpx;
 				width: 33%;

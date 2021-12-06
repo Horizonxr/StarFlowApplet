@@ -34,8 +34,8 @@
 				<view class="name">{{repo_name}}</view>
 			</view>
 			<view class="warehouseName">
-				<view class="warehouse">GitHub仓库：</view>
-				<view class="address"> {{repo_address}}</view>
+				<view class="warehouse">仓库链接：</view>
+				<view class="address"> github.com/{{repo_name}}</view>
 				<view class="iconfont icon-chengong"></view>
 			</view>
 			<view class="personalManagement">
@@ -45,7 +45,8 @@
 					<scroll-view scroll-y="true" class="huadon">
 						<view class="list-item" v-for="(item, key) in member_list" :key=item.key>
 							<view class="name">{{item.fields.username}}</view>
-							<view class="root" @click="openpemissionSetting(member_list[key].pk,key)">
+							<view class="root"
+							@click="openpemissionSetting(member_list[key].pk,key)">
 								{{member_root[item.fields.identity+1]}}
 							</view>
 							<view class="iconfont icon-chahao" v-if="item.fields.identity!==0" v-show="person_change_delete" @click="memberDeleteConfirm(key)"></view>
@@ -115,6 +116,7 @@
 			openpemissionSetting(member_id,key) {
 				// 超管直接返回,不让修改
 				if (this.member_list[key].fields.identity == 0 || this.role != 0) return
+				else if (this.person_change_delete == false) return
 				//权限不足不让修改
 				// if (this.role !== 0) return;
 				this.pull_member_id = member_id
@@ -174,13 +176,25 @@
 				this.$options.methods.cancle.bind(this)()
 			},
 			personAni(){
-				this.ani = uni.createAnimation({
-					duration:200,
-					timingFunction: "ease",
-				})
-				this.ani.translateX(-25).step({duration:200})
-				this.person_ani = this.ani.export();
-				this.person_change_delete = true
+				if (this.person_change_delete){
+					this.ani = uni.createAnimation({
+						duration:200,
+						timingFunction: "ease",
+					})
+					this.ani.translateX(0+0.00001*Math.random()).step({duration:200})
+					this.person_ani = this.ani.export();
+					this.person_change_delete = false
+				}
+				else{
+					this.ani = uni.createAnimation({
+						duration:200,
+						timingFunction: "ease",
+					})
+					this.ani.translateX(-25+0.00001*Math.random()).step({duration:200})
+					this.person_ani = this.ani.export();
+					this.person_change_delete = true
+				}
+
 			},
 			refreshMemberList() {
 				uni.showLoading({
@@ -398,6 +412,7 @@
 				line-height: 75rpx;
 				border-radius: 10rpx;
 				padding-left: 20rpx;
+				overflow: hidden;
 			}
 		}
 
@@ -444,6 +459,7 @@
 						left: 100rpx;
 						color: #000000;
 						font-size: 33rpx;
+						overflow: hidden;
 					}
 
 					.root {
