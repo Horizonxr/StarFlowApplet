@@ -1,5 +1,8 @@
 <template>
 	<view class="back">
+		<uni-popup class="pop" ref="popup" type="message">
+			<uni-popup-message type="error" message="成功消息" :duration="3000">{{msg}}</uni-popup-message>
+		</uni-popup>
 		<view class="top">
 			<view class="cancle" @click="back">
 				<view class="iconfont icon-fanhui" @click="back">
@@ -60,7 +63,7 @@
 				task_info:"",
 				pull_task_info:"请输入任务详情",
 				pull_task_name:"请输入任务名称",
-				
+				msg:''
 
 			};
 		},
@@ -80,6 +83,11 @@
 				console.log(this.pull_ddl),
 				console.log(this.repo_id),
 				console.log(this.pull_user_name)
+				if (!(this.pull_task_name&&this.pull_task_info&&this.pull_ddl&&this.pull_user_name)){
+					this.msg = '任务不完整，请检查输入'
+					this.$refs.popup.open('top')
+					return
+				}
 				uni.request({
 					url: baseUrl + '/task/addtask', //仅为示例，并非真实接口地址。
 					method: 'POST',

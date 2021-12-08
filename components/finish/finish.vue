@@ -1,5 +1,8 @@
 <template name="finish">
 	<view class="finished-body">
+		<uni-popup class="pop" ref="popup" type="message">
+			<uni-popup-message type="success" message="失败消息" :duration="3000">{{msg}}</uni-popup-message>
+		</uni-popup>
 		<view class="finished-top-button">
 			<view class="iconfont icon-fanhui" @click="back"></view>
 		</view>
@@ -11,13 +14,13 @@
 			<view class="finished-mission">任务：{{taskInfo.task_name}}</view>
 			<view class="finished-mission">开发者：{{taskInfo.member_name}}</view>
 			<view class="mission-content">任务详情:{{taskInfo.task_info}}</view>
-			<view class="finished-push">
-				<view>{{taskInfo.title ==''? "空" : taskInfo.title}}</view>
+			<view class="finished-push" @click="toRequestUrl()">
 				<view class="iconfont icon-git-merge"></view>
+				<view>{{taskInfo.title ==''? "空" : taskInfo.title}}</view>
 			</view>
 		</view>
 		<view class="finished-bottom-button">
-			<view class="iconfont icon-shizhong" @click=""></view>
+			<!-- <view class="iconfont icon-shizhong" @click=""></view> -->
 			<view class="iconfont icon-lajitong" @click="taskDelete" v-if="role<=1"></view>
 		</view>
 	</view>
@@ -39,10 +42,18 @@
 		},
 		data() {
 			return {
+				msg:'',
 				repositories_list: []
 			}
 		},
 		methods: {
+			toRequestUrl(){
+				uni.setClipboardData({
+					data: this.taskInfo.request_url
+				})
+				this.msg = "Pull Request链接已复制到剪切板，请在外部浏览器粘贴查看"
+				this.$refs.popup.open('top')
+			},
 			taskDelete(){
 				console.log("删除任务")
 				uni.showLoading({
@@ -180,39 +191,49 @@
 				width: 550rpx;
 				height: 70rpx;
 				left: 26rpx;
-				font-size: 35rpx;
 				border-radius: 5rpx;
 				background-color: $pending-mission;
-				text-align: center;
-				line-height: 70rpx;
 				border: 1px solid #d2d2d2;
-				.iconfont {
-					position: relative;
-					height: 55rpx;
-					width: 55rpx;
-					left: 40rpx;
-					top: -97rpx;
+				display: flex;
+				justify-content: space-around;
+				view:nth-child(1) {
+					height: 70rpx;
+					width: 20%;
 					font-size: 55rpx;
+					text-align: center;
+					line-height: 76rpx;
+				}
+				view:nth-child(2) {
+					height: 70rpx;
+					width: 80%;
+					left: 40rpx;
+					font-size: 40rpx;
+					text-align: left;
+					line-height: 70rpx;
+					overflow: hidden;
 				}
 			}
 		}
 
 		.finished-bottom-button {
 			position: absolute;
-			display: flex;
 			text-align: center;
 			width: 100%;
 			height: 90rpx;
 			bottom: 44rpx;
+			display: flex;
+			justify-content: space-around;
+			// view:nth-child(1) {
+			// 	width: 50%;
+			// 	font-size: 80rpx;
+			// 	line-height: 80rpx;
+			// 	color: #C0C0C0;
+			// }
+
 			view:nth-child(1) {
 				width: 50%;
-				font-size: 80rpx;
-				color: #C0C0C0;
-			}
-
-			view:nth-child(2) {
-				width: 50%;
 				font-size: 85rpx;
+				line-height: 80rpx;
 			}
 		}
 

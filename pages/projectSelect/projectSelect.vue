@@ -1,5 +1,6 @@
 <template>
 	<view class="body">
+		<bgAni></bgAni>
 		<uni-popup class="morePopup" ref="morePopup" type="center" :mask-click="false">
 			<view class="wrapper">
 				<view class="botton-wrapper">
@@ -74,16 +75,10 @@
 						<view class="list-item-description">{{item.repo[0].fields.url}}</view>
 						<progress class="list-item-bar" duration=7 stroke-width="20rpx" border-radius="300"
 							active="true" color="#5091f2"
-							:percent="item.repo[0].fields.finished * 100 / (item.repo[0].fields.checking+item.repo[0].fields.finished+item.repo[0].fields.incomplete)"></progress>
+							:percent="progressCompute(key)"></progress>
 					</view>
 				</view>
 			</view>
-		</view>
-		<!-- 背景 -->
-		<view class="bg-circle">
-			<view class='orange' :animation='orange_ani'></view>
-			<view class='blue' :animation='blue_ani'></view>
-			<view class='green' :animation='green_ani'></view>
 		</view>
 	</view>
 </template>
@@ -98,16 +93,11 @@
 			return {
 				userInfo: [],
 				project_list: [],
+				project_progress:[],
 				u_id: -1,
 				middle: -1,
 				message: '',
 				GitHubAccount: '',
-				orange_ani: {},
-				blue_ani:{},
-				green_ani:{},
-				or:{},
-				bl:{},
-				gr:{},
 				err_msg:''
 			};
 		},
@@ -116,6 +106,14 @@
 			joininProject
 		},
 		methods: {
+			//进度计算
+			progressCompute(key){
+				let project_list = this.project_list
+				let num = project_list[key].repo[0].fields.finished * 100 
+				/ (project_list[key].repo[0].fields.checking+project_list[key].repo[0].fields.finished+project_list[key].repo[0].fields.incomplete)
+				console.log("计算出的进度为"+num)
+				return num
+			},
 			//弹窗相关方法
 			openPopup() {
 				// 通过组件定义的ref调用uni-popup方法 ,如果传入参数 ，type 属性将失效 ，仅支持 ['top','left','bottom','right','center']
@@ -153,7 +151,8 @@
 				let member_id = this.project_list[key].member_id
 				// item.repo[0].fields.finished * 100 / (item.repo[0].fields.checking+item.repo[0].fields.finished+item.repo[0].fields.incomplete)
 				let f = this.project_list[key].repo[0].fields
-				let progress = f.incomplete * 100 / (f.incomplete + f.checking + f.finished)
+				let progress = this.$options.methods.progressCompute.bind(this)(key)
+				console.log("任务进度为："+progress)
 				progress = parseInt(progress)
 				uni.navigateTo({
 					url: '../projectList/projectList?repo_id=' + repo + '&repo_name=' + repo_name + '&url=' + url +
@@ -259,53 +258,6 @@
 					}
 				})
 			},
-			circleAnimation() {
-				{
-					var pi = Math.PI
-					let angle = 0
-					let r1 = 100
-					let x_zuo = r1 * Math.cos(angle)
-					let y_zuo = r1 * Math.sin(angle)
-					this.or = setInterval(()=>{
-						this.or_ani = uni.createAnimation({duration: 200});
-						this.or_ani.translate(x_zuo,y_zuo).scale(0.3*Math.sin(0.5*angle+pi)+1.2).step({duration:200})
-						this.orange_ani = this.or_ani.export();
-						angle = (angle+0.1)%(2*pi)
-						x_zuo = r1*Math.cos(angle)
-						y_zuo = r1*Math.sin(angle)
-					},200)
-				}
-				{
-					var pi = Math.PI
-					let angle = 5
-					let r1 = 60
-					let x_zuo = r1 * Math.cos(angle)
-					let y_zuo = r1 * Math.sin(angle)
-					this.bl = setInterval(()=>{
-						this.bl_ani = uni.createAnimation({duration: 200});
-						this.bl_ani.translate(x_zuo,y_zuo).step({duration:200})
-						this.blue_ani = this.bl_ani.export();
-						angle = (angle-0.02+2*pi)%(2*pi)
-						x_zuo = r1*Math.cos(angle)
-						y_zuo = r1*Math.sin(angle)
-					},200)
-				}
-				{
-					var pi = Math.PI
-					let angle = pi
-					let r1 = 120
-					let x_zuo = r1 * Math.cos(angle)
-					let y_zuo = r1 * Math.sin(angle)
-					this.gr = setInterval(()=>{
-						this.gr_ani = uni.createAnimation({duration: 200});
-						this.gr_ani.translate(x_zuo,y_zuo).step({duration:200})
-						this.green_ani = this.gr_ani.export();
-						angle = (angle+0.06)%(2*pi)
-						x_zuo = r1*Math.cos(angle)
-						y_zuo = r1*Math.sin(angle)
-					},200)
-				}
-			}
 		},
 		onLoad() {
 			if (!uni.getStorageSync("userInfo") || !uni.getStorageSync("GitHubAccount") || !uni.getStorageSync(
@@ -347,13 +299,10 @@
 
 		},
 		onShow() {
-			this.$options.methods.circleAnimation.bind(this)()
 			this.$options.methods.refreshList.bind(this)()
 		},
 		onHide(){
-			clearInterval(this.or)
-			clearInterval(this.bl)
-			clearInterval(this.gr)
+
 		}
 	}
 </script>
@@ -372,9 +321,9 @@
 			.botton-wrapper {
 				position: absolute;
 				height: 600rpx;
-				width: 364rpx;
+				width: 400rpx;
 				bottom: 59rpx;
-				left: -23rpx;
+				left: -32rpx;
 				display: flex;
 				flex-direction: column;
 
@@ -385,11 +334,12 @@
 					justify-content: center;
 
 					view:nth-child(1) {
-						width: 210rpx;
+						width: 229rpx;
 						height: 200rpx;
-						font-size: 40rpx;
+						font-size: 55rpx;
 						line-height: 200rpx;
 						color: white;
+						text-align: left;
 					}
 
 					view:nth-child(2) {

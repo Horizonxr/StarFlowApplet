@@ -2,7 +2,7 @@
 	<view class="unfinished-body">
 		<!-- 删除项目提示 -->
 		<uni-popup class="test" ref="err_msg_popup" type="message">
-		    <uni-popup-message type="success" message="失败消息" :duration="3000">{{err_msg}}</uni-popup-message>
+		    <uni-popup-message type="success" message="成功消息" :duration="3000">{{err_msg}}</uni-popup-message>
 		</uni-popup>
 		<view class="unfinished-top-button" @click="back">
 			<view class="iconfont icon-fanhui"></view>
@@ -21,17 +21,17 @@
 				@click="this.pull_request_selected = key; this.pull_request_id = this.pullRequestList[key].request_id; this.pull_request_selected_title=this.pullRequestList[key].title" 
 				:style="{'background-color':pull_request_selected !== key ? 'white' : '#5091f2'}" 
 				v-for="(item, key) in pullRequestList" :key=item.key>
+					<view class="iconfont icon-git-merge"></view>
 					<view class="content">
 						{{item.title}}
 					</view>
-					<view class="iconfont icon-git-merge"></view>
 				</view>
 			</scroll-view>
 			
 		</view>
 		
 		<view class="unfinished-bottom-button">
-			<view class="iconfont icon-shizhong" @click="taskHistory"></view>
+			<!-- <view class="iconfont icon-shizhong" @click="taskHistory"></view> -->
 			<view class="iconfont icon-tijiao" @click="taskSubmit"></view>
 			<view class="iconfont icon-lajitong" @click="taskDelete" v-if="role<=1"></view>
 		</view>
@@ -85,11 +85,20 @@
 				        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 				    },
 				    success: (res) => {
-						console.log(112111212111)
-						console.log(res.data.message)
 						this.pullRequestList = res.data.data
-						console.log(this.pullRequestList)
-						this.err_msg = res.data.message
+						if (res.data.data.length == 0){
+							console.log(11111)
+							uni.showToast({
+								title:'暂无PR信息',
+								icon:'error'
+							})
+						}
+						if (res.data.message == 'success' ){
+							this.err_msg = "拉取成功"
+						}
+						else{
+							this.err_msg = res.data.message
+						}
 						this.$refs.err_msg_popup.open('top')
 						uni.hideLoading()
 				    },
@@ -215,7 +224,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.unfinished-body {
 		height: 100vh;
 		position: relative;
@@ -284,9 +293,10 @@
 				top: 60rpx;
 				width: 150rpx;
 				height: 50rpx;
+				line-height: 50rpx;
 				left: 25rpx;
 				font-size: 30rpx;
-				border-radius: 5rpx;
+				border-radius: 10rpx;
 				text-align: center;
 				border: 1px solid #d2d2d2;
 			}
@@ -307,47 +317,58 @@
 					text-align: center;
 					line-height: 70rpx;
 					border: 1px solid #d2d2d2;
-					.iconfont {
-						position: relative;
-						height: 55rpx;
-						width: 55rpx;
-						left: 7rpx;
-						top: -97rpx;
+					display: flex;
+					justify-content: space-around;
+					view:nth-child(1) {
+						height: 70rpx;
+						width: 20%;
 						font-size: 55rpx;
+						text-align: center;
+						line-height: 76rpx;
+					}
+					view:nth-child(2) {
+						height: 70rpx;
+						width: 80%;
+						left: 40rpx;
+						font-size: 40rpx;
+						text-align: left;
+						line-height: 70rpx;
+						overflow: hidden;
 					}
 				}
 			}
 		}
 		.unfinished-bottom-button {
 			position: absolute;
-			display: flex;
 			text-align: center;
 			width: 100%;
 			height: 90rpx;
 			bottom: 44rpx;
+			display: flex;
+			justify-content: space-around;
+			// view:nth-child(1) {
+			// 	// position: absolute;
+			// 	// left: 70rpx;
+			// 	width: 33%;
+			// 	font-size: 80rpx;
+			// 	color: #C0C0C0;
+			// 	line-height: 80rpx;
+			// }
+
 			view:nth-child(1) {
 				// position: absolute;
-				// left: 70rpx;
+				// left: 310rpx;
 				width: 33%;
-				top: 900rpx;
-				font-size: 80rpx;
-				color: #C0C0C0;
+				font-size: 65rpx;
+				line-height: 80rpx;
 			}
 
 			view:nth-child(2) {
 				// position: absolute;
-				// left: 310rpx;
-				width: 33%;
-				top: 900rpx;
-				font-size: 65rpx;
-			}
-
-			view:nth-child(3) {
-				// position: absolute;
 				// left: 520rpx;
 				width: 33%;
-				top: 897rpx;
 				font-size: 90rpx;
+				line-height: 80rpx;
 			}
 		}
 
