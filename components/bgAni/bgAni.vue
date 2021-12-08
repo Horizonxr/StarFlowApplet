@@ -223,7 +223,7 @@
 			top: 700rpx;
 			position: fixed;
 			border-radius: 50%;
-			background: rgba($color: $uni-color-success, $alpha: 0.9);
+			background: rgba(166,229,174,0.8);
 			opacity: 0;
 		}
 	}

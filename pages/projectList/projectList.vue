@@ -323,7 +323,7 @@
 					z-index: 15;
 					position: fixed;
 					left: 279rpx;
-					bottom: 469rpx;
+					bottom: 460rpx;
 					font-size: 55rpx;
 					color: #fffefe;
 					font-family: Adobe 黑体 Std;
@@ -344,7 +344,7 @@
 				.help-text {
 					z-index: 101;
 					position: fixed;
-					bottom: 305rpx;
+					bottom: 286rpx;
 					right: 200rpx;
 					font-size: 55rpx;
 					color: #fffefe;

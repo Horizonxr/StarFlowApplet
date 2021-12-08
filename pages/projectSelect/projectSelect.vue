@@ -321,9 +321,9 @@
 			.botton-wrapper {
 				position: absolute;
 				height: 600rpx;
-				width: 364rpx;
+				width: 400rpx;
 				bottom: 59rpx;
-				left: -23rpx;
+				left: -32rpx;
 				display: flex;
 				flex-direction: column;
 
@@ -334,11 +334,12 @@
 					justify-content: center;
 
 					view:nth-child(1) {
-						width: 210rpx;
+						width: 229rpx;
 						height: 200rpx;
-						font-size: 40rpx;
+						font-size: 55rpx;
 						line-height: 200rpx;
 						color: white;
+						text-align: left;
 					}
 
 					view:nth-child(2) {

@@ -85,11 +85,20 @@
 				        "content-type": "application/x-www-form-urlencoded" //自定义请求头信息
 				    },
 				    success: (res) => {
-						console.log(112111212111)
-						console.log(res.data.message)
 						this.pullRequestList = res.data.data
-						console.log(this.pullRequestList)
-						this.err_msg = res.data.message
+						if (res.data.data.length == 0){
+							console.log(11111)
+							uni.showToast({
+								title:'暂无PR信息',
+								icon:'error'
+							})
+						}
+						if (res.data.message == 'success' ){
+							this.err_msg = "拉取成功"
+						}
+						else{
+							this.err_msg = res.data.message
+						}
 						this.$refs.err_msg_popup.open('top')
 						uni.hideLoading()
 				    },

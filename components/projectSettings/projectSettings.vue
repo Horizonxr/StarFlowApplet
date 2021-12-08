@@ -59,7 +59,9 @@
 			</view>
 			<view class="bottom">
 				<view class="iconfont icon-fenxiang" @click="share"></view>
-				<view class="iconfont icon-yishenpi" v-if="role==0" @click="openmemberAudit"></view>
+				<view class="iconfont icon-yishenpi" v-if="role==0" @click="openmemberAudit">
+					<uni-badge :text="person_num" type="error" size="normal" maxNum="10" absolute="rightBottom"></uni-badge>
+				</view>
 				<view class="iconfont icon-duigou" @click="close"></view>
 			</view>
 		</view>
@@ -89,7 +91,8 @@
 				delete_key:-1,
 				show_member_audit:false,
 				err_msg:'',
-				msg:''
+				msg:'',
+				person_num:'11'
 			};
 		},
 		methods: {
@@ -103,13 +106,6 @@
 			share(){
 				uni.setClipboardData({
 				    data: this.repo_name,
-				    success() {
-						uni.hideToast()
-						uni.showToast({
-							icon:'success',
-							title:'已复制项目名称'
-						})
-				    },
 					fail() {
 						uni.showToast({
 							icon:'error',
@@ -117,6 +113,8 @@
 						})
 					}
 				});
+				this.msg = '已将仓库名称复制到剪切板，快去分享给您的朋友吧'
+				this.$refs.popup.open('top')
 			},
 			close() {
 				this.$emit("closemyPopup")
@@ -291,7 +289,30 @@
 					});
 				}
 			})
-
+			uni.request({
+				url: baseUrl + '/user/request_num', //仅为示例，并非真实接口地址。
+				method: 'POST',
+				timeout: 8000,
+				data: {
+					repo_id: this.repo_id
+				},
+				header: {
+					"content-type": "application/x-www-form-urlencoded" //自定义请求头信息
+				},
+				success: (res) => {
+					
+					this.person_num = res.data.num.toString()
+					console.log("这是申请人数"+this.person_num)
+					uni.hideLoading()
+				},
+				fail() {
+					uni.hideLoading()
+					uni.showToast({
+						title: '请求失败',
+						icon: 'error'
+					});
+				}
+			})
 		},
 	}
 </script>
@@ -510,7 +531,6 @@
 				text-align: center;
 				line-height: 80rpx;
 			}
-
 			view:nth-child(2) {
 				width: 33%;
 				font-size: 75rpx;
